@@ -1,5 +1,7 @@
 package org.aptivate.sarpaminfohub;
 
+import org.aptivate.web.utils.HtmlIterator;
+
 import com.meterware.httpunit.WebForm;
 import com.meterware.httpunit.WebResponse;
 
@@ -7,7 +9,7 @@ public class IntegrationTest extends SarpamInfoHubTest
 {
 	private String getSearchPageUrl()
 	{
-		return "http://localhost:8000";
+		return "http://localhost:8000/";
 	}
 	
 	private WebResponse loadSearchPage() throws Exception
@@ -33,5 +35,17 @@ public class IntegrationTest extends SarpamInfoHubTest
 		String resultsPageContent = response.getText();
 		
 		assertTrue(resultsPageContent.contains("Ciprobay"));
+	}
+	
+	private void validatePage(WebResponse response) throws Exception
+	{
+		HtmlIterator html = new HtmlIterator(response.getText());
+		assertNotNull(html);
+	}
+	
+	public void testSearchPageValidates() throws Exception
+	{
+		WebResponse response = loadSearchPage();
+		validatePage(response);
 	}
 }

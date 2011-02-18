@@ -1,6 +1,8 @@
 # Create your views here.
 
 from django.shortcuts import render_to_response
+from forms import SearchForm
 
-def search_form(request):
-    return render_to_response('search.html')
+def search(request):
+    search_form = SearchForm()
+    return render_to_response('search.html', {'search_form': search_form})
