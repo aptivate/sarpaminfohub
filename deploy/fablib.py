@@ -150,10 +150,12 @@ def _get_django_db_settings():
 def _get_mysql_root_password():
     # first try to read the root password from a file
     # otherwise ask the user
-    if files.exists('/root/mysql_root_password'):
-        return sudo ('cat /root/mysql_root_password')
-    else:
+    with settings(warn_only=True):
+        file_exists = sudo('test -f /root/mysql_root_password')
+    if file_exists.failed:
         return getpass.getpass('Enter MySQL root password:')
+    else:
+        return sudo ('cat /root/mysql_root_password')
 
 def update_db():
     """ create and/or update the database, do migrations etc """

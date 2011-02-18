@@ -15,7 +15,7 @@ env.repo_type = "git"
 env.repository = 'git://github.com/aptivate/' + env.project + '.git'
 
 env.django_dir = "django/" + env.project
-env.django_apps = ['project_app', ]
+env.django_apps = ['infohub', ]
 env.test_cmd = ' manage.py test -v0 ' + ' '.join(env.django_apps)
 
 
