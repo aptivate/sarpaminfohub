@@ -1,11 +1,11 @@
-import os, sys
+import os
 import getpass
 
-from fabric.api import *
-from fabric.contrib import files, console
-from fabric.contrib.files import exists
+#from fabric.api import *
+from fabric.api import env, sudo, require, local, cd, run, settings
+
+from fabric.contrib import files
 from fabric import utils
-from fabric.decorators import hosts
 
 def _setup_path():
     # TODO: something like

@@ -1,11 +1,7 @@
-from fabric.api import *
-from fabric import utils
-from fabric.decorators import hosts
-
 # this is our common file that can be copied across projects
 # we deliberately import all of this to get all the commands it
 # provides as fabric commands
-from fablib import *
+from fablib import env, utils
 import fablib
 
 
@@ -16,7 +12,7 @@ env.project_dir = env.project
 
 # repository type can be "svn" or "git"
 env.repo_type = "git"
-env.repository = 'https://github.com/aptivate/' + env.project
+env.repository = 'git://github.com/aptivate/' + env.project + '.git'
 
 env.django_dir = "django/" + env.project
 env.django_apps = ['project_app', ]
@@ -66,14 +62,16 @@ def staging_test():
     # so we need project_root to be different ...
     env.project_dir = env.project + '_test'
     env.environment = 'staging_test'
-    env.hosts = ['fen-vz-sarpaminfohub']
+    # env.hosts = ['fen-vz-sarpaminfohub']
+    env.hosts = ['10.0.156.249']
     _local_setup()
 
 
 def staging():
     """ use staging environment on remote host to demo to client"""
     env.environment = 'staging'
-    env.hosts = ['fen-vz-sarpaminfohub']
+#    env.hosts = ['fen-vz-sarpaminfohub']
+    env.hosts = ['10.0.156.249']
     _local_setup()
 
 
