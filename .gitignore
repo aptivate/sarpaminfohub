@@ -1,3 +1,4 @@
 *~
 bin
 *.pyc
+django/sarpaminfohub/local_settings.py

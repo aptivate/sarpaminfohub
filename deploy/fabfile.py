@@ -1,7 +1,7 @@
 # this is our common file that can be copied across projects
 # we deliberately import all of this to get all the commands it
 # provides as fabric commands
-from fablib import env, utils
+from fablib import *
 import fablib
 
 
