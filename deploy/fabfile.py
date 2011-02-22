@@ -62,16 +62,14 @@ def staging_test():
     # so we need project_root to be different ...
     env.project_dir = env.project + '_test'
     env.environment = 'staging_test'
-    # env.hosts = ['fen-vz-sarpaminfohub']
-    env.hosts = ['10.0.156.249']
+    env.hosts = ['fen-vz-sarpaminfohub']
     _local_setup()
 
 
 def staging():
     """ use staging environment on remote host to demo to client"""
     env.environment = 'staging'
-#    env.hosts = ['fen-vz-sarpaminfohub']
-    env.hosts = ['10.0.156.249']
+    env.hosts = ['fen-vz-sarpaminfohub']
     _local_setup()
 
 
