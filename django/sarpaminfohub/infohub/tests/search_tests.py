@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from sarpaminfohub.infohub.forms import SearchForm
-from HTMLParser import HTMLParser #@UnresolvedImport
+from HTMLParser import HTMLParser
 
 class SearchTest(TestCase):
     class TableParser(HTMLParser):
