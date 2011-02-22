@@ -1,6 +1,7 @@
 Django==1.2.5
 Fabric==0.9.3
 distribute==0.6.10
+django-tables==0.2
 paramiko==1.7.6
 pycrypto==2.3
 wsgiref==0.1.2

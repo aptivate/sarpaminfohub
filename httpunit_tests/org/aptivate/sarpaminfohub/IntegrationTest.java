@@ -12,13 +12,18 @@ public class IntegrationTest extends SarpamInfoHubTest
 		return "http://localhost:8000/";
 	}
 	
-	private WebResponse loadSearchPage() throws Exception
+	private WebResponse loadSearchPage(String query) throws Exception
 	{
 		String searchPageUrl = getSearchPageUrl();
 		
-		WebResponse response = loadUrl(searchPageUrl);
+		WebResponse response = loadUrl(searchPageUrl + query);
 		
 		return response;
+	}	
+	
+	private WebResponse loadSearchPage() throws Exception
+	{
+		return loadSearchPage("");
 	}
 	
 	public void testSearchForCiprofloxacinReturnsCiprobay() throws Exception
@@ -39,13 +44,18 @@ public class IntegrationTest extends SarpamInfoHubTest
 	
 	private void validatePage(WebResponse response) throws Exception
 	{
-		HtmlIterator html = new HtmlIterator(response.getText());
-		assertNotNull(html);
+		new HtmlIterator(response.getText());
 	}
 	
 	public void testSearchPageValidates() throws Exception
 	{
 		WebResponse response = loadSearchPage();
+		validatePage(response);
+	}
+	
+	public void testSearchPageWithResultsValidates() throws Exception
+	{
+		WebResponse response = loadSearchPage("?search=ciprofloxacin");
 		validatePage(response);
 	}
 }
