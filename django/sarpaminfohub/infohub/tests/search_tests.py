@@ -96,5 +96,6 @@ class SearchTest(TestCase):
         
         expected_rows = [["ciprofloxacin", "Ciprobay 500",
                           "500mg tablet", "0.54", "South Africa"]]
-        self.assertEquals(expected_rows, 
-                          parser.rows)
+        self.assertEquals(expected_rows, parser.rows)
+        
+        
