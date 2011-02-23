@@ -8,6 +8,12 @@ class ResultsTable(tables.MemoryTable):
     price = tables.Column()
     country = tables.Column()
 
+    def __init__(self, rows, search_string):
+        tables.MemoryTable.__init__(self, rows)
+        self.search_string = search_string
+
     def as_html(self):
-        return render_to_string('table.html', {'table':self})
+        return render_to_string('results.html',\
+                                {'table':self, \
+                                 'search_string':self.search_string})
     
