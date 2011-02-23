@@ -97,7 +97,7 @@ th, td
   border:thin solid #ccc;
 }
 
-td
+td, th
 { 
   padding:0.1em;
 }
@@ -119,11 +119,10 @@ td
   text-align:left;
 }
 
-#procurements, #pricedistribution
+#pricedistribution
 { 
-  margin:1em;
   float:left;
-/*  background-color:#99B3CC; */
+  width:100%;
 }
 
 #pricedistribution .prequalified {
@@ -132,8 +131,9 @@ td
 
 #pricedistribution table 
 {
+    margin:1em auto;
+    width:95%;
 	background-color: #C9D1FF;
-	padding: 0.3em ;
 }
 
 #pricedistribution table td
@@ -144,18 +144,18 @@ td
 
 #pricedistribution table th
 {
-	background-color:#7381d1; 
-	 border: 0;
+    color: white;
+	background-color:#7381d1;
+	border: 0;
+	text-align:left;
 }
-#pricedistribution table th { color: white; }
-
-
 
 #info h3, #map h3
-{ margin-top:0;
-  color:white;
-  text-align:center;
-  margin-top:0;
+{
+    margin-top:0;
+    color:white;
+    text-align:center;
+    margin-top:0;
 }
 
 #map h3
