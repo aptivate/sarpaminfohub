@@ -144,14 +144,21 @@ class SearchTest(SarpamTestCase):
     def test_search_result_headings_are_as_expected(self):
         parser = self.parse_search_results_for_ciprofloxacin()
         self.assertEquals(parser.FINISHED, parser.state)
-        self.assertEquals(["Formulation", "Country", "Fob Price", "Landed Price"], 
+        self.assertEquals(["Formulation", "Country", "FOB Price", "Landed Price"], 
                           parser.headings)
 
     def test_search_for_ciprofloxacin_with_django_backend_returns_drc_prices(self):
         self.setup_drc_ciprofloxacin()
         parser = self.parse_search_results_for_ciprofloxacin()
-        self.assertEquals(parser.FINISHED, parser.state)
         
         expected_rows = [["ciprofloxacin 500mg tablet",
                           "Democratic Republic of Congo", "0.03", "0.04"]]
+        self.assertEquals(expected_rows, parser.rows)
+        
+    def test_null_prices_displayed_as_double_dash(self):
+        self.setup_drc_ciprofloxacin(fob_price=None, landed_price=None)
+        parser = self.parse_search_results_for_ciprofloxacin()
+        
+        expected_rows = [["ciprofloxacin 500mg tablet",
+                          "Democratic Republic of Congo", "--", "--"]]
         self.assertEquals(expected_rows, parser.rows)
