@@ -5,3 +5,4 @@ django/sarpaminfohub/local_settings.py
 django/sarpaminfohub/fixtures/*.json
 django/sarpaminfohub/sarpam_pma.sqlite
 django/sarpaminfohub/sarpaminfohub.sqlite
+scripts/*.json

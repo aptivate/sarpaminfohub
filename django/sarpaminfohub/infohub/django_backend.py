@@ -14,5 +14,9 @@ class DjangoBackend(Backend):
             record['country'] = price.country.name
             record['fob_price'] = price.fob_price
             record['landed_price'] = price.landed_price
+            record['fob_currency'] = price.fob_currency
+            record['period'] = price.period
+            record['issue_unit'] = price.issue_unit
+            record['landed_currency'] = price.landed_currency
             
         return results

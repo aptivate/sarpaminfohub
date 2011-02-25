@@ -119,11 +119,13 @@ class SearchTest(SarpamTestCase):
         return parser
     
     def test_search_for_ciprofloxacin_returns_south_africa_prices(self):
+        self.setup_exchange_rate(symbol='ZAR', rate='0.11873', year='2009')
+        
         parser = self.parse_search_results_for_ciprofloxacin(backend='test')
         self.assertEquals(parser.FINISHED, parser.state)
         
         expected_rows = [["ciprofloxacin 500mg tablet",
-                          "South Africa", "0.05", "0.06"]]
+                          "South Africa", "0.04440502", "0.04440502"]]
         self.assertEquals(expected_rows, parser.rows)
         
     def test_search_term_displayed_in_heading(self):
@@ -149,14 +151,18 @@ class SearchTest(SarpamTestCase):
 
     def test_search_for_ciprofloxacin_with_django_backend_returns_drc_prices(self):
         self.setup_drc_ciprofloxacin()
+        self.setup_exchange_rate(symbol='EUR', rate=1.39071, year=2009)
         parser = self.parse_search_results_for_ciprofloxacin()
         
         expected_rows = [["ciprofloxacin 500mg tablet",
-                          "Democratic Republic of Congo", "0.03", "0.04"]]
+                          "Democratic Republic of Congo", "0.02503278", 
+                          "0.0289963035"]]
         self.assertEquals(expected_rows, parser.rows)
         
     def test_null_prices_displayed_as_double_dash(self):
         self.setup_drc_ciprofloxacin(fob_price=None, landed_price=None)
+        self.setup_exchange_rate(symbol='EUR', rate=1.39071, year=2009)
+        
         parser = self.parse_search_results_for_ciprofloxacin()
         
         expected_rows = [["ciprofloxacin 500mg tablet",

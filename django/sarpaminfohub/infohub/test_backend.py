@@ -1,9 +1,30 @@
 from sarpaminfohub.infohub.backend import Backend
 
 class TestBackend(Backend):
+    def get_amitriptyline(self):
+        return {"formulation":"amitriptyline 25mg tablet",
+                     "fob_price":"58.64",
+                     "fob_currency":"NAD",
+                     "landed_price":"67.44",
+                     "landed_currency":"NAD",
+                     "country":"Namibia",
+                     "period":"2009",
+                     "issue_unit":"500"}
+    
     def search(self, search_term):
-        return [{\
-            "formulation":"ciprofloxacin 500mg tablet",\
-            "fob_price":"0.05",\
-            "landed_price":"0.06",\
-            "country":"South Africa"}]
+        if search_term == "amitriptyline":
+            test_result = self.get_amitriptyline() 
+        elif search_term == "issue unit none":
+            test_result = self.get_amitriptyline()
+            test_result['issue_unit'] = None
+        else:
+            test_result = {"formulation":"ciprofloxacin 500mg tablet",
+                 "fob_price":"3.74",
+                 "landed_price":"3.74",
+                 "country":"South Africa",
+                 "fob_currency":"ZAR",
+                 "period":"2009",
+                 "issue_unit":"10",
+                 "landed_currency":"ZAR"}
+
+        return [test_result]

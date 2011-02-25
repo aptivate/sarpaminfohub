@@ -14,5 +14,9 @@ class DjangoBackendTest(SarpamTestCase):
         self.assertEquals({"formulation":"ciprofloxacin 500mg tablet",
                            "country": "Democratic Republic of Congo",
                            "fob_price": Decimal("0.000003"), 
-                           "landed_price": Decimal("0.000004")}, 
+                           "landed_price": Decimal("0.000004"),
+                           "fob_currency": 'EUR',
+                           "period": 2009,
+                           "issue_unit":100,
+                           "landed_currency": 'EUR'},
                           results[0])

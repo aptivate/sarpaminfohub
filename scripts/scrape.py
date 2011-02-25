@@ -7,9 +7,8 @@ the purposes of import)
 """
 import json
 import sqlite3
-
-
-DBFILE = 'file.db'
+import sys
+from decimal import Decimal
 
 country_codes = {}
 country_codes[1] = 'SC'
@@ -34,7 +33,7 @@ def normalisePrice(raw):
     For example, the float value 4.49 will result in the integer value 449.
     """
     if raw:
-        return int(raw * 100) # hacky
+        return Decimal(str(raw)).to_eng_string()
     else:
         return None
 
@@ -59,6 +58,27 @@ def scrapeCountries(conn):
         results.append(result)
     return results
 
+def scrapeExchangeRate(conn):
+    query = "SELECT * FROM exchange_rate"
+    c = conn.cursor()
+    c.execute(query)
+    results = []
+    counter = 0
+    for row in c:
+        result={}
+        exchange_fields = {}
+
+        result['pk'] = counter
+        result['model'] = "infohub.exchangerate"
+        result['fields'] = exchange_fields
+        exchange_fields['symbol'] = row[0]
+        exchange_fields['year'] = int(row[1])
+        exchange_fields['rate'] = row[2]
+        
+        results.append(result)
+        counter += 1
+    return results
+    
 
 def scrapeProducts(conn):
     """
@@ -95,7 +115,8 @@ def scrapeFormulations(conn):
     c = conn.cursor()
     # Return the results as discussed with Adi
     query = """SELECT f10.description, f10.landed_cost_price, f10.fob_price,
-        f10.period, f10.basic_unit, country.name, country.id
+        f10.period, f10.issue_unit, country.name, country.id,
+        f10.fob_currency, f10.landed_cost_currency, f10.period
         FROM form10_row AS f10
         INNER JOIN country ON f10.country = country.id
         ORDER BY f10.description, country.name"""
@@ -110,6 +131,9 @@ def scrapeFormulations(conn):
         result['unit'] = row[4]
         result['country'] = row[5]
         result['country_id'] = country_codes[row[6]]
+        result['fob_currency'] = row[7]
+        result['landed_currency'] = row[8]
+        result['period'] = int(row[9])
         results.append(result)
     return results
 
@@ -120,15 +144,18 @@ def output_json(name, data):
     json.dump(data, output, indent=2)
     output.close()
 
-def scrape():
+def scrape(db_file):
     """
     Opens the database, scrapes a bunch of data and writes it all out to JSON
     """
-    conn = sqlite3.connect(DBFILE)
+    conn = sqlite3.connect(db_file)
     formulations = scrapeFormulations(conn)
     products = scrapeProducts(conn)
     countries = scrapeCountries(conn)
     # Build Martin's schema
+    exchange_rates = scrapeExchangeRate(conn)
+    output_json("exchange_rates", exchange_rates)
+    
     output_json("countries", countries)
     # formulations
     counter = 0
@@ -157,6 +184,10 @@ def scrape():
         price_fields['country'] = f['country_id']
         price_fields['fob_price'] = normalisePrice(f['fob_price'])
         price_fields['landed_price'] = normalisePrice(f['landed_cost_price'])
+        price_fields['fob_currency'] = f['fob_currency']
+        price_fields['landed_currency'] = f['landed_currency']
+        price_fields['issue_unit'] = f['unit']
+        price_fields['period'] = f['period']
         price_table.append(price_record)
     output_json('formulations', formulation_table)
     output_json('prices', price_table)
@@ -201,4 +232,4 @@ def scrape():
 
 
 if __name__ == "__main__":
-    scrape()
+    scrape(sys.argv[1])
