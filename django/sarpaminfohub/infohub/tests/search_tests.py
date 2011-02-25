@@ -1,9 +1,8 @@
-from django.test import TestCase
-
 from sarpaminfohub.infohub.forms import SearchForm
 from HTMLParser import HTMLParser
+from sarpaminfohub.infohub.tests.sarpam_test_case import SarpamTestCase
 
-class SearchTest(TestCase):
+class SearchTest(SarpamTestCase):
     class TableParser(HTMLParser):
         FINDING_RESULTS_HEADING = 0
         PARSING_RESULTS_HEADING = 10
@@ -100,8 +99,13 @@ class SearchTest(TestCase):
         parser = self.parse_table_content(response)
         self.assertEquals(parser.FINDING_RESULTS_HEADING, parser.state)
 
-    def search_for_ciprofloxacin(self):
-        return self.client.get('/?search=ciprofloxacin')
+    def search_for_ciprofloxacin(self, backend):
+        url = '/?search=ciprofloxacin'
+        
+        if backend is not None:
+            url += '&backend=%s' % backend
+        
+        return self.client.get(url)
 
     def parse_table_content(self, response):
         parser = self.TableParser()
@@ -109,23 +113,17 @@ class SearchTest(TestCase):
         parser.close()
         return parser
 
-    def parse_search_results_for_ciprofloxacin(self):
-        response = self.search_for_ciprofloxacin()
+    def parse_search_results_for_ciprofloxacin(self, backend=None):
+        response = self.search_for_ciprofloxacin(backend=backend)
         parser = self.parse_table_content(response)
         return parser
     
-    def test_search_result_headings_are_as_expected(self):
-        parser = self.parse_search_results_for_ciprofloxacin()
-        self.assertEquals(parser.FINISHED, parser.state)
-        self.assertEquals(["Molecule", "Product", "Formulation", "Price", "Country"], 
-                          parser.headings)
-
-    def test_search_for_ciprofloxacin_returns_ciprobay(self):
-        parser = self.parse_search_results_for_ciprofloxacin()
+    def test_search_for_ciprofloxacin_returns_south_africa_prices(self):
+        parser = self.parse_search_results_for_ciprofloxacin(backend='test')
         self.assertEquals(parser.FINISHED, parser.state)
         
-        expected_rows = [["ciprofloxacin", "Ciprobay 500",
-                          "500mg tablet", "0.54", "South Africa"]]
+        expected_rows = [["ciprofloxacin 500mg tablet",
+                          "South Africa", "0.05", "0.06"]]
         self.assertEquals(expected_rows, parser.rows)
         
     def test_search_term_displayed_in_heading(self):
@@ -142,5 +140,18 @@ class SearchTest(TestCase):
         response = self.client.get('/')
         parser = self.parse_table_content(response)
         self.assertEquals(None, parser.input_field_value)
+
+    def test_search_result_headings_are_as_expected(self):
+        parser = self.parse_search_results_for_ciprofloxacin()
+        self.assertEquals(parser.FINISHED, parser.state)
+        self.assertEquals(["Formulation", "Country", "Fob Price", "Landed Price"], 
+                          parser.headings)
+
+    def test_search_for_ciprofloxacin_with_django_backend_returns_drc_prices(self):
+        self.setup_drc_ciprofloxacin()
+        parser = self.parse_search_results_for_ciprofloxacin()
+        self.assertEquals(parser.FINISHED, parser.state)
         
-        
+        expected_rows = [["ciprofloxacin 500mg tablet",
+                          "Democratic Republic of Congo", "0.03", "0.04"]]
+        self.assertEquals(expected_rows, parser.rows)

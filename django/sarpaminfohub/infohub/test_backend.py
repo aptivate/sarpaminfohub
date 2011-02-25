@@ -1,9 +1,9 @@
-class TestBackend(object):
+from sarpaminfohub.infohub.backend import Backend
+
+class TestBackend(Backend):
     def search(self, search_term):
-        return '[{\
-            "molecule":"ciprofloxacin",\
-            "product":"Ciprobay 500",\
-            "formulation":"500mg tablet",\
-            "price":0.54,\
-            "country":"South Africa"}]'
-        
+        return [{\
+            "formulation":"ciprofloxacin 500mg tablet",\
+            "fob_price":"0.05",\
+            "landed_price":"0.06",\
+            "country":"South Africa"}]

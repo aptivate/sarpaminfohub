@@ -2,11 +2,10 @@ import django_tables as tables
 from django.template.loader import render_to_string
 
 class ResultsTable(tables.MemoryTable):
-    molecule = tables.Column()
-    product = tables.Column()
     formulation = tables.Column()
-    price = tables.Column()
     country = tables.Column()
+    fob_price = tables.Column(verbose_name="Fob Price")
+    landed_price = tables.Column(verbose_name="Landed Price")
 
     def __init__(self, rows, search_string):
         tables.MemoryTable.__init__(self, rows)

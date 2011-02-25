@@ -26,7 +26,7 @@ public class IntegrationTest extends SarpamInfoHubTest
 		return loadSearchPage("");
 	}
 	
-	public void testSearchForCiprofloxacinReturnsCiprobay() throws Exception
+	public void testSearchForCiprofloxacinReturnsCiprofloxacin500mg() throws Exception
 	{
 		WebResponse response = loadSearchPage();
 		
@@ -39,7 +39,7 @@ public class IntegrationTest extends SarpamInfoHubTest
 		
 		String resultsPageContent = response.getText();
 		
-		assertTrue(resultsPageContent.contains("Ciprobay"));
+		assertTrue(resultsPageContent.contains("ciprofloxacin 500mg tablet"));
 	}
 	
 	private void validatePage(WebResponse response) throws Exception
