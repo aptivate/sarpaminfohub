@@ -1,4 +1,3 @@
-from sarpaminfohub.infohub.forms import SearchForm
 from HTMLParser import HTMLParser
 from sarpaminfohub.infohub.tests.sarpam_test_case import SarpamTestCase
 
@@ -81,19 +80,6 @@ class SearchTest(SarpamTestCase):
         response = self.client.get('/')
         self.assertTemplateUsed(response, 'search.html')
 
-    def test_search_form_can_be_created(self):
-        search_form = SearchForm()
-        self.assertTrue(isinstance(search_form, SearchForm))
-
-    def test_search_form_has_search_field(self):
-        search_form = SearchForm()
-        self.assertTrue(search_form.fields.has_key('search'))
-
-    def test_search_field_has_no_label(self):
-        search_form = SearchForm()
-        search_field = search_form.fields['search']
-        self.assertEquals("", search_field.label)
-
     def test_search_page_has_no_results_initially(self):
         response = self.client.get('/')
         parser = self.parse_table_content(response)
@@ -118,15 +104,19 @@ class SearchTest(SarpamTestCase):
         parser = self.parse_table_content(response)
         return parser
     
+    def get_rows_for_ciprofloxacin(self, backend=None):
+        parser = self.parse_search_results_for_ciprofloxacin(backend=backend)
+        self.assertEquals(parser.FINISHED, parser.state)
+        
+        return parser.rows
+    
     def test_search_for_ciprofloxacin_returns_south_africa_prices(self):
         self.setup_exchange_rate(symbol='ZAR', rate='0.11873', year='2009')
         
-        parser = self.parse_search_results_for_ciprofloxacin(backend='test')
-        self.assertEquals(parser.FINISHED, parser.state)
-        
+        rows = self.get_rows_for_ciprofloxacin('test')
         expected_rows = [["ciprofloxacin 500mg tablet",
-                          "South Africa", "0.04440502", "0.04440502"]]
-        self.assertEquals(expected_rows, parser.rows)
+                          "South Africa", "0.044", "0.044"]]
+        self.assertEquals(expected_rows, rows)
         
     def test_search_term_displayed_in_heading(self):
         parser = self.parse_search_results_for_ciprofloxacin()
@@ -155,16 +145,16 @@ class SearchTest(SarpamTestCase):
         parser = self.parse_search_results_for_ciprofloxacin()
         
         expected_rows = [["ciprofloxacin 500mg tablet",
-                          "Democratic Republic of Congo", "0.02503278", 
-                          "0.0289963035"]]
+                          "Democratic Republic of Congo", "0.025", 
+                          "0.029"]]
         self.assertEquals(expected_rows, parser.rows)
         
     def test_null_prices_displayed_as_double_dash(self):
         self.setup_drc_ciprofloxacin(fob_price=None, landed_price=None)
         self.setup_exchange_rate(symbol='EUR', rate=1.39071, year=2009)
         
-        parser = self.parse_search_results_for_ciprofloxacin()
+        rows = self.get_rows_for_ciprofloxacin()
         
         expected_rows = [["ciprofloxacin 500mg tablet",
                           "Democratic Republic of Congo", "--", "--"]]
-        self.assertEquals(expected_rows, parser.rows)
+        self.assertEquals(expected_rows, rows)
