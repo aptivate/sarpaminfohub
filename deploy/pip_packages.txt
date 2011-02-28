@@ -1,7 +1,12 @@
 Django==1.2.5
 Fabric==0.9.3
+Fom==0.9.2
+MySQL-python==1.2.3
+blinker==1.1
 distribute==0.6.10
+django-fluidinfo==0.2.1
 django-tables==0.2
+httplib2==0.6.0
 paramiko==1.7.6
 pycrypto==2.3
 wsgiref==0.1.2

@@ -3,7 +3,7 @@ from models import Price
 
 class DjangoBackend(Backend):
     def search(self, search_term):
-        prices = Price.objects.filter(formulation__name__contains=search_term)
+        prices = Price.objects.filter(formulation__name__icontains=search_term)
         
         results = []
         
