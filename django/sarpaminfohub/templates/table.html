@@ -6,12 +6,6 @@
   {% endfor %}
 </tr>
 
-{% for row in table.rows %}
-  <tr>
-  {% for value in row %}
-    <td>{{ value }}</td>
-  {% endfor %}
-  </tr>
-{% endfor %}
+{% include table.rows_template %}
 
 </table>

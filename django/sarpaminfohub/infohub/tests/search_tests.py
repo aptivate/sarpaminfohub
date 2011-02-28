@@ -19,6 +19,7 @@ class SearchTest(SarpamTestCase):
             self.rows = []
             self.cells = []
             self.headings = []
+            self.cell_classes = []
             HTMLParser.__init__(self)
             self.results_heading = None
             self.input_field_value = None
@@ -36,6 +37,9 @@ class SearchTest(SarpamTestCase):
 
             if tag == "input" and ('name', 'search') in attributes:
                 self.input_field_value = self.get_attribute(attributes, 'value')
+            
+            if tag == "td":
+                self.cell_classes.append(self.get_attribute(attributes, 'class'))
             
             if self.state == self.FINDING_RESULTS_HEADING and tag == "h2":
                 self.state = self.PARSING_RESULTS_HEADING
@@ -91,6 +95,9 @@ class SearchTest(SarpamTestCase):
         if backend is not None:
             url += '&backend=%s' % backend
         
+            if backend == 'test':
+                self.setup_exchange_rate(symbol='ZAR', rate='0.11873', year='2009')
+        
         return self.client.get(url)
 
     def parse_table_content(self, response):
@@ -111,8 +118,6 @@ class SearchTest(SarpamTestCase):
         return parser.rows
     
     def test_search_for_ciprofloxacin_returns_south_africa_prices(self):
-        self.setup_exchange_rate(symbol='ZAR', rate='0.11873', year='2009')
-        
         rows = self.get_rows_for_ciprofloxacin('test')
         expected_rows = [["ciprofloxacin 500mg tablet",
                           "South Africa", "0.044", "0.044"]]
@@ -158,3 +163,8 @@ class SearchTest(SarpamTestCase):
         expected_rows = [["ciprofloxacin 500mg tablet",
                           "Democratic Republic of Congo", "--", "--"]]
         self.assertEquals(expected_rows, rows)
+
+    def test_price_cells_are_in_number_class(self):
+        parser = self.parse_search_results_for_ciprofloxacin(backend='test')
+        self.assertEquals([None, None, "number", "number"], parser.cell_classes)
+        

@@ -99,7 +99,7 @@ th, td
 
 td, th
 { 
-  padding:0.1em;
+  padding:0.2em;
 }
 
 .menu a:visited, .menu a:link
@@ -264,3 +264,8 @@ margin: 0 0 0 10em;
 .searchresults .filterresults h3 { background-color: #ccc; padding: 0.5em; margin: 0.5em 0; }
 .searchresults .filterresults  ul { list-style: none; padding: 0; margin: 0; }
 .searchresults .filterresults  ul ul { padding: 0 0 0.5em 1.5em; font-style: italic; }
+
+.number
+{
+    text-align:right;
+}

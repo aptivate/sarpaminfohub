@@ -1,0 +1,8 @@
+{% for row in table.rows %}
+  <tr>
+    <td>{{ row.formulation }}</td>
+    <td>{{ row.country }}</td>
+    <td class="number">{{ row.fob_price }}</td>
+    <td class="number">{{ row.landed_price }}</td>
+  </tr>
+{% endfor %}
