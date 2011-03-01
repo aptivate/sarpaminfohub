@@ -29,13 +29,12 @@ def _setup_path():
         env.settings        = '%(project)s.settings' % env
 
 def _get_svn_user_and_pass():
-    # just use the redmine user for now.
-    if len(env.svnuser) == 0:
-      # prompt user for username
-      prompt('Enter SVN username:', 'svnuser')
-    if len(env.svnpass) == 0:
-      # prompt user for password
-      env.svnpass = getpass.getpass('Enter SVN password:')
+    if not env.has_key('svnuser') or len(env.svnuser) == 0:
+        # prompt user for username
+        prompt('Enter SVN username:', 'svnuser')
+    if not env.has_key('svnpass') or len(env.svnpass) == 0:
+        # prompt user for password
+        env.svnpass = getpass.getpass('Enter SVN password:')
 
 
 
@@ -104,13 +103,15 @@ def checkout_or_update(revision=None):
             if revision:
                 cmd += " --revision " + revision
             with cd(env.vcs_root):
-                sudo(cmd)
+                with hide('running'):
+                    sudo(cmd)
         else:
             cmd = 'svn checkout --username %s --password %s %s' % (env.svnuser, env.svnpass, env.repository)
             if revision:
                 cmd += "@" + revision
             with cd(env.project_root):
-                sudo(cmd)
+                with hide('running'):
+                    sudo(cmd)
     elif env.repo_type == "git":
         # if the .git directory exists, do an update, otherwise do
         # a clone
@@ -120,6 +121,9 @@ def checkout_or_update(revision=None):
         else:
             with cd(env.project_root):
                 sudo('git clone %s dev' % env.repository)
+        if revision:
+            with cd(env.project_root):
+                sudo('git checkout %s' % revision)
 
 
 def update_requirements():
