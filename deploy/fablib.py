@@ -30,13 +30,12 @@ def _setup_path():
 
 def _get_svn_user_and_pass():
     # just use the redmine user for now.
-    pass
-#    if len(env.svnuser) == 0:
-#      # prompt user for username
-#      prompt('Enter SVN username:', 'svnuser')
-#    if len(env.svnpass) == 0:
-#      # prompt user for password
-#      env.svnpass = getpass.getpass('Enter SVN password:')
+    if len(env.svnuser) == 0:
+      # prompt user for username
+      prompt('Enter SVN username:', 'svnuser')
+    if len(env.svnpass) == 0:
+      # prompt user for password
+      env.svnpass = getpass.getpass('Enter SVN password:')
 
 
 
