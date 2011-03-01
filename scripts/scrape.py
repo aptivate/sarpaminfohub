@@ -138,7 +138,7 @@ def scrapeFormulations(conn):
     return results
 
 def output_json(name, data):
-    filename = '/home/martinb2/workspace/sarpaminfohub/django/sarpaminfohub/fixtures/%s.json' % name
+    filename = '/home/martinb2/workspace/reactionsarpam/data/fixtures/initial_data/%s.json' % name
 
     output = open(filename, 'w')
     json.dump(data, output, indent=2)

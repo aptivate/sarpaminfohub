@@ -1,7 +1,11 @@
 # this is our common file that can be copied across projects
 # we deliberately import all of this to get all the commands it
 # provides as fabric commands
-from fabric.api import env
+import os
+from fabric.api import env, sudo, require, cd
+from fabric.contrib import files
+from fabric.context_managers import hide
+
 from fablib import apache_reload, apache_restart, checkout_or_update, \
              configtest, create_virtualenv, deploy_clean, \
              link_apache_conf, link_local_settings, local_test, remote_test, \
@@ -18,6 +22,8 @@ env.project_dir = env.project
 env.repo_type = "git"
 env.repository = 'git://github.com/aptivate/' + env.project + '.git'
 env.fixtures_repo = "https://svn.aptivate.org/svn/reactionsarpam/data/fixtures/"
+env.svnuser = ""
+env.svnpass = ""
 
 env.django_dir = "django/" + env.project
 env.django_apps = ['infohub', ]
@@ -97,6 +103,7 @@ def deploy(revision=None):
     update_requirements()
     link_local_settings()
     update_db()
+    load_fixtures()
     link_apache_conf()
     apache_restart()
 
@@ -111,10 +118,15 @@ def checkout_or_update_fixtures():
     if files.exists(os.path.join(env.fixtures_dir, ".svn")):
         cmd = 'svn update --username %s --password %s' % (env.svnuser, env.svnpass)
         with cd(env.fixtures_dir):
-            sudo(cmd)
+            with hide('running'):
+                sudo(cmd)
     else:
         cmd = 'svn checkout --username %s --password %s %s' % \
                         (env.svnuser, env.svnpass, env.fixtures_repo)
         with cd(env.django_root):
-            sudo(cmd)
+            with hide('running'):
+                sudo(cmd)
 
+def load_fixtures():
+    with cd(env.django_root):
+        sudo(env.python_bin + ' manage.py loaddata fixtures/initial_data/*.json')

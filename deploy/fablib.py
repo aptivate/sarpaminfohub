@@ -2,7 +2,7 @@ import os
 import getpass
 
 #from fabric.api import *
-from fabric.api import env, sudo, require, local, cd, run, settings
+from fabric.api import env, sudo, require, local, cd, run, settings, prompt
 
 from fabric.contrib import files
 from fabric import utils
