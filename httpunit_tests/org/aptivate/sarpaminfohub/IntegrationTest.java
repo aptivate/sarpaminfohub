@@ -58,4 +58,10 @@ public class IntegrationTest extends SarpamInfoHubTest
 		WebResponse response = loadSearchPage("?search=ciprofloxacin");
 		validatePage(response);
 	}
+	
+	public void testFormulationPageValidates() throws Exception
+	{
+		WebResponse response = loadSearchPage("formulation/1/");
+		validatePage(response);
+	}
 }

@@ -30,3 +30,26 @@ class DjangoBackendTest(SarpamTestCase):
         results = self.backend.search('CIPROFLOXACIN')
         
         self.assertEquals(self.expected_ciprofloxacin_results, results[0])
+
+    def get_first_row_of_prices_with_formulation_id_1(self):
+        rows = self.backend.get_prices_for_formulation_with_id(1)
+        
+        return rows[0]
+
+    def check_column_matches_expected_field_with_name(self, name):
+        first_row = self.get_first_row_of_prices_with_formulation_id_1()
+        self.assertEquals(self.expected_ciprofloxacin_results[name],\
+                          first_row[name])
+
+    def test_ciprofloxacin_country_can_be_retrieved_by_id(self):
+        self.check_column_matches_expected_field_with_name('country')
+
+    def test_ciprofloxacin_fob_price_can_be_retrieved_by_id(self):
+        self.check_column_matches_expected_field_with_name('fob_price')
+
+    def test_ciprofloxacin_landed_price_can_be_retrieved_by_id(self):
+        self.check_column_matches_expected_field_with_name('landed_price')
+
+    def test_formulation_name_can_be_retrieved_by_id(self):
+        name = self.backend.get_formulation_name_with_id(1)
+        self.assertEquals("ciprofloxacin 500mg tablet", name)

@@ -1,5 +1,6 @@
 from sarpaminfohub.infohub.backend import Backend
 from models import Price
+from sarpaminfohub.infohub.models import Formulation
 
 class DjangoBackend(Backend):
     def search(self, search_term):
@@ -20,3 +21,22 @@ class DjangoBackend(Backend):
             record['landed_currency'] = price.landed_currency
             
         return results
+    
+    def get_prices_for_formulation_with_id(self, formulation_id):
+        results = []
+        
+        prices = Price.objects.filter(formulation=formulation_id)
+        
+        for price in prices:
+            record = {}
+            results.append(record)
+            record['country'] = price.country.name
+            record['fob_price'] = price.fob_price
+            record['landed_price'] = price.landed_price
+        
+        return results
+    
+    def get_formulation_name_with_id(self, formulation_id):
+        formulation = Formulation.objects.get(pk=formulation_id)
+        
+        return formulation.name

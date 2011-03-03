@@ -1,0 +1,14 @@
+{%  extends 'page.html' %}
+{% block main %}
+
+<ul class="menu">
+    <li><a href="#">Price Distribution</a></li>
+    <li class="selected">{{ formulation_name }}</li>
+</ul>
+<div id="content">
+    <div id="pricedistribution">
+        {{ formulation_table.as_html }}
+    </div>
+</div>
+
+{% endblock main %}

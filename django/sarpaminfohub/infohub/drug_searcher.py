@@ -51,3 +51,11 @@ class DrugSearcher(object):
                                                          period, 
                                                          issue_unit)
         return rows
+
+    def get_prices_for_formulation_with_id(self, formulation_id):
+        rows = self.backend.get_prices_for_formulation_with_id(formulation_id)
+        return rows
+            
+    def get_formulation_name_with_id(self, formulation_id):
+        return self.backend.get_formulation_name_with_id(formulation_id)
+        

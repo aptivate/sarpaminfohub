@@ -28,3 +28,13 @@ class TestBackend(Backend):
                  "landed_currency":"ZAR"}
 
         return [test_result]
+
+    def get_prices_for_formulation_with_id(self, formulation_id):
+        test_result = {"fob_price": 0.009,
+                       "landed_price": 0.010,
+                       "country": "South Africa"}
+        
+        return [test_result]
+    
+    def get_formulation_name_with_id(self,formulation_id):
+        return "ciprofloxacin 500mg tablet"
