@@ -25,7 +25,7 @@ def search(request):
         backend = get_backend(backend_name)
             
         drug_searcher = DrugSearcher(backend)
-        rows = drug_searcher.get_rows(search_term)
+        rows = drug_searcher.get_formulations_that_match(search_term)
     
         results_table = ResultsTable(rows, search_term)
     else:

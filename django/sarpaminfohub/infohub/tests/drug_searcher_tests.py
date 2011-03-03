@@ -24,7 +24,7 @@ class DrugSearcherTest(SarpamTestCase):
         fob_price_in_usd = (fob_price_in_nad * exchange_rate) / issue_unit
         landed_price_in_usd = (landed_price_in_nad * exchange_rate) / issue_unit
          
-        rows = self.drug_searcher.get_rows("amitriptyline")
+        rows = self.drug_searcher.get_formulations_that_match("amitriptyline")
         
         row = rows[0]
         
@@ -32,7 +32,7 @@ class DrugSearcherTest(SarpamTestCase):
         self.assertEquals(landed_price_in_usd, row['landed_price'])
 
     def test_no_error_when_issue_unit_none(self):
-        rows = self.drug_searcher.get_rows("issue unit none")
+        rows = self.drug_searcher.get_formulations_that_match("issue unit none")
         row = rows[0]
 
         self.assertEquals(None, row['fob_price'])

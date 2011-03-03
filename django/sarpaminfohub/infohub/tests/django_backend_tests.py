@@ -22,12 +22,12 @@ class DjangoBackendTest(SarpamTestCase):
         
     
     def test_search_for_ciprofloxacin_returns_ciprofloxacin_500mg(self):
-        results = self.backend.search('ciprofloxacin')
+        results = self.backend.get_formulations_that_match('ciprofloxacin')
         
         self.assertEquals(self.expected_ciprofloxacin_results, results[0])
 
     def test_search_is_case_sensitive(self):
-        results = self.backend.search('CIPROFLOXACIN')
+        results = self.backend.get_formulations_that_match('CIPROFLOXACIN')
         
         self.assertEquals(self.expected_ciprofloxacin_results, results[0])
 

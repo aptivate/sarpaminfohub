@@ -3,7 +3,7 @@ from models import Price
 from sarpaminfohub.infohub.models import Formulation
 
 class DjangoBackend(Backend):
-    def search(self, search_term):
+    def get_formulations_that_match(self, search_term):
         prices = Price.objects.filter(formulation__name__icontains=search_term)
         
         results = []

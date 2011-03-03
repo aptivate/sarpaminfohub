@@ -11,7 +11,7 @@ class TestBackend(Backend):
                      "period":"2009",
                      "issue_unit":"500"}
     
-    def search(self, search_term):
+    def get_formulations_that_match(self, search_term):
         if search_term == "amitriptyline":
             test_result = self.get_amitriptyline() 
         elif search_term == "issue unit none":

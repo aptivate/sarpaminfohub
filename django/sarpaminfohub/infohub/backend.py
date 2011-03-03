@@ -5,5 +5,11 @@ class Backend(object):
         caller = inspect.getouterframes(inspect.currentframe())[1][3]
         raise NotImplementedError(caller + ' must be implemented in subclass')
 
-    def search(self, search_term):
+    def get_formulations_that_match(self, search_term):
+        self.abstract()
+
+    def get_prices_for_formulation_with_id(self, formulation_id):
+        self.abstract()
+        
+    def get_formulation_name_with_id(self, formulation_id):
         self.abstract()

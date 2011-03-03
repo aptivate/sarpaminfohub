@@ -29,8 +29,8 @@ class DrugSearcher(object):
         
         return int(value)
     
-    def get_rows(self, search_term):
-        rows = self.backend.search(search_term)
+    def get_formulations_that_match(self, search_term):
+        rows = self.backend.get_formulations_that_match(search_term)
         
         for row in rows:
             fob_local_price = self.float_or_none(row['fob_price'])
