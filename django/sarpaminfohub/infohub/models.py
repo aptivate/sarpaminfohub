@@ -1,7 +1,11 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 
 class Formulation(models.Model):
     name = models.CharField(max_length=200)
+
+    def get_url(self):
+        return reverse('formulation', args=[str(self.id), ""])
 
 class Country(models.Model):
     code = models.CharField(max_length=2, primary_key=True)

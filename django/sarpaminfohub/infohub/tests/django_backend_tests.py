@@ -15,11 +15,11 @@ class DjangoBackendTest(SarpamTestCase):
                            "fob_currency": 'EUR',
                            "period": 2009,
                            "issue_unit":100,
-                           "landed_currency": 'EUR'}
+                           "landed_currency": 'EUR',
+                           'url': '/formulation/1/'}
 
         self.setup_drc_ciprofloxacin(fob_price=Decimal("0.000003"), 
                                      landed_price=Decimal("0.000004"))
-        
     
     def test_search_for_ciprofloxacin_returns_ciprofloxacin_500mg(self):
         results = self.backend.get_formulations_that_match('ciprofloxacin')

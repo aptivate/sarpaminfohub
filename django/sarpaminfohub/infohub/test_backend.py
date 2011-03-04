@@ -2,16 +2,24 @@ from sarpaminfohub.infohub.backend import Backend
 
 class TestBackend(Backend):
     def get_amitriptyline(self):
-        return {"formulation":"amitriptyline 25mg tablet",
-                     "fob_price":"58.64",
-                     "fob_currency":"NAD",
-                     "landed_price":"67.44",
-                     "landed_currency":"NAD",
-                     "country":"Namibia",
-                     "period":"2009",
-                     "issue_unit":"500"}
+        return self.get_formulation_for_country("amitriptyline",
+                                                country="Namibia", 
+                                                fob_price=58.64, 
+                                                currency='NAD',
+                                                period=2009, 
+                                                issue_unit=500, 
+                                                landed_price=67.44, 
+                                                formulation_id=8)
     
     def get_ciprofloxacin(self):
+        return self.get_formulation_for_country("ciprofloxacin 500mg tablet", 
+                                                country="South Africa", 
+                                                fob_price=3.74, 
+                                                currency='ZAR', 
+                                                period=2009, 
+                                                issue_unit=10, 
+                                                landed_price=3.74, 
+                                                formulation_id=20)
         ciprofloxacin = {"formulation":"ciprofloxacin 500mg tablet",
              "fob_price":"3.74",
              "landed_price":"3.74",
@@ -29,11 +37,16 @@ class TestBackend(Backend):
 
     def get_formulation_for_country(self, name, country, fob_price=None, 
                                     currency=None, period=None, 
-                                    issue_unit=None, landed_price=None):
+                                    issue_unit=None, landed_price=None,
+                                    formulation_id=None):
+        
+        url = "/formulation/%d/" % formulation_id
+        
         return {'formulation':name, 'country':country, 'fob_price': fob_price,
                 'fob_currency':currency, 'period':period, 
                 'issue_unit':issue_unit, 'landed_price':landed_price, 
-                'landed_currency':currency}
+                'landed_currency':currency,
+                'url':url}
     
     def get_amoxycillin125_for_country(self, country, 
                                        fob_price=None, 
@@ -42,15 +55,17 @@ class TestBackend(Backend):
         return self.get_formulation_for_country("amoxycillin 125mg/5ml suspension",
                                                 country, fob_price, 
                                                 currency, period, 
-                                                issue_unit, landed_price)
+                                                issue_unit, landed_price,
+                                                formulation_id=9)
     
     def get_amoxycillin500_for_country(self, country):
         return self.get_formulation_for_country("amoxycillin 500mg tablet/capsule",
-                                                country)
+                                                country,
+                                                formulation_id=10)
         
     def get_tamoxifen_for_country(self, country):
         return self.get_formulation_for_country("tamoxifen 20mg tablet",
-                                                country)
+                                                country, formulation_id=49)
     
     def get_amox(self):
         amoxycillin125_angola = self.get_amoxycillin125_for_country(country="Angola")
@@ -83,7 +98,8 @@ class TestBackend(Backend):
         return [amoxycillin125_angola, amoxycillin125_botswana, 
                 amoxycillin125_drc, amoxycillin125_namibia,
                 amoxycillin500_angola, 
-                amoxycillin500_botswana, tamoxifen_angola]
+                amoxycillin500_botswana,
+                tamoxifen_angola]
     
     def get_formulations_that_match(self, search_term):
         if search_term == "amitriptyline":

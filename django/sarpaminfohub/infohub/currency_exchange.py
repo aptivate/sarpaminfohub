@@ -11,7 +11,7 @@ class CurrencyExchange:
         try:
             exchange = ExchangeRate.objects.get(symbol=currency, year=year)
         except ExchangeRate.DoesNotExist:
-            print "Currency = %s, Year = %d" % (currency, year)
+            print "Currency = %s, Year = %s" % (currency, year)
             raise
 
         return local_price * exchange.rate

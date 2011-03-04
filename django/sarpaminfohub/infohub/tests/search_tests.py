@@ -18,6 +18,7 @@ class SearchTest(SarpamTestCase):
             self.state = self.FINDING_RESULTS_HEADING
             self.rows = []
             self.cells = []
+            self.hrefs = []
             self.headings = []
             self.cell_classes = []
             HTMLParser.__init__(self)
@@ -40,6 +41,9 @@ class SearchTest(SarpamTestCase):
             
             if tag == "td":
                 self.cell_classes.append(self.get_attribute(attributes, 'class'))
+            
+            if tag == "a" and self.state == self.PARSING_CELL:
+                self.hrefs.append(self.get_attribute(attributes, 'href'))
             
             if self.state == self.FINDING_RESULTS_HEADING and tag == "h2":
                 self.state = self.PARSING_RESULTS_HEADING
@@ -89,16 +93,17 @@ class SearchTest(SarpamTestCase):
         parser = self.parse_table_content(response)
         self.assertEquals(parser.FINDING_RESULTS_HEADING, parser.state)
 
-    def search_for_ciprofloxacin(self, backend):
-        url = '/?search=ciprofloxacin'
+    def search_for(self, search_term, backend):
+        url = "/?search=%s" % search_term
         
         if backend is not None:
             url += '&backend=%s' % backend
         
-            if backend == 'test':
-                self.setup_exchange_rate_for_zar()
-        
         return self.client.get(url)
+        
+
+    def search_for_ciprofloxacin(self, backend):
+        return self.search_for("ciprofloxacin", backend)
 
     def parse_table_content(self, response):
         parser = self.TableParser()
@@ -106,30 +111,31 @@ class SearchTest(SarpamTestCase):
         parser.close()
         return parser
 
-    def parse_search_results_for_ciprofloxacin(self, backend=None):
-        response = self.search_for_ciprofloxacin(backend=backend)
+    def parse_search_results_for(self, search_term, backend=None):
+        response = self.search_for(search_term, backend=backend)
         parser = self.parse_table_content(response)
         return parser
     
     def get_rows_for_ciprofloxacin(self, backend=None):
-        parser = self.parse_search_results_for_ciprofloxacin(backend=backend)
+        parser = self.parse_search_results_for("ciprofloxacin", backend=backend)
         self.assertEquals(parser.FINISHED, parser.state)
         
         return parser.rows
     
     def test_search_for_ciprofloxacin_returns_south_africa_prices(self):
+        self.setup_exchange_rate_for_zar()
         rows = self.get_rows_for_ciprofloxacin('test')
         expected_rows = [["ciprofloxacin 500mg tablet",
                           "0.044", "0.044"]]
         self.assertEquals(expected_rows, rows)
         
     def test_search_term_displayed_in_heading(self):
-        parser = self.parse_search_results_for_ciprofloxacin()
+        parser = self.parse_search_results_for("ciprofloxacin")
         self.assertEquals("Search results for ciprofloxacin", 
                           parser.results_heading)
         
     def test_search_term_displayed_in_input_field(self):
-        parser = self.parse_search_results_for_ciprofloxacin()
+        parser = self.parse_search_results_for("ciprofloxacin")
         self.assertEquals("ciprofloxacin", 
                           parser.input_field_value)
         
@@ -139,7 +145,7 @@ class SearchTest(SarpamTestCase):
         self.assertEquals(None, parser.input_field_value)
 
     def test_search_result_headings_are_as_expected(self):
-        parser = self.parse_search_results_for_ciprofloxacin()
+        parser = self.parse_search_results_for("ciprofloxacin")
         self.assertEquals(parser.FINISHED, parser.state)
         self.assertEquals(["Formulation", "Median FOB Price", "Median Landed Price"], 
                           parser.headings)
@@ -147,7 +153,7 @@ class SearchTest(SarpamTestCase):
     def test_search_for_ciprofloxacin_with_django_backend_returns_drc_prices(self):
         self.setup_drc_ciprofloxacin()
         self.setup_exchange_rate_for_eur()
-        parser = self.parse_search_results_for_ciprofloxacin()
+        parser = self.parse_search_results_for("ciprofloxacin")
         
         expected_rows = [["ciprofloxacin 500mg tablet",
                           "0.025", 
@@ -165,6 +171,19 @@ class SearchTest(SarpamTestCase):
         self.assertEquals(expected_rows, rows)
 
     def test_price_cells_are_in_number_class(self):
-        parser = self.parse_search_results_for_ciprofloxacin(backend='test')
+        self.setup_exchange_rate_for_zar()
+        parser = self.parse_search_results_for("ciprofloxacin", backend='test')
         self.assertEquals([None, "number", "number"], parser.cell_classes)
         
+    def test_search_results_link_to_formulation_page(self):
+        self.setup_exchange_rate_for_usd()
+        self.setup_exchange_rate_for_eur()
+        self.setup_exchange_rate_for_nad()
+        parser = self.parse_search_results_for("amox", backend='test')
+        self.assertEquals(3, len(parser.hrefs))
+        amoxycillin125_href = "/formulation/9/"
+        amoxycillin500_href = "/formulation/10/"
+        tamoxifen_href = "/formulation/49/"
+        
+        expected_hrefs = [amoxycillin125_href, amoxycillin500_href, tamoxifen_href] 
+        self.assertEquals(expected_hrefs, parser.hrefs)

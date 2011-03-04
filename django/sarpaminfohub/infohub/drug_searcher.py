@@ -88,12 +88,14 @@ class DrugSearcher(object):
         formulations = self.backend.get_formulations_that_match(search_term)
         
         formulation_dict = {}
+        formulation_hrefs = {}
         
         for formulation in formulations:
             name = formulation['formulation']
             
             if not name in formulation_dict:
-                formulation_dict[name] = [] 
+                formulation_dict[name] = []
+                formulation_hrefs[name] = formulation['url'] 
 
             self.convert_prices_to_usd(formulation)
             formulation_dict[name].append(formulation)
@@ -104,8 +106,10 @@ class DrugSearcher(object):
             (median_fob_price, median_landed_price) = \
                 self.get_median_prices(formulation_dict[name])
             
+            href = formulation_hrefs[name]
+            
             row = {'formulation':name, 'fob_price':median_fob_price,
-                   'landed_price':median_landed_price}
+                   'landed_price':median_landed_price, 'href':href}
             rows.append(row)
 
         return rows

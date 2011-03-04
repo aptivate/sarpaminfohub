@@ -1,4 +1,5 @@
 import django_tables as tables
+
 from django.template.loader import render_to_string
 from sarpaminfohub.infohub.sarpam_table import SarpamTable
 

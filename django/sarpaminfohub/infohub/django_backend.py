@@ -19,6 +19,7 @@ class DjangoBackend(Backend):
             record['period'] = price.period
             record['issue_unit'] = price.issue_unit
             record['landed_currency'] = price.landed_currency
+            record['url'] = price.formulation.get_url()
             
         return results
     
