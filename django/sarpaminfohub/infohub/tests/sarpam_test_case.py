@@ -22,3 +22,16 @@ class SarpamTestCase(TestCase):
     def setup_exchange_rate(self, symbol, rate, year):
         exchange_rate = ExchangeRate(symbol=symbol, rate=rate, year=year)
         exchange_rate.save()
+
+    def setup_exchange_rate_for_nad(self):
+        self.setup_exchange_rate(symbol='NAD', rate=0.12314, year=2009)
+    
+    def setup_exchange_rate_for_usd(self):
+        self.setup_exchange_rate(symbol='USD', rate=1.03, year=2007)
+        
+    def setup_exchange_rate_for_eur(self):
+        self.setup_exchange_rate(symbol='EUR', rate=1.39071, year=2009)
+    
+
+    def setup_exchange_rate_for_zar(self):
+        self.setup_exchange_rate(symbol='ZAR', rate='0.11873', year='2009')

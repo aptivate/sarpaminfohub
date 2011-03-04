@@ -8,6 +8,10 @@ class CurrencyExchange:
         if currency is None:
             return None
         
-        exchange = ExchangeRate.objects.get(symbol=currency, year=year)
+        try:
+            exchange = ExchangeRate.objects.get(symbol=currency, year=year)
+        except ExchangeRate.DoesNotExist:
+            print "Currency = %s, Year = %d" % (currency, year)
+            raise
 
         return local_price * exchange.rate

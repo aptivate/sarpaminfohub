@@ -96,7 +96,7 @@ class SearchTest(SarpamTestCase):
             url += '&backend=%s' % backend
         
             if backend == 'test':
-                self.setup_exchange_rate(symbol='ZAR', rate='0.11873', year='2009')
+                self.setup_exchange_rate_for_zar()
         
         return self.client.get(url)
 
@@ -120,7 +120,7 @@ class SearchTest(SarpamTestCase):
     def test_search_for_ciprofloxacin_returns_south_africa_prices(self):
         rows = self.get_rows_for_ciprofloxacin('test')
         expected_rows = [["ciprofloxacin 500mg tablet",
-                          "South Africa", "0.044", "0.044"]]
+                          "0.044", "0.044"]]
         self.assertEquals(expected_rows, rows)
         
     def test_search_term_displayed_in_heading(self):
@@ -141,30 +141,30 @@ class SearchTest(SarpamTestCase):
     def test_search_result_headings_are_as_expected(self):
         parser = self.parse_search_results_for_ciprofloxacin()
         self.assertEquals(parser.FINISHED, parser.state)
-        self.assertEquals(["Formulation", "Country", "FOB Price", "Landed Price"], 
+        self.assertEquals(["Formulation", "Median FOB Price", "Median Landed Price"], 
                           parser.headings)
 
     def test_search_for_ciprofloxacin_with_django_backend_returns_drc_prices(self):
         self.setup_drc_ciprofloxacin()
-        self.setup_exchange_rate(symbol='EUR', rate=1.39071, year=2009)
+        self.setup_exchange_rate_for_eur()
         parser = self.parse_search_results_for_ciprofloxacin()
         
         expected_rows = [["ciprofloxacin 500mg tablet",
-                          "Democratic Republic of Congo", "0.025", 
+                          "0.025", 
                           "0.029"]]
         self.assertEquals(expected_rows, parser.rows)
         
     def test_null_prices_displayed_as_double_dash(self):
         self.setup_drc_ciprofloxacin(fob_price=None, landed_price=None)
-        self.setup_exchange_rate(symbol='EUR', rate=1.39071, year=2009)
+        self.setup_exchange_rate_for_eur()
         
         rows = self.get_rows_for_ciprofloxacin()
         
         expected_rows = [["ciprofloxacin 500mg tablet",
-                          "Democratic Republic of Congo", "--", "--"]]
+                          "--", "--"]]
         self.assertEquals(expected_rows, rows)
 
     def test_price_cells_are_in_number_class(self):
         parser = self.parse_search_results_for_ciprofloxacin(backend='test')
-        self.assertEquals([None, None, "number", "number"], parser.cell_classes)
+        self.assertEquals([None, "number", "number"], parser.cell_classes)
         

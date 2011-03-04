@@ -4,9 +4,8 @@ from sarpaminfohub.infohub.sarpam_table import SarpamTable
 
 class ResultsTable(SarpamTable):
     formulation = tables.Column()
-    country = tables.Column()
-    fob_price = tables.Column(verbose_name="FOB Price")
-    landed_price = tables.Column(verbose_name="Landed Price")
+    fob_price = tables.Column(verbose_name="Median FOB Price")
+    landed_price = tables.Column(verbose_name="Median Landed Price")
     rows_template = "drug_price_rows.html"
 
     def __init__(self, rows, search_string):

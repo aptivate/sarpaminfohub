@@ -2,8 +2,8 @@ from sarpaminfohub.infohub.results_table import ResultsTable
 from sarpaminfohub.infohub.tests.table_test_case import TableTestCase
 
 class ResultsTableTest(TableTestCase):
-    FOB_COLUMN = 2
-    LANDED_COLUMN = 3
+    FOB_COLUMN = 1
+    LANDED_COLUMN = 2
     
     FIRST_ROW = 0
     
