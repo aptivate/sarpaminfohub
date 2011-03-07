@@ -118,7 +118,7 @@ td, th
   text-align:left;
 }
 
-#pricedistribution
+#pricedistribution, #pricegraph
 { 
   float:left;
   width:100%;
@@ -128,14 +128,14 @@ td, th
   background-color: white ; 
 }
 
-#pricedistribution table 
+#pricedistribution table, #pricegraph table
 {
     margin:1em auto;
     width:95%;
 	background-color: #C9D1FF;
 }
 
-#pricedistribution table td
+#pricedistribution table td, #pricegraph table td
 {
    	border-color: #5b66a6 ; 
 	border-width: 1px 0 ;
@@ -148,6 +148,10 @@ td, th
 	border: 0;
 	text-align:left;
 }
+
+#pricegraph .graph .bar{display:block;white-space:nowrap;margin:2px 0;}
+#pricegraph .graph .fob_price{background-color:#7381D1;}
+#pricegraph .graph .landed_price{background-color:#7381D1;}
 
 #info h3, #map h3
 {

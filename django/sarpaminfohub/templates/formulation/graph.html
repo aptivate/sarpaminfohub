@@ -1,0 +1,19 @@
+<table class="graph">
+
+{% for row in table.rows %}
+<tr>
+	<td nowrap="nowrap">
+		{{ row.country }}
+	</td>
+	<td nowrap="nowrap">
+		FOB Price<br>
+		Landed Price
+	</td>
+	<td width="100%">
+		<span class="bar fob_price" style="width:{% if row.fob_price != '--' %}{% widthratio row.fob_price table.max_price 100 %}{% else %}0{% endif %}%">&nbsp;</span>
+		<span class="bar landed_price" style="width:{% if row.landed_price != '--' %}{% widthratio row.landed_price table.max_price 100 %}{% else %}0{% endif %}%">&nbsp;</span>
+	</td>
+</tr>
+{% endfor %}
+
+</table>
