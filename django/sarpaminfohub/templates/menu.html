@@ -1,0 +1,17 @@
+<ul class="menu">
+
+{% if formulation_name == None %}
+
+    <li class="selected">Search Results</li>
+
+{% else %}
+
+    {% if results_href != None %}
+
+    <li><a href="{{ results_href }}">Search Results</a></li>
+
+    {% endif %}
+
+    <li class="selected">{{ formulation_name }}</li>
+{% endif %}
+</ul>

@@ -45,7 +45,7 @@ class SearchTest(SarpamTestCase):
             if tag == "a" and self.state == self.PARSING_CELL:
                 self.hrefs.append(self.get_attribute(attributes, 'href'))
             
-            if self.state == self.FINDING_RESULTS_HEADING and tag == "h2":
+            if self.state == self.FINDING_RESULTS_HEADING and tag == "li":
                 self.state = self.PARSING_RESULTS_HEADING
             
             if self.state == self.FINDING_TABLE and tag == "table":
@@ -131,7 +131,7 @@ class SearchTest(SarpamTestCase):
         
     def test_search_term_displayed_in_heading(self):
         parser = self.parse_search_results_for("ciprofloxacin")
-        self.assertEquals("Search results for ciprofloxacin", 
+        self.assertEquals("Search Results", 
                           parser.results_heading)
         
     def test_search_term_displayed_in_input_field(self):

@@ -5,6 +5,7 @@ from sarpaminfohub.infohub.drug_searcher import DrugSearcher
 from sarpaminfohub.infohub.django_backend import DjangoBackend
 from sarpaminfohub.infohub.test_backend import TestBackend
 from sarpaminfohub.infohub.formulation_table import FormulationTable
+import re
 
 def get_backend(name):
     if name == "test":
@@ -47,6 +48,22 @@ def formulation(request, formulation_id, backend_name="django"):
     
     formulation_name = drug_searcher.get_formulation_name_with_id(formulation_id)
     
+    results_href = None
+
+    referer = request.META.get('HTTP_REFERER')
+
+    if referer is not None:
+        referer_parts = re.sub('^https?:\/\/', '', referer).split('/')
+        
+        referer_host = referer_parts[0]
+        
+        if referer_host == '' or referer_host == request.META.get('HTTP_HOST'):
+            results_href = referer
+
+    search_form = SearchForm()
+    
     return render_to_response('formulation.html',
                               {'formulation_table': formulation_table,
-                               'formulation_name': formulation_name});
+                               'formulation_name': formulation_name,
+                               'results_href' : results_href,
+                               'search_form' : search_form});

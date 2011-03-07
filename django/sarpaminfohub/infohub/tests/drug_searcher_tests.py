@@ -51,9 +51,9 @@ class DrugSearcherTest(SarpamTestCase):
         self.assertEquals(fob_price_in_usd, row['fob_price'])
         self.assertEquals(landed_price_in_usd, row['landed_price'])
 
-    def test_get_formulation_name_with_id(self):
+    def test_gets_formulation_name_from_backend_given_id(self):
         name = self.drug_searcher.get_formulation_name_with_id(1)
-        self.assertEquals("ciprofloxacin 500mg tablet", name)
+        self.assertEquals("amitriptyline", name)
 
     def get_formulations_that_match_amox(self):
         self.setup_exchange_rate_for_eur()
@@ -99,12 +99,6 @@ class DrugSearcherTest(SarpamTestCase):
 
     def test_matching_formulations_include_median_landed_price(self):
         formulations = self.get_formulations_that_match_amox()
-
-        # landed prices are:
-        # Angola None
-        # DRC 0.005
-        # Namibia 0.006
-        # Botswana 0.009
 
         amoxycillin125 = formulations[0]
 

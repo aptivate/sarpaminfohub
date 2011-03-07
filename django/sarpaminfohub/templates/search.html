@@ -1,11 +1,6 @@
 {%  extends 'page.html' %}
 
 {% block main %}
-            <form id="search">
-                {{ search_form.as_p }}
-                <input type="submit" value="Search" />
-            </form>
-
             {% if results_table != None %}
                 {{ results_table.as_html }}
             {% endif %}
