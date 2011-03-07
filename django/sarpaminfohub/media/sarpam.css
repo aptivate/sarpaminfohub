@@ -149,9 +149,9 @@ td, th
 	text-align:left;
 }
 
-#pricegraph .graph .bar{display:block;white-space:nowrap;margin:2px 0;}
+#pricegraph .graph .bar{display:block;white-space:nowrap;margin:2px 0;font-size:70%;height:15px;}
 #pricegraph .graph .fob_price{background-color:#7381D1;}
-#pricegraph .graph .landed_price{background-color:#7381D1;}
+#pricegraph .graph .landed_price{background-color:#93A1f1;}
 
 #info h3, #map h3
 {
