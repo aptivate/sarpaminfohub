@@ -12,8 +12,8 @@ class FormulationTable(SarpamTable):
         for row in rows:
             self.round_to_three_decimal_places(row, 'fob_price')
             self.round_to_three_decimal_places(row, 'landed_price')
-
-        tables.MemoryTable.__init__(self, rows)
+                        
+        tables.MemoryTable.__init__(self, rows, order_by='landed_price')
 
     def as_html(self):
         return render_to_string('table.html',\

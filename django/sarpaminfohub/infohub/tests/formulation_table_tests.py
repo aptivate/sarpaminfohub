@@ -40,3 +40,8 @@ class FormulationTableTest(TableTestCase):
         html = self.formulation_table.as_html()
         self.assertTrue(self.contains(html, "<table>"))
         self.assertTrue(self.contains(html, "</table>"))
+
+    def test_ordered_by_landed_price(self):
+        order_by = self.formulation_table.order_by
+        expected_order = ('landed_price',)
+        self.assertEquals(expected_order, order_by)
