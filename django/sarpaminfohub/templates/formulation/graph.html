@@ -2,12 +2,27 @@
 
 {% for row in table.rows %}
 <tr>
-	<td nowrap="nowrap">
+	<td nowrap="nowrap" width="20%" class="label">
 		{{ row.country }}
 	</td>
-	<td width="100%">
-		<span class="bar fob_price" style="width:{% if row.fob_price != '' %}{% widthratio row.fob_price table.max_price 100 %}{% else %}0{% endif %}%">{{ row.fob_price }}</span>
-		<span class="bar landed_price" style="width:{% if row.landed_price != '' %}{% widthratio row.landed_price table.max_price 100 %}{% else %}0{% endif %}%">{{ row.landed_price }}</span>
+	<td width="80%" class="grid">
+		<table><tr>
+			<td width="10%">
+				<div>
+					<span class="bar fob_price" style="width:{% if row.fob_price != '' %}{% widthratio row.fob_price table.max_price 760 %}{% else %}0{% endif %}px">{{ row.fob_price }}</span>
+					<span class="bar landed_price" style="width:{% if row.landed_price != '' %}{% widthratio row.landed_price table.max_price 760 %}{% else %}0{% endif %}px">{{ row.landed_price }}</span>
+				</div>
+			</td>
+			<td width="10%"></td>
+			<td width="10%"></td>
+			<td width="10%"></td>
+			<td width="10%"></td>
+			<td width="10%"></td>
+			<td width="10%"></td>
+			<td width="10%"></td>
+			<td width="10%"></td>
+			<td width="10%"></td>
+		</tr></table>
 	</td>
 </tr>
 {% endfor %}
