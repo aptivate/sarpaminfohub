@@ -27,9 +27,6 @@ class ExchangeRate(models.Model):
     rate = models.FloatField()
 
 class MSHPrice(models.Model):
-    formulation = models.ForeignKey(Formulation)
+    formulation = models.OneToOneField(Formulation)
     period = models.IntegerField()
     price = models.DecimalField(max_digits=20, decimal_places=6, null=True)
-
-    class Meta:
-        unique_together = ("formulation", "period")

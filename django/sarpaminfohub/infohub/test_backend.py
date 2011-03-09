@@ -19,6 +19,7 @@ class TestBackend(Backend):
                                                 period=2009, 
                                                 issue_unit=10, 
                                                 landed_price=3.74, 
+                                                msh_price=0.033,
                                                 formulation_id=20)
         ciprofloxacin = {"formulation":"ciprofloxacin 500mg tablet",
              "fob_price":"3.74",
@@ -38,6 +39,7 @@ class TestBackend(Backend):
     def get_formulation_for_country(self, name, country, fob_price=None, 
                                     currency=None, period=None, 
                                     issue_unit=None, landed_price=None,
+                                    msh_price=None,
                                     formulation_id=None):
         
         url = "/formulation/%d/" % formulation_id
@@ -45,6 +47,7 @@ class TestBackend(Backend):
         return {'formulation':name, 'country':country, 'fob_price': fob_price,
                 'fob_currency':currency, 'period':period, 
                 'issue_unit':issue_unit, 'landed_price':landed_price, 
+                'msh_price':msh_price,
                 'landed_currency':currency,
                 'url':url}
     
@@ -56,16 +59,20 @@ class TestBackend(Backend):
                                                 country, fob_price, 
                                                 currency, period, 
                                                 issue_unit, landed_price,
+                                                msh_price=0.005,
                                                 formulation_id=9)
     
     def get_amoxycillin500_for_country(self, country):
         return self.get_formulation_for_country("amoxycillin 500mg tablet/capsule",
                                                 country,
+                                                msh_price=0.04,
                                                 formulation_id=10)
         
     def get_tamoxifen_for_country(self, country):
         return self.get_formulation_for_country("tamoxifen 20mg tablet",
-                                                country, formulation_id=49)
+                                                country,
+                                                msh_price=0.077,
+                                                formulation_id=49)
     
     def get_amox(self):
         amoxycillin125_angola = self.get_amoxycillin125_for_country(country="Angola")
