@@ -1,5 +1,15 @@
 <table class="graph">
 
+<tr>
+	<td width="20%"></td>
+	<td width="80%" class="scale">
+		<table><tr>
+		{% for k in table.scale %}
+			<td width="10%">{{ k|stringformat:".03f" }}</td>
+		{% endfor %}
+		</tr></table>
+	</td>
+</tr>
 {% for row in table.rows %}
 <tr>
 	<td nowrap="nowrap" width="20%" class="label">
@@ -9,8 +19,8 @@
 		<table><tr>
 			<td width="10%">
 				<div>
-					<span class="bar fob_price" style="width:{% if row.fob_price != '' %}{% widthratio row.fob_price table.max_price 760 %}{% else %}0{% endif %}px">{{ row.fob_price }}</span>
-					<span class="bar landed_price" style="width:{% if row.landed_price != '' %}{% widthratio row.landed_price table.max_price 760 %}{% else %}0{% endif %}px">{{ row.landed_price }}</span>
+					<span class="bar fob_price" style="width:{% if row.fob_price != '' %}{% widthratio row.fob_price table.max_price 767 %}{% else %}0{% endif %}px">{{ row.fob_price }}</span>
+					<span class="bar landed_price" style="width:{% if row.landed_price != '' %}{% widthratio row.landed_price table.max_price 767 %}{% else %}0{% endif %}px">{{ row.landed_price }}</span>
 				</div>
 			</td>
 			<td width="10%"></td>

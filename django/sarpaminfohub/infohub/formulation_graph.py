@@ -20,6 +20,10 @@ class FormulationGraph(SarpamTable):
             if isinstance(row['landed_price'], float) and row['landed_price'] > self.max_price:
                 self.max_price = row['landed_price']
 
+        self.scale = []
+        for k in range(1, 11):
+            self.scale.append(k * (self.max_price / 10))
+
         tables.MemoryTable.__init__(self, rows)
 
     def as_html(self):
