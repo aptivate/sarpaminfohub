@@ -122,12 +122,15 @@ class DrugSearcher(object):
 
     def get_prices_for_formulation_with_id(self, formulation_id):
         formulations = self.backend.get_prices_for_formulation_with_id(formulation_id)
-        
+
         for formulation in formulations:
             self.convert_prices_to_usd(formulation)
-        
+
         return formulations
-            
+
     def get_formulation_name_with_id(self, formulation_id):
         return self.backend.get_formulation_name_with_id(formulation_id)
+
+    def get_formulation_msh_with_id(self, formulation_id):
+        return self.backend.get_formulation_msh_with_id(formulation_id)
 

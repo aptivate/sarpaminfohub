@@ -19,6 +19,7 @@
 		<table><tr>
 			<td width="10%">
 				<div>
+					{% if msh_price %}<div class="msh_price" style="left:{% widthratio msh_price table.max_price 767 %}px;"></div>{% endif %}
 					<span class="bar fob_price" style="width:{% if row.fob_price != '' %}{% widthratio row.fob_price table.max_price 767 %}{% else %}0{% endif %}px">{{ row.fob_price }}</span>
 					<span class="bar landed_price" style="width:{% if row.landed_price != '' %}{% widthratio row.landed_price table.max_price 767 %}{% else %}0{% endif %}px">{{ row.landed_price }}</span>
 				</div>
@@ -36,5 +37,9 @@
 	</td>
 </tr>
 {% endfor %}
+
+<tr class="foot">
+	<td colspan="2"><span>MSH Price: {{ msh_price }}</span></td>
+</tr>
 
 </table>

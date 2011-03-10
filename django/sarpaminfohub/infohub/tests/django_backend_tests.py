@@ -70,3 +70,7 @@ class DjangoBackendTest(SarpamTestCase):
     def test_formulation_name_can_be_retrieved_by_id(self):
         name = self.backend.get_formulation_name_with_id(1)
         self.assertEquals("ciprofloxacin 500mg tablet", name)
+
+    def test_formulation_msh_can_be_retrieved_by_id(self):
+        msh = self.backend.get_formulation_msh_with_id(1)
+        self.assertEquals(self.expected_ciprofloxacin_results['msh_price'], msh)

@@ -55,3 +55,11 @@ class DjangoBackend(Backend):
         formulation = Formulation.objects.get(pk=formulation_id)
 
         return formulation.name
+
+    def get_formulation_msh_with_id(self, formulation_id):
+        formulation = Formulation.objects.get(pk=formulation_id)
+
+        try:
+            return formulation.mshprice.price
+        except ObjectDoesNotExist:
+            return None

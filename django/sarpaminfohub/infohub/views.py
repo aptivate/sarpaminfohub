@@ -49,10 +49,11 @@ def formulation(request, formulation_id, backend_name="django"):
     from copy import deepcopy
     rows_graph = deepcopy(rows)
 
-    formulation_table = FormulationTable(rows)
-    formulation_graph = FormulationGraph(rows_graph)
-
     formulation_name = drug_searcher.get_formulation_name_with_id(formulation_id)
+    formulation_msh = drug_searcher.get_formulation_msh_with_id(formulation_id)
+
+    formulation_table = FormulationTable(rows)
+    formulation_graph = FormulationGraph(rows_graph, formulation_msh)
 
     results_href = None
 
@@ -72,5 +73,6 @@ def formulation(request, formulation_id, backend_name="django"):
                               {'formulation_table': formulation_table,
                                'formulation_graph': formulation_graph,
                                'formulation_name': formulation_name,
+                               'formulation_msh': formulation_msh,
                                'results_href' : results_href,
                                'search_form' : search_form});

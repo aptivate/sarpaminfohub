@@ -130,3 +130,6 @@ class TestBackend(Backend):
     
     def get_formulation_name_with_id(self,formulation_id):
         return "amitriptyline"
+
+    def get_formulation_msh_with_id(self,formulation_id):
+        return 0.0057

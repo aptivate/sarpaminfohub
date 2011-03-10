@@ -149,18 +149,24 @@ td, th
 	text-align:left;
 }
 
-#pricegraph .graph{border-collapse:separate;width:960px;}
+#pricegraph .graph{width:960px;}
 #pricegraph .graph td{border:0;}
 #pricegraph .graph td.label{border:1px solid #5b66a6;border-width:1px 1px 0 1px;}
 #pricegraph .graph .scale table{width:100%;}
 #pricegraph .graph .scale td{text-align:right;}
-#pricegraph .graph .grid{padding:0;height:36px;}
-#pricegraph .graph .grid td{padding:0;border:1px solid #5b66a6;border-width:1px 1px 0 0;vertical-align:top;}
+#pricegraph .graph .grid{padding:0;height:36px;border-top:1px solid #5b66a6;}
+#pricegraph .graph .grid td{padding:0;border-right:1px solid #5b66a6;vertical-align:top;}
 #pricegraph .graph .grid table{margin:0;width:100%;height:36px;}
 #pricegraph .graph .grid div{position:relative;}
 #pricegraph .graph .grid .bar{position:absolute;top:0;left:0;height:15px;display:block;white-space:nowrap;margin:2px 0;font-size:70%;height:15px;}
 #pricegraph .graph .grid .fob_price{top:0;background-color:#7381D1;}
 #pricegraph .graph .grid .landed_price{top:16px;background-color:#93A1f1;}
+#pricegraph .graph .grid .msh_price{position:absolute;width:1px;border-right:2px solid red;top:0;height:36px;z-index:10;}
+#pricegraph .graph tr.foot{border-top:1px solid #5b66a6;}
+#pricegraph .graph tr.foot td{text-align:right;}
+#pricegraph .graph tr.foot td span{border-left:2px solid red;padding-left:6px;}
+
+#formulation_msh{width:95%;margin:0 auto;color:white;}
 
 #info h3, #map h3
 {
