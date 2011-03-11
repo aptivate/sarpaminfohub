@@ -25,3 +25,11 @@ class ExchangeRate(models.Model):
     symbol = models.CharField(max_length=3)
     year = models.IntegerField()
     rate = models.FloatField()
+
+class Supplier(models.Model):
+    name = models.CharField(max_length=200)
+
+class Product(models.Model):
+    formulation = models.ForeignKey(Formulation)
+    name = models.CharField(max_length=200)
+    suppliers = models.ManyToManyField(Supplier)
