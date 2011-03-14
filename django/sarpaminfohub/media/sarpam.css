@@ -149,13 +149,39 @@ td, th
 	text-align:left;
 }
 
-#pricegraph .graph{border-collapse:separate;width:960px;}
+#pricegraph .graph {
+    -moz-border-radius: 10px 10px 10px 10px;
+    background-color: #FFFFFF;
+    border-collapse: separate;
+    padding: 10px 50px 10px 20px;
+}
+
 #pricegraph .graph td{border:0;}
-#pricegraph .graph td.label{border:1px solid #5b66a6;border-width:1px 1px 0 1px;}
-#pricegraph .graph .scale table{width:100%;}
+#pricegraph .graph td.label {
+    background-color: #454E7E;
+    border-color: #5B66A6 #333333 #FFFFFF #5B66A6;
+    border-style: solid;
+    border-width: 1px 5px 1px 1px;
+    color: #FFFFFF;
+}
+
+#pricegraph .graph .scale table{
+	width:100%;
+	position:relative;
+	left:35px;
+	background-color:inherit;
+}
 #pricegraph .graph .scale td{text-align:right;}
 #pricegraph .graph .grid{padding:0;height:36px;}
-#pricegraph .graph .grid td{padding:0;border:1px solid #5b66a6;border-width:1px 1px 0 0;vertical-align:top;}
+#pricegraph .graph .grid td {
+    background-color: #FFFFFF;
+    border-color: #5B66A6;
+    border-style: solid;
+    border-width: 1px 1px 0 0;
+    padding: 0;
+    vertical-align: top;
+}
+
 #pricegraph .graph .grid table{margin:0;width:100%;height:36px;}
 #pricegraph .graph .grid div{position:relative;}
 #pricegraph .graph .grid .bar{position:absolute;top:0;left:0;height:15px;display:block;white-space:nowrap;margin:2px 0;font-size:70%;height:15px;}
