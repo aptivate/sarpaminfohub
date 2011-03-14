@@ -4,7 +4,7 @@ from os import path
 import shutil, sys, virtualenv, subprocess
 
 PROJECT_ROOT = path.abspath(path.dirname(__file__))
-REQUIREMENTS = path.join(PROJECT_ROOT, '..', 'deploy', 'pip_packages.txt')
+REQUIREMENTS = path.join(PROJECT_ROOT, '..', '..', 'deploy', 'pip_packages.txt')
 
 VE_ROOT = path.join(PROJECT_ROOT, '.ve')
 VE_TIMESTAMP = path.join(VE_ROOT, 'timestamp')
