@@ -8,6 +8,12 @@
         {{ formulation_table.as_html }}
     </div>
 
+	{% if formulation_msh %}
+	<div id="formulation_msh">
+		MSH International Median Price: {{ formulation_msh }}
+	</div>
+	{% endif %}
+
     <div id="pricegraph">
         {{ formulation_graph.as_html }}
     </div>
