@@ -1,10 +1,9 @@
-import os
+import os, sys
 import getpass
 
-#from fabric.api import *
-from fabric.api import env, sudo, require, local, cd, run, settings, prompt
-
-from fabric.contrib import files
+from fabric.api import *
+from fabric.contrib import files, console
+from fabric.contrib.files import exists
 from fabric import utils
 
 def _setup_path():
@@ -18,13 +17,18 @@ def _setup_path():
         env.project_root    = os.path.join(env.home, env.project_dir)
     if not env.has_key('vcs_root'):
         env.vcs_root        = os.path.join(env.project_root, 'dev')
+    if not env.has_key('deploy_root'):
+        env.deploy_root     = os.path.join(env.vcs_root, 'deploy')
+    env.tasks_bin = os.path.join(env.deploy_root, 'tasks.py')
+    if env.project_type == "django" and not env.has_key('django_dir'):
+        env.django_dir      = env.project
     if env.project_type == "django" and not env.has_key('django_root'):
         env.django_root     = os.path.join(env.vcs_root, env.django_dir)
     if env.use_virtualenv:
         if not env.has_key('virtualenv_root'):
-            env.virtualenv_root = os.path.join(env.project_root, 'env')
+            env.virtualenv_root = os.path.join(env.django_root, '.ve')
         if not env.has_key('python_bin'):
-            env.python_bin      = os.path.join(env.virtualenv_root, 'bin', 'python26')
+            env.python_bin      = os.path.join(env.virtualenv_root, 'bin', 'python2.6')
     if not env.has_key('settings'):
         env.settings        = '%(project)s.settings' % env
 
@@ -43,6 +47,9 @@ def deploy_clean(revision=None):
     if env.environment == 'production':
         utils.abort('do not delete the production environment!!!')
     require('project_root', provided_by=env.valid_non_prod_envs)
+    # TODO: also clean the database?? After dump??
+    with settings(warn_only=True):
+        apache_cmd('stop')
     sudo('rm -rf %s' % env.project_root)
     deploy(revision)
 
@@ -50,10 +57,10 @@ def deploy_clean(revision=None):
 def deploy(revision=None):
     """ update remote host environment (virtualenv, deploy, update) """
     require('project_root', provided_by=env.valid_envs)
+    with settings(warn_only=True):
+        apache_cmd('stop')
     if not files.exists(env.project_root):
         sudo('mkdir -p %(project_root)s' % env)
-    if env.use_virtualenv:
-        create_virtualenv()
     checkout_or_update(revision)
     if env.use_virtualenv:
         update_requirements()
@@ -61,7 +68,7 @@ def deploy(revision=None):
         link_local_settings()
         update_db()
     link_apache_conf()
-    apache_restart()
+    apache_cmd('start')
 
 
 def local_test():
@@ -76,17 +83,6 @@ def remote_test():
     require('django_root', 'python_bin', 'test_cmd', provided_by=env.valid_non_prod_envs)
     with cd(env.django_root):
         sudo(env.python_bin + env.test_cmd)
-
-
-def create_virtualenv():
-    """ setup virtualenv on remote host """
-    require('virtualenv_root', provided_by=env.valid_envs)
-    if files.exists(os.path.join(env.virtualenv_root, 'bin')):
-        # virtualenv already exists
-        return
-    # note these args are for centos 5 as set up by puppet
-    args = '--clear --python /usr/bin/python26 --no-site-packages --distribute'
-    sudo('virtualenv %s %s' % (args, env.virtualenv_root))
 
 
 def checkout_or_update(revision=None):
@@ -128,62 +124,14 @@ def checkout_or_update(revision=None):
 
 def update_requirements():
     """ update external dependencies on remote host """
-    require('vcs_root', 'virtualenv_root', provided_by=env.valid_envs)
+    require('tasks_bin', provided_by=env.valid_envs)
+    sudo(env.tasks_bin + ' update_ve')
 
-    cmd_base = ['source %(virtualenv_root)s/bin/activate; ' % env]
-    cmd_base += ['pip install']
-    cmd_base += ['-E %(virtualenv_root)s' % env]
-
-    cmd = cmd_base + ['--requirement %s' % os.path.join(env.vcs_root, 'deploy', 'pip_packages.txt')]
-    sudo(' '.join(cmd))
-
-    # mysql is not normally installed on development machines,
-    # let's ensure it is installed
-    # TODO: check if this is installed and only install if required
-    cmd = cmd_base + ['MySQL-python']
-    sudo(' '.join(cmd))
-
-
-def _get_django_db_settings():
-    with cd(os.path.join(env.vcs_root, 'deploy')):
-        db_details = run(env.python_bin + ' ' + 'get_db_details.py')
-    db_name, db_user, db_pw = db_details.split(' ')
-    return (db_name, db_user, db_pw)
-
-def _get_mysql_root_password():
-    # first try to read the root password from a file
-    # otherwise ask the user
-    with settings(warn_only=True):
-        file_exists = sudo('test -f /root/mysql_root_password')
-    if file_exists.failed:
-        return getpass.getpass('Enter MySQL root password:')
-    else:
-        return sudo ('cat /root/mysql_root_password')
 
 def update_db():
     """ create and/or update the database, do migrations etc """
-    require('django_root', 'python_bin', provided_by=env.valid_envs)
-    # first work out the database username and password
-    db_name, db_user, db_pw = _get_django_db_settings()
-    # then see if the database exists
-    with settings(warn_only=True):
-        db_exist = run('mysql -u %s -p%s %s -e "quit"' % 
-                       (db_user, db_pw, db_name))
-    if db_exist.failed:
-        # create the database and grant privileges
-        root_pw = _get_mysql_root_password()
-        sudo('mysql -u root -p%s -e "CREATE DATABASE %s CHARACTER SET utf8"' % (root_pw, db_name))
-        sudo('mysql -u root -p%s -e "GRANT ALL PRIVILEGES ON %s.* TO \'%s\'@\'localhost\' IDENTIFIED BY \'%s\'"' % 
-            (root_pw, db_name, db_user, db_pw))
-    # if we are using South we need to do the migrations aswell
-    use_migrations = False
-    for app in env.django_apps:
-        if files.exists(os.path.join(env.django_root, app, 'migrations')):
-            use_migrations = True
-    with cd(env.django_root):
-        sudo(env.python_bin + ' manage.py syncdb --noinput')
-        if use_migrations:
-            sudo(env.python_bin + ' manage.py migrate --noinput')
+    require('tasks_bin', provided_by=env.valid_envs)
+    sudo(env.tasks_bin + ' update_db')
 
 def touch():
     """ touch wsgi file to trigger reload """
@@ -194,16 +142,15 @@ def touch():
 
 def link_local_settings():
     """link the apache.conf file"""
-    require('django_root', provided_by=env.valid_envs)
-    # ensure that we create a local_settings.py using a link
-    # eg. 'ln -s local_settings.py.staging local_settings.py'
-    local_settings_path = os.path.join(env.django_root, 'local_settings.py')
-    local_settings_env_path = local_settings_path + '.' + env.environment
-    if not files.exists(local_settings_env_path):
-        utils.abort('%s does not exist - you need a local_settings file for this environment' % local_settings_env_path)
-    if not files.exists(local_settings_path):
-        with cd(env.django_root):
-            sudo('ln -s local_settings.py.' + env.environment + ' local_settings.py')
+    require('tasks_bin', provided_by=env.valid_envs)
+    sudo(env.tasks_bin + ' link_local_settings:' + env.environment)
+
+    # check that settings imports local_settings, as it always should,
+    # and if we forget to add that to our project, it could cause mysterious
+    # failures
+    run('grep -q "^from local_settings import \*" %s' %
+        os.path.join(env.django_root, 'settings.py'))
+
     # touch the wsgi file to reload apache
     touch()
 
@@ -211,6 +158,8 @@ def link_local_settings():
 def link_apache_conf():
     """link the apache.conf file"""
     require('vcs_root', provided_by=env.valid_envs)
+    if env.use_apache == False:
+        return
     conf_file = os.path.join(env.vcs_root, 'apache', env.environment+'.conf')
     apache_conf = os.path.join('/etc/httpd/conf.d', env.project+'_'+env.environment+'.conf')
     if not files.exists(conf_file):
@@ -222,17 +171,23 @@ def link_apache_conf():
 
 def configtest():    
     """ test Apache configuration """
-    sudo('/usr/sbin/httpd -S')
+    if env.use_apache:
+        sudo('/usr/sbin/httpd -S')
 
 
 def apache_reload():    
     """ reload Apache on remote host """
-    sudo('/etc/init.d/httpd reload')
+    apache_cmd('reload')
 
 
 def apache_restart():    
     """ restart Apache on remote host """
-    sudo('/etc/init.d/httpd restart')
+    apache_cmd('restart')
 
+
+def apache_cmd(cmd):
+    """ run cmd against apache init.d script """
+    if env.use_apache:
+        sudo('/etc/init.d/httpd %s' % cmd)
 
 

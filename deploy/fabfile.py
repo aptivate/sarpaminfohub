@@ -37,6 +37,8 @@ env.project_type = "django"
 # does this virtualenv for python packages
 env.use_virtualenv = True
 
+env.use_apache = True
+
 # valid environments - used for require statements in fablib
 env.valid_non_prod_envs = ('dev_server', 'staging_test', 'staging')
 env.valid_envs = ('dev_server', 'staging_test', 'staging', 'production')
