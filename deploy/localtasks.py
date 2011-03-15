@@ -8,12 +8,26 @@ import tasklib
 # this is the svn repository that holds private fixtures
 fixtures_repo = "https://svn.aptivate.org/svn/reactionsarpam/data/fixtures/"
 
-def deploy(environment):
+def deploy(environment=None, svnuser=None, svnpass=None):
+    if environment == None:
+        environment = tasklib._infer_environment()
+
     tasklib.create_ve()
     tasklib.link_local_settings(environment)
     tasklib.update_db()
-    checkout_or_update_fixtures()
+    checkout_or_update_fixtures(svnuser, svnpass)
     load_fixtures()
+
+def run_jenkins(svnuser, svnpass):
+    """ make sure the local settings is correct and the database exists """
+    tasklib.update_ve()
+    tasklib._install_django_jenkins()
+    tasklib.link_local_settings('jenkins')
+    tasklib.update_db()
+    checkout_or_update_fixtures(svnuser, svnpass)
+    load_fixtures()
+    tasklib._manage_py_jenkins()
+
 
 def checkout_or_update_fixtures(svnuser=None, svnpass=None):
     """ checkout the fixtures from subversion """

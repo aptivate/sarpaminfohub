@@ -196,24 +196,42 @@ def run_tests():
     _manage_py(args)
 
 
-def prepare_jenkins():
-    update_ve()
-    # first we need to ensure that pip has installed the django-jenkins thing
+def _install_django_jenkins():
+    """ ensure that pip has installed the django-jenkins thing """
     pip_bin = os.path.join(env['ve_dir'], 'bin', 'pip')
     cmd = [pip_bin, 'install', '-E', env['ve_dir'], 'django-jenkins']
     subprocess.call(cmd)
-    # make sure the local settings is correct and the database exists
+
+def _manage_py_jenkins():
+    """ run the jenkins command """
+    args = ['jenkins', ]
+    args += ['--pylint-rcfile', os.path.join(env['project_dir'], 'jenkins', 'pylint.rc')]
+    args += project_settings.django_apps
+    _manage_py(args)
+
+def run_jenkins():
+    """ make sure the local settings is correct and the database exists """
+    update_ve()
+    _install_django_jenkins()
     link_local_settings('jenkins')
     update_db()
-    # and now run jenkins
-#    args = ['jenkins', ]
-#    args.extend(project_settings.django_apps)
-#    args.extend(['--pylintrc', env['project_root']])
-#    _manage_py(args)
+    _manage_py_jenkins()
 
 
-def deploy(environment):
+def _infer_environment():
+    local_settings = os.path.join(env['django_dir'], 'local_settings.py')
+    if os.path.exists(local_settings):
+        return os.readlink(local_settings).split('.')[-1]
+    else:
+        print 'no environment set, or pre-existing'
+        sys.exit(2)
+
+
+def deploy(environment=None):
     """Do all the required steps in order"""
+    if environment == None:
+        environment = _infer_environment()
+
     create_ve()
     link_local_settings(environment)
     update_db()
