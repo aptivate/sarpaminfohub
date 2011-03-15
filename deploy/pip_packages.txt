@@ -8,7 +8,10 @@ distribute==0.6.10
 django-fluidinfo==0.2.1
 django-haystack==1.1.0
 django-tables==0.2
+django-tagging==0.3.1
 httplib2==0.6.0
+ipython==0.10.1
 paramiko==1.7.6
 pycrypto==2.3
 wsgiref==0.1.2
+
