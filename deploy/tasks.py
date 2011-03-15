@@ -18,6 +18,21 @@
 * jenkins - setting up the environment and running tests
 * fabric - it will call a copy on the remote server when deploying
 
+You can pass arguments to the tasks listed below, by adding the argument after a
+colon. So to call deploy and set the environment to staging you could do:
+
+$ ./tasks.py deploy:staging
+
+or you could name the argument and set the value after an equals sign:
+
+$ ./tasks.py deploy:environment=staging
+
+Multiple arguments are separated by commas:
+
+$ ./tasks.py deploy:environment=staging,arg2=somevalue
+
+See the functions in tasklib.py (or localtasks.py) to see what arguments
+the functions accept.
 """
 
 import os, sys
@@ -71,6 +86,17 @@ def tasks_available():
     return tasks
 
 
+def print_help_text():
+    print __doc__
+    print "The functions you can call are:"
+    print
+    tasks = tasks_available()
+    for task in tasks:
+        print task
+    print
+    sys.exit(0)
+
+
 def main():
     # parse command line options
     try:
@@ -82,18 +108,11 @@ def main():
     # process options
     for o, a in opts:
         if o in ("-h", "--help"):
-            print __doc__
-            print "The functions you can call are:"
-            print
-            tasks = tasks_available()
-            for task in tasks:
-                print task
-            print
-            print "You can pass arguments by separating with a ':' For example:"
-            print "./tasks.py link_local_settings:staging"
-            sys.exit(0)
+            print_help_text()
     # process arguments - just call the function with that name
     tasklib._setup_paths()
+    if len(args) == 0:
+        print_help_text()
     for arg in args:
         task_bits = arg.split(':', 1)
         fname = task_bits[0]
