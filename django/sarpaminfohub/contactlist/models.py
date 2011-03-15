@@ -29,7 +29,7 @@ class Contact(models.Model):
         return ('client', (), {'id': self.id})
     
     def __unicode__(self):
-        return self.first_name + " " + self.last_name
+        return self.given_name + " " + self.family_name
 
 
 class Tag(models.Model):
