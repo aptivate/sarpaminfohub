@@ -1,5 +1,5 @@
 from django.db import models
-
+import custom_fields
 TITLES = (
 (1, 'Dr'),
 (1, 'Honorable'),
@@ -17,8 +17,9 @@ class Contact(models.Model):
     family_name = models.CharField(max_length=128)
     additional_family_name = models.CharField(max_length=128)
     phone = models.CharField(max_length=20)
-    email = models.CharField(max_length=256)
+    email = models.EmailField(max_length=256)
     address = models.CharField(max_length=512)
+    country = custom_fields.CountryField()
     note = models.TextField(null=True, blank=True)
     
     @models.permalink
