@@ -23,7 +23,7 @@ class Contact(models.Model):
     address_line_3 = models.CharField(max_length=512)
     country = custom_fields.CountryField()
     note = models.TextField(null=True, blank=True)
-    roles = models.ManyToManyField("RoleTag")
+    tags = models.ManyToManyField("Tag")
     @models.permalink
     def get_absolute_url(self):
         return ('client', (), {'id': self.id})
@@ -32,5 +32,5 @@ class Contact(models.Model):
         return self.first_name + " " + self.last_name
 
 
-class RoleTag(models.Model):
-    role_name = models.CharField(max_length=64)
+class Tag(models.Model):
+    tag_name = models.CharField(max_length=64)
