@@ -97,29 +97,27 @@ def main():
     for arg in args:
         task_bits = arg.split(':', 1)
         fname = task_bits[0]
-        #print "fname = '%s'" % fname
-        try:
-            # work out which function to call - localtasks have priority
-            f = None
-            if fname in localtasks_list():
-                f = getattr(localtasks, fname)
-            elif fname in tasklib_list():
-                f = getattr(tasklib, fname)
-            else:
-                invalid_command(fname)
+        # work out which function to call - localtasks have priority
+        f = None
+        if fname in localtasks_list():
+            f = getattr(localtasks, fname)
+        elif fname in tasklib_list():
+            f = getattr(tasklib, fname)
+        else:
+            invalid_command(fname)
 
-            # call the function
-            if len(task_bits) == 1:
-                f()
-            else:
-                f_args = task_bits[1].split(',')
-                pos_args = [arg for arg in f_args if arg.find('=') == -1]
-                kwargs = [arg for arg in f_args if arg.find('=') >= 0]
-                kwargs_dict = {}
-                for kwarg in kwargs:
-                    kw, value = kwarg.split('=', 1)
-                    kwargs_dict[kw] = value
-                f(*pos_args, **kwargs_dict)
+        # call the function
+        if len(task_bits) == 1:
+            f()
+        else:
+            f_args = task_bits[1].split(',')
+            pos_args = [arg for arg in f_args if arg.find('=') == -1]
+            kwargs = [arg for arg in f_args if arg.find('=') >= 0]
+            kwargs_dict = {}
+            for kwarg in kwargs:
+                kw, value = kwarg.split('=', 1)
+                kwargs_dict[kw] = value
+            f(*pos_args, **kwargs_dict)
 
 
 if __name__ == '__main__':
