@@ -25,3 +25,8 @@ class ExchangeRate(models.Model):
     symbol = models.CharField(max_length=3)
     year = models.IntegerField()
     rate = models.FloatField()
+
+class MSHPrice(models.Model):
+    formulation = models.OneToOneField(Formulation)
+    period = models.IntegerField()
+    price = models.DecimalField(max_digits=20, decimal_places=6, null=True)

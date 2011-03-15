@@ -7,7 +7,7 @@ class FormulationTable(SarpamTable):
     fob_price = tables.Column(verbose_name="FOB Price")
     landed_price = tables.Column(verbose_name="Landed Price")
     rows_template = "formulation_rows.html"
-    
+
     def __init__(self, rows):
         for row in rows:
             self.round_to_three_decimal_places(row, 'fob_price')
@@ -17,4 +17,4 @@ class FormulationTable(SarpamTable):
 
     def as_html(self):
         return render_to_string('table.html',\
-                         {'table':self})
+                                {'table':self})

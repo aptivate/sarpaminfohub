@@ -1,4 +1,5 @@
 *~
+.*.swp
 bin
 *.pyc
 django/search_index/*
