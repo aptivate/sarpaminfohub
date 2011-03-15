@@ -90,7 +90,8 @@ INSTALLED_APPS = (
     'django_tables',
     'haystack',
     'sarpaminfohub.contactlist',
-    'sarpaminfohub.infohub'
+    'sarpaminfohub.infohub',
+    'tagging'
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = ('django.contrib.auth.context_processors.auth',
