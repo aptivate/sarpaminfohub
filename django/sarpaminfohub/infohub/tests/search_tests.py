@@ -126,7 +126,7 @@ class SearchTest(SarpamTestCase):
         self.setup_exchange_rate_for_zar()
         rows = self.get_rows_for_ciprofloxacin('test')
         expected_rows = [["ciprofloxacin 500mg tablet",
-                          "0.044", "0.044"]]
+                          "0.044", "0.044", "0.033"]]
         self.assertEquals(expected_rows, rows)
         
     def test_search_term_displayed_in_heading(self):
@@ -147,7 +147,10 @@ class SearchTest(SarpamTestCase):
     def test_search_result_headings_are_as_expected(self):
         parser = self.parse_search_results_for("ciprofloxacin")
         self.assertEquals(parser.FINISHED, parser.state)
-        self.assertEquals(["Formulation", "Median FOB Price", "Median Landed Price"], 
+        self.assertEquals(["Formulation",
+                           "Median FOB Price",
+                           "Median Landed Price",
+                           "MSH International Median"],
                           parser.headings)
 
     def test_search_for_ciprofloxacin_with_django_backend_returns_drc_prices(self):
@@ -157,23 +160,24 @@ class SearchTest(SarpamTestCase):
         
         expected_rows = [["ciprofloxacin 500mg tablet",
                           "0.025", 
-                          "0.029"]]
+                          "0.029",
+                          "0.033"]]
         self.assertEquals(expected_rows, parser.rows)
         
     def test_null_prices_displayed_as_double_dash(self):
-        self.setup_drc_ciprofloxacin(fob_price=None, landed_price=None)
+        self.setup_drc_ciprofloxacin(fob_price=None, landed_price=None, msh_price=None)
         self.setup_exchange_rate_for_eur()
         
         rows = self.get_rows_for_ciprofloxacin()
         
         expected_rows = [["ciprofloxacin 500mg tablet",
-                          "--", "--"]]
+                          "--", "--", "--"]]
         self.assertEquals(expected_rows, rows)
 
     def test_price_cells_are_in_number_class(self):
         self.setup_exchange_rate_for_zar()
         parser = self.parse_search_results_for("ciprofloxacin", backend='test')
-        self.assertEquals([None, "number", "number"], parser.cell_classes)
+        self.assertEquals([None, "number", "number", "number"], parser.cell_classes)
         
     def test_search_results_link_to_formulation_page(self):
         self.setup_exchange_rate_for_usd()

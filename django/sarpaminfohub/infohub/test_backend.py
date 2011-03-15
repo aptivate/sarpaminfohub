@@ -1,8 +1,9 @@
+# -*- coding: iso-8859-15 -*-
 from sarpaminfohub.infohub.backend import Backend
 
 class TestBackend(Backend):
     def get_amitriptyline(self):
-        return self.get_formulation_for_country("amitriptyline",
+        return self.get_formulation_for_country("amitriptyline 25mg tablet",
                                                 country="Namibia", 
                                                 fob_price=58.64, 
                                                 currency='NAD',
@@ -19,6 +20,7 @@ class TestBackend(Backend):
                                                 period=2009, 
                                                 issue_unit=10, 
                                                 landed_price=3.74, 
+                                                msh_price=0.033,
                                                 formulation_id=20)
         ciprofloxacin = {"formulation":"ciprofloxacin 500mg tablet",
              "fob_price":"3.74",
@@ -38,6 +40,7 @@ class TestBackend(Backend):
     def get_formulation_for_country(self, name, country, fob_price=None, 
                                     currency=None, period=None, 
                                     issue_unit=None, landed_price=None,
+                                    msh_price=None,
                                     formulation_id=None):
         
         url = "/formulation/%d/" % formulation_id
@@ -45,6 +48,7 @@ class TestBackend(Backend):
         return {'formulation':name, 'country':country, 'fob_price': fob_price,
                 'fob_currency':currency, 'period':period, 
                 'issue_unit':issue_unit, 'landed_price':landed_price, 
+                'msh_price':msh_price,
                 'landed_currency':currency,
                 'url':url}
     
@@ -56,16 +60,20 @@ class TestBackend(Backend):
                                                 country, fob_price, 
                                                 currency, period, 
                                                 issue_unit, landed_price,
+                                                msh_price=0.005,
                                                 formulation_id=9)
     
     def get_amoxycillin500_for_country(self, country):
         return self.get_formulation_for_country("amoxycillin 500mg tablet/capsule",
                                                 country,
+                                                msh_price=0.04,
                                                 formulation_id=10)
         
     def get_tamoxifen_for_country(self, country):
         return self.get_formulation_for_country("tamoxifen 20mg tablet",
-                                                country, formulation_id=49)
+                                                country,
+                                                msh_price=0.077,
+                                                formulation_id=49)
     
     def get_amox(self):
         amoxycillin125_angola = self.get_amoxycillin125_for_country(country="Angola")
@@ -122,4 +130,16 @@ class TestBackend(Backend):
         return [amitriptyline]
     
     def get_formulation_name_with_id(self,formulation_id):
-        return "amitriptyline"
+        return "amitriptyline 25mg tablet"
+
+    def get_formulation_msh_with_id(self,formulation_id):
+        return 0.0057
+
+    def get_products_based_on_formulation_with_id(self, formulation_id):
+        suppliers = [u"Afrifármacia, Lda", "Aspen Pharmacare Ltd, S.A"]
+
+        amitrilon25 = {'product': "AMITRILON-25", 
+                       'suppliers': suppliers} 
+        
+        products = [amitrilon25]
+        return products

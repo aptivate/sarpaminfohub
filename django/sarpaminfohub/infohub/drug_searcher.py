@@ -83,19 +83,21 @@ class DrugSearcher(object):
         median_landed_price = self.get_median(landed_prices)
 
         return (median_fob_price, median_landed_price)
-    
+
     def get_formulations_that_match(self, search_term):
         formulations = self.backend.get_formulations_that_match(search_term)
-        
+
         formulation_dict = {}
         formulation_hrefs = {}
-        
+        formulation_mshs = {}
+
         for formulation in formulations:
             name = formulation['formulation']
-            
+
             if not name in formulation_dict:
                 formulation_dict[name] = []
-                formulation_hrefs[name] = formulation['url'] 
+                formulation_hrefs[name] = formulation['url']
+                formulation_mshs[name] = formulation['msh_price']
 
             self.convert_prices_to_usd(formulation)
             formulation_dict[name].append(formulation)
@@ -105,23 +107,38 @@ class DrugSearcher(object):
         for name in sorted(formulation_dict.iterkeys()):
             (median_fob_price, median_landed_price) = \
                 self.get_median_prices(formulation_dict[name])
-            
+
             href = formulation_hrefs[name]
-            
-            row = {'formulation':name, 'fob_price':median_fob_price,
-                   'landed_price':median_landed_price, 'href':href}
+            msh_price = formulation_mshs[name]
+
+            row = {'formulation': name,
+                   'fob_price': median_fob_price,
+                   'landed_price': median_landed_price,
+                   'msh_price': msh_price,
+                   'href': href}
             rows.append(row)
 
         return rows
 
     def get_prices_for_formulation_with_id(self, formulation_id):
         formulations = self.backend.get_prices_for_formulation_with_id(formulation_id)
-        
+
         for formulation in formulations:
             self.convert_prices_to_usd(formulation)
-        
+
         return formulations
-            
+
     def get_formulation_name_with_id(self, formulation_id):
         return self.backend.get_formulation_name_with_id(formulation_id)
-        
+
+    def get_formulation_msh_with_id(self, formulation_id):
+        return self.backend.get_formulation_msh_with_id(formulation_id)
+
+    def get_products_based_on_formulation_with_id(self, formulation_id):
+        products = self.backend.get_products_based_on_formulation_with_id(formulation_id)
+        for product in products:
+            suppliers = product['suppliers']
+            suppliers = ', ' . join(suppliers)
+            product['suppliers'] = suppliers
+            
+        return products

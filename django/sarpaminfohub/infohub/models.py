@@ -26,6 +26,11 @@ class ExchangeRate(models.Model):
     year = models.IntegerField()
     rate = models.FloatField()
 
+class MSHPrice(models.Model):
+    formulation = models.OneToOneField(Formulation)
+    period = models.IntegerField()
+    price = models.DecimalField(max_digits=20, decimal_places=6, null=True)
+
 class Supplier(models.Model):
     name = models.CharField(max_length=200)
 

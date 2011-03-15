@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-15 -*-
 from sarpaminfohub.infohub.tests.sarpam_test_case import SarpamTestCase
 from sarpaminfohub.infohub.test_backend import TestBackend
 from sarpaminfohub.infohub.drug_searcher import DrugSearcher
@@ -53,7 +54,7 @@ class DrugSearcherTest(SarpamTestCase):
 
     def test_gets_formulation_name_from_backend_given_id(self):
         name = self.drug_searcher.get_formulation_name_with_id(1)
-        self.assertEquals("amitriptyline", name)
+        self.assertEquals("amitriptyline 25mg tablet", name)
 
     def get_formulations_that_match_amox(self):
         self.setup_exchange_rate_for_eur()
@@ -144,3 +145,20 @@ class DrugSearcherTest(SarpamTestCase):
                       {'landed_price':0.14, 'fob_price':None}]
         median = self.drug_searcher.get_median_prices(price_list)
         self.assertAlmostEquals(0.09, median[1])
+
+    def get_amitrilon_25(self):
+        products = self.drug_searcher.get_products_based_on_formulation_with_id(1)
+        
+        amitrilon25 = products[0]
+        
+        return amitrilon25
+
+    def test_amitrilon_25_returned_as_product_based_on_amitryptyline(self):
+        amitrilon25 = self.get_amitrilon_25()
+        self.assertEquals("AMITRILON-25", amitrilon25['product'])
+
+    def test_afrifarmacia_returned_as_supplier_of_amitryptyline(self):
+        amitrilon25 = self.get_amitrilon_25()
+        self.assertEquals(u"Afrifármacia, Lda, Aspen Pharmacare Ltd, S.A", 
+                          amitrilon25['suppliers'])
+

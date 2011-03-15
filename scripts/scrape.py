@@ -10,6 +10,7 @@ import os
 import json
 import sqlite3
 import sys
+import pprint
 from decimal import Decimal
 
 country_codes = {}
@@ -232,6 +233,8 @@ def scrape(db_file):
     product_dict = {}
     counter = 0
     unknown_formulations = set()
+    pp = pprint.PrettyPrinter(indent=4)
+
     for p in products:
         counter+=1
         if not p['product'] in product_dict:
@@ -253,19 +256,17 @@ def scrape(db_file):
             product_table.append(record)
             product_dict[p['product']] = counter
 
-        try:
-            product_fields['suppliers'].append(supplier_dict[p['supplier']])
-        except KeyError:
-            pass
-
+            supplier_name = p['supplier']
+            
+            if supplier_name in supplier_dict:
+                supplier_id = supplier_dict[supplier_name]
+                product_fields['suppliers'].append(supplier_id)
 
     output_json('products', product_table)
-    #output_json('suppliers', supplier_table)
 
     output = open('unknownFormulationsInProducts.json', 'w')
     json.dump(list(unknown_formulations), output, indent=2)
     output.close()
-
 
 if __name__ == "__main__":
     scrape(sys.argv[1])
