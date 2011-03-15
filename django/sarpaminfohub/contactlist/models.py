@@ -18,7 +18,9 @@ class Contact(models.Model):
     additional_family_name = models.CharField(max_length=128)
     phone = models.CharField(max_length=20)
     email = models.EmailField(max_length=256)
-    address = models.CharField(max_length=512)
+    address_line_1 = models.CharField(max_length=512)
+    address_line_2 = models.CharField(max_length=512)
+    address_line_3 = models.CharField(max_length=512)
     country = custom_fields.CountryField()
     note = models.TextField(null=True, blank=True)
     
