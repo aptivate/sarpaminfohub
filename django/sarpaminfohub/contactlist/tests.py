@@ -25,26 +25,26 @@ class SimpleTest(TestCase):
         self.createContacts()
     
     def createContacts(self):
-        c = Contact(first_name="My", last_name="Name", phone="(12345) 678910",
-                   email="a@b.c", address="123 A Road Name, Somewhere", 
+        c = Contact(given_name="My", family_name="Name", phone="(12345) 678910",
+                   email="a@b.c", address_line_1="123 A Road Name, Somewhere", 
                    note="Note Very Important")
         c.save()
         c = Contact(
-                   first_name="Anew", last_name="Person", phone="(54321) 123456",
-                   email="d@e.f", address="456 A Road, Through the Looking Glass"
+                   given_name="Anew", family_name="Person", phone="(54321) 123456",
+                   email="d@e.f", address_line_1="456 A Road, Through the Looking Glass"
                    )
         c.save()
-        c = Contact(first_name="Aptivate", last_name="Employee", phone="(32543) 523566",
-                   email="g@h.i", address="999 Letsbe Avenue", note="Death Note")
+        c = Contact(given_name="Aptivate", family_name="Employee", phone="(32543) 523566",
+                   email="g@h.i", address_line_1="999 Letsbe Avenue", note="Death Note")
         c.save()
     
-    def testSearchByFirstName(self):
+    def testSearchByGivenName(self):
         client = self.client
         self.login(client)
         response = client.get('/search/', {'q':"My"})
         self.assertContains(response, 'My Name')
     
-    def testSearchByLastName(self):
+    def testSearchByFamilyName(self):
         client = self.client
         self.login(client)
         response = client.get('/search/', {'q':"Person"})
