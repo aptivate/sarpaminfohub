@@ -1,6 +1,7 @@
 *~
 bin
 *.pyc
+django/search_index/*
 django/sarpaminfohub/local_settings.py
 django/sarpaminfohub/fixtures
 django/sarpaminfohub/fixtures/*.json
