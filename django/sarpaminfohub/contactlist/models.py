@@ -30,4 +30,4 @@ class Contact(models.Model):
         return ('client', (), {'id': self.id})
     
     def __unicode__(self):
-        return self.given_name + " " + self.family_name
+        return DESIGNATION[int(self.designation)-1][1]+ " " + self.given_name + " " + self.family_name

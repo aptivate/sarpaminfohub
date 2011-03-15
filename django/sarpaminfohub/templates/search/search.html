@@ -16,15 +16,31 @@
 	</form>
         {% if query %}
             <h3>Results</h3>
-
+						<table>
+							<tr>
+								<th>Name</th>
+								<th>Phone Number</th>
+								<th>Address</th>
+								<th>Notes</th>
+								<th>Tags</th>
+							</tr>
             {% for result in page.object_list %}
-                <p>
-                    <a href="{{ result.object.get_absolute_url }}">{{ result.object}}</a>
-                </p>
+                <tr>
+									{{result.object}}
+								</tr>
+								<tr>
+									{{result.object.phone}}
+								</tr>
+								<tr>
+									{{result.object.address_line_1}}
+									{{result.object.address_line_2}}
+									{{result.object.address_line_3}}
+									{{result.object.country}}
+								</tr>
             {% empty %}
                 <p>No results found.</p>
             {% endfor %}
-
+						</table>
             {% if page.has_previous or page.has_next %}
                 <div>
                     {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous {% if page.has_previous %}</a>{% endif %}
