@@ -93,5 +93,4 @@ TEMPLATE_CONTEXT_PROCESSORS = ('django.contrib.auth.context_processors.auth',
                                'django.core.context_processors.request',
                                )
 
-from local_settings import DATABASE_ENGINE, DATABASE_NAME, DATABASE_OPTIONS #@UnusedImport
-from local_settings import DATABASE_USER, DATABASE_PASSWORD #@UnusedImport
+from local_settings import *

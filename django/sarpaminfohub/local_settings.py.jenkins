@@ -1,3 +1,4 @@
+from settings import INSTALLED_APPS, settings_dir, MIDDLEWARE_CLASSES
 # local settings for the jenkins (CI) server
 
 # turn on debug stuff on jenkins (CI) server
@@ -13,3 +14,8 @@ DATABASE_PASSWORD = 'aptivate' # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 DATABASE_OPTIONS = {"init_command": "SET storage_engine=INNODB"}
+
+# add the jenkins app here
+INSTALLED_APPS = (
+      'django_jenkins',
+    )  + INSTALLED_APPS
