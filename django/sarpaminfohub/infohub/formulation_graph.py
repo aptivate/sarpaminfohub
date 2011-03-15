@@ -9,7 +9,7 @@ class FormulationGraph(SarpamTable):
     max_price = 0
     NO_DATA = ""
 
-    def __init__(self, rows):
+    def __init__(self, rows, msh_price=None):
         for row in rows:
             self.round_to_three_decimal_places(row, 'fob_price')
             self.round_to_three_decimal_places(row, 'landed_price')
@@ -24,9 +24,11 @@ class FormulationGraph(SarpamTable):
         for k in range(1, 11):
             self.scale.append(k * (self.max_price / 10))
 
+        self.msh_price = msh_price
+
         tables.MemoryTable.__init__(self, rows)
 
     def as_html(self):
-        return render_to_string('formulation/graph.html',\
-                                {'table':self})
+        return render_to_string('formulation/graph.html',
+                                {'table': self, 'msh_price': self.msh_price})
 
