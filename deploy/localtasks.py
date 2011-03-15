@@ -36,4 +36,10 @@ def checkout_or_update_fixtures(svnuser=None, svnpass=None):
 
 
 def load_fixtures():
-    tasklib._manage_py(['loaddata', 'fixtures/initial_data/*.json'])
+    # can't pass *.json to subprocess, so these 3 lines do *.json
+    fixture_list = filter(lambda fn: fn.endswith('.json'), 
+        os.listdir(os.path.join(tasklib.env['django_dir'], 'fixtures', 'initial_data')))
+    fixture_list = map(lambda fn: os.path.join('fixtures', 'initial_data', fn), 
+                        fixture_list)
+    fixture_list.sort()
+    tasklib._manage_py(['loaddata'] + fixture_list)
