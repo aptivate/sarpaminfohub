@@ -10,6 +10,8 @@ from results_table_tests import *
 from sarpam_table_tests import *
 from search_form_tests import *
 from search_tests import *
+from supplier_tests import *
+from supplier_table_tests import *
 from template_tests import *
 
 

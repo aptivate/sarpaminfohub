@@ -1,8 +1,15 @@
 from django.test.testcases import TestCase
 from sarpaminfohub.infohub.models import Formulation, Price, Country,\
-    ExchangeRate, MSHPrice
+    ExchangeRate, MSHPrice, Product, Supplier
 
 class SarpamTestCase(TestCase):
+    def setup_biofloxx(self, formulation, suppliers=[]):
+        biofloxx = Product(formulation=formulation, name="BIOFLOXX 500 MG")
+        biofloxx.save()
+
+        biofloxx.suppliers = suppliers
+        biofloxx.save()
+    
     def setup_drc_ciprofloxacin(self, fob_price="1.8", landed_price="2.085",
                                 msh_price="0.033",
                                 fob_currency='EUR', issue_unit=100,
@@ -22,6 +29,19 @@ class SarpamTestCase(TestCase):
                       issue_unit=issue_unit,
                       landed_currency=landed_currency)
         price.save()
+        
+        return ciprofloxacin
+        
+    def setup_suppliers_of_formulation(self, formulation):
+        biotech_laboratories = Supplier(name="Biotech Laboratories")
+        biotech_laboratories.save()
+        
+        camox_pharmaceuticals = Supplier(name="Camox Pharmaceuticals (Pty) Ltd")
+        camox_pharmaceuticals.save()
+        
+        suppliers = [biotech_laboratories, camox_pharmaceuticals]
+        
+        self.setup_biofloxx(formulation, suppliers)
 
     def setup_exchange_rate(self, symbol, rate, year):
         exchange_rate = ExchangeRate(symbol=symbol, rate=rate, year=year)

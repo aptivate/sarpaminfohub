@@ -2,7 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from sarpaminfohub.infohub.backend import Backend
 from models import Price
-from sarpaminfohub.infohub.models import Formulation
+from sarpaminfohub.infohub.models import Formulation, Product
 
 class DjangoBackend(Backend):
     def get_formulations_that_match(self, search_term):
@@ -63,3 +63,21 @@ class DjangoBackend(Backend):
             return formulation.mshprice.price
         except ObjectDoesNotExist:
             return None
+
+    def get_products_based_on_formulation_with_id(self, formulation_id):
+        products = Product.objects.filter(formulation=formulation_id)
+        
+        results = []
+        
+        for product in products:
+            record = {}
+            record['product'] = product.name
+            
+            suppliers = []
+            for supplier in product.suppliers.all():       
+                suppliers.append(supplier.name)
+                
+            record['suppliers'] = suppliers
+            results.append(record)
+            
+        return results

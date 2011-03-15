@@ -11,3 +11,4 @@ django/sarpaminfohub/sarpaminfohub.sqlite
 django/sarpaminfohub/.ve
 django/sarpaminfohub/distribute-*.tar.gz
 scripts/*.json
+.settings

@@ -13,3 +13,6 @@ class Backend(object):
         
     def get_formulation_name_with_id(self, formulation_id):
         self.abstract()
+
+    def get_products_based_on_formulation_with_id(self, formulation_id):
+        self.abstract()

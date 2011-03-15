@@ -24,3 +24,5 @@ class ResultsTable(SarpamTable):
                                 {'table':self, \
                                  'search_string':self.search_string})
 
+    def get_rows_template(self):
+        return "drug_price_rows.html"

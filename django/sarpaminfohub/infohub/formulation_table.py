@@ -1,6 +1,5 @@
 import django_tables as tables
 from sarpaminfohub.infohub.sarpam_table import SarpamTable
-from django.template.loader import render_to_string
 
 class FormulationTable(SarpamTable):
     country = tables.Column()
@@ -15,6 +14,6 @@ class FormulationTable(SarpamTable):
                         
         tables.MemoryTable.__init__(self, rows, order_by='landed_price')
 
-    def as_html(self):
-        return render_to_string('table.html',\
-                                {'table':self})
+    def get_rows_template(self):
+        return "formulation_rows.html"
+

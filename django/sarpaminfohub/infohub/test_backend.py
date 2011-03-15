@@ -1,8 +1,9 @@
+# -*- coding: iso-8859-15 -*-
 from sarpaminfohub.infohub.backend import Backend
 
 class TestBackend(Backend):
     def get_amitriptyline(self):
-        return self.get_formulation_for_country("amitriptyline",
+        return self.get_formulation_for_country("amitriptyline 25mg tablet",
                                                 country="Namibia", 
                                                 fob_price=58.64, 
                                                 currency='NAD',
@@ -129,7 +130,16 @@ class TestBackend(Backend):
         return [amitriptyline]
     
     def get_formulation_name_with_id(self,formulation_id):
-        return "amitriptyline"
+        return "amitriptyline 25mg tablet"
 
     def get_formulation_msh_with_id(self,formulation_id):
         return 0.0057
+
+    def get_products_based_on_formulation_with_id(self, formulation_id):
+        suppliers = [u"Afrifármacia, Lda", "Aspen Pharmacare Ltd, S.A"]
+
+        amitrilon25 = {'product': "AMITRILON-25", 
+                       'suppliers': suppliers} 
+        
+        products = [amitrilon25]
+        return products
