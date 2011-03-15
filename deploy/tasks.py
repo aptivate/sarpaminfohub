@@ -38,17 +38,20 @@ env = {}
 
 def _setup_paths():
     """Set up the paths used by other tasks"""
-    # what is the root of the project - one up from this directory
-    env['project_dir'] = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    env['django_dir']  = os.path.join(env['project_dir'], project_settings.django_dir)
-    env['ve_dir']      = os.path.join(env['django_dir'], '.ve')
-    env['python_bin']  = os.path.join(env['ve_dir'], 'bin', 'python2.6')
-    env['manage_py']   = os.path.join(env['django_dir'], 'manage.py')
+    # if calling back in from local tasks we may need to re-setup paths
+    if not env.has_key('project_dir'):
+        # what is the root of the project - one up from this directory
+        env['project_dir'] = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        env['django_dir']  = os.path.join(env['project_dir'], project_settings.django_dir)
+        env['ve_dir']      = os.path.join(env['django_dir'], '.ve')
+        env['python_bin']  = os.path.join(env['ve_dir'], 'bin', 'python2.6')
+        env['manage_py']   = os.path.join(env['django_dir'], 'manage.py')
 
 
 def _manage_py(args):
     # if ve is not yet created then python_bin won't exist
     # so check before using manage.py
+    _setup_paths()
     if os.path.exists(env['python_bin']):
         manage_cmd = [env['python_bin'], 'manage.py']
     else:
@@ -70,6 +73,7 @@ def _get_django_db_settings():
     # import local_settings from the django dir. Here we are adding the django
     # project directory to the path. Note that env['django_dir'] may be more than
     # one directory (eg. 'django/project') which is why we use django_module
+    _setup_paths()
     sys.path.append(env['django_dir'])
     import local_settings
 
@@ -118,6 +122,7 @@ def clean_ve():
     
 def clean_db():
     """Delete the database for a clean start"""
+    _setup_paths()
     # first work out the database username and password
     db_engine, db_name, db_user, db_pw = _get_django_db_settings()
     # then see if the database exists
@@ -148,6 +153,7 @@ def update_ve():
 
 
 def link_local_settings(environment):
+    _setup_paths()
     # die if the correct local settings does not exist
     local_settings_env_path = os.path.join(env['django_dir'], 
                                     'local_settings.py.'+environment)
@@ -160,6 +166,7 @@ def link_local_settings(environment):
 
 
 def update_db():
+    _setup_paths()
     # first work out the database username and password
     db_engine, db_name, db_user, db_pw = _get_django_db_settings()
     # then see if the database exists
@@ -197,6 +204,7 @@ def run_tests():
 
 
 def prepare_jenkins():
+    _setup_paths()
     update_ve()
     # first we need to ensure that pip has installed the django-jenkins thing
     pip_bin = os.path.join(env['ve_dir'], 'bin', 'pip')
@@ -245,7 +253,8 @@ def _tasks_available(include_hidden=False):
         if callable(globals()[task]):
             if not task.startswith('_'):
                 if not task in tasks_to_ignore:
-                    tasks.append(task)
+                    if not task in tasks:
+                        tasks.append(task)
     tasks.sort()
     return tasks
 
@@ -291,7 +300,8 @@ def main():
             else:
                 f_args = task_bits[1]
                 f(f_args)
-        except KeyError:
+        #except KeyError:
+        except AttributeError:
             _invalid_command(fname)
 
 
