@@ -30,3 +30,11 @@ class MSHPrice(models.Model):
     formulation = models.OneToOneField(Formulation)
     period = models.IntegerField()
     price = models.DecimalField(max_digits=20, decimal_places=6, null=True)
+
+class Supplier(models.Model):
+    name = models.CharField(max_length=200)
+
+class Product(models.Model):
+    formulation = models.ForeignKey(Formulation)
+    name = models.CharField(max_length=200)
+    suppliers = models.ManyToManyField(Supplier)

@@ -64,4 +64,10 @@ public class IntegrationTest extends SarpamInfoHubTest
 		WebResponse response = loadSearchPage("formulation/1/");
 		validatePage(response);
 	}
+	
+	public void testSuppliersPageValidates() throws Exception
+	{
+		WebResponse response = loadSearchPage("formulation_suppliers/1/test");
+		validatePage(response);
+	}
 }

@@ -33,9 +33,6 @@ class FormulationTableTest(TableTestCase):
         
         self.assertAlmostEquals(4.988, landed_price)
 
-    def contains(self, string_to_search, sub_string):
-        return string_to_search.find(sub_string) > -1
-
     def test_html_includes_table(self):
         html = self.formulation_table.as_html()
         self.assertTrue(self.contains(html, "<table>"))

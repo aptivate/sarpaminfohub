@@ -5,9 +5,12 @@ Scrapes values from the Sqlite database file and writes out nice JSON objects
 that map to either objects in Fluidinfo or rows in a relational database (for
 the purposes of import)
 """
+
+import os
 import json
 import sqlite3
 import sys
+import pprint
 from decimal import Decimal
 
 country_codes = {}
@@ -41,7 +44,7 @@ def normalisePrice(raw):
 def scrapeCountries(conn):
     """
     Returns a list of countries
-    """    
+    """
     query = "SELECT * FROM country"
     c = conn.cursor()
     c.execute(query)
@@ -54,9 +57,10 @@ def scrapeCountries(conn):
         result['model'] = "infohub.country"
         result['fields'] = country_fields
         country_fields['name'] = row[1]
-        
+
         results.append(result)
     return results
+
 
 def scrapeExchangeRate(conn):
     query = "SELECT * FROM exchange_rate"
@@ -74,11 +78,35 @@ def scrapeExchangeRate(conn):
         exchange_fields['symbol'] = row[0]
         exchange_fields['year'] = int(row[1])
         exchange_fields['rate'] = row[2]
-        
+
         results.append(result)
         counter += 1
     return results
-    
+
+
+def scrapeSuppliers(conn):
+    query = "SELECT DISTINCT supplier FROM form1_row"
+    c = conn.cursor()
+    c.execute(query)
+    results = []
+    counter = 0
+    supplier_dict = {}
+
+    for row in c:
+        result = {}
+        supplier_fields = {}
+
+        result['pk'] = counter
+        result['model'] = "infohub.supplier"
+        result['fields'] = supplier_fields
+        supplier_fields['name'] = row[0]
+        supplier_dict[row[0]] = counter
+
+        results.append(result)
+        counter += 1
+
+    return results, supplier_dict
+
 
 def scrapeProducts(conn):
     """
@@ -137,26 +165,33 @@ def scrapeFormulations(conn):
         results.append(result)
     return results
 
+
 def output_json(name, data):
-    filename = '/home/martinb2/workspace/reactionsarpam/data/fixtures/initial_data/%s.json' % name
+    fixtures_path = os.environ['INFOHUB_FIXTURES']
+    filename = '%s/%s.json' % (fixtures_path, name)
 
     output = open(filename, 'w')
     json.dump(data, output, indent=2)
     output.close()
+
 
 def scrape(db_file):
     """
     Opens the database, scrapes a bunch of data and writes it all out to JSON
     """
     conn = sqlite3.connect(db_file)
+
     formulations = scrapeFormulations(conn)
     products = scrapeProducts(conn)
     countries = scrapeCountries(conn)
-    # Build Martin's schema
     exchange_rates = scrapeExchangeRate(conn)
+    suppliers, supplier_dict = scrapeSuppliers(conn)
+
+    # Build Martin's schema
     output_json("exchange_rates", exchange_rates)
-    
     output_json("countries", countries)
+    output_json("suppliers", suppliers)
+
     # formulations
     counter = 0
     form_counter = 0
@@ -171,7 +206,7 @@ def scrape(db_file):
             formulation_table.append({'pk': form_counter,
                                       'model': "infohub.formulation",
                                       'fields' : formulation_fields})
-            
+
             formulation_fields['name'] = f['formulation']
 #            formulation_fields['unit'] = f['unit']
             formulation_dict[f['formulation']] = form_counter
@@ -191,12 +226,15 @@ def scrape(db_file):
         price_table.append(price_record)
     output_json('formulations', formulation_table)
     output_json('prices', price_table)
+
     # Product
     product_table = []
     supplier_table = []
     product_dict = {}
     counter = 0
     unknown_formulations = set()
+    pp = pprint.PrettyPrinter(indent=4)
+
     for p in products:
         counter+=1
         if not p['product'] in product_dict:
@@ -206,30 +244,29 @@ def scrape(db_file):
             record['model'] = "infohub.product"
             record['fields'] = product_fields
             try:
-                product_fields['formulation_id'] = formulation_dict[p['formulation']]
+                product_fields['formulation'] = formulation_dict[p['formulation']]
             except:
                 unknown_formulations.add(p['formulation'])
                 continue
             product_fields['name'] = p['product']
-            product_fields['manufacturer'] = p['manufacturer']
+            # Where does Country belongs ? HELP
+            # There are more than one manufacturer per product. HELP
+            #product_fields['manufacturer'] = p['manufacturer']
+            product_fields['suppliers'] = []
             product_table.append(record)
             product_dict[p['product']] = counter
-        supplier_record = {}
-        supplier_fields = {}
-        supplier_record['pk'] = counter
-        supplier_record['fields'] = supplier_fields
-        supplier_record['model'] = "infohub.supplier"
-        supplier_fields['product_id'] = product_dict[p['product']]
-        supplier_fields['name'] = p['supplier']
-        supplier_fields['country_id'] = p['country_id']
-        supplier_table.append(supplier_record)
+
+            supplier_name = p['supplier']
+            
+            if supplier_name in supplier_dict:
+                supplier_id = supplier_dict[supplier_name]
+                product_fields['suppliers'].append(supplier_id)
+
     output_json('products', product_table)
-    output_json('suppliers', supplier_table)
 
     output = open('unknownFormulationsInProducts.json', 'w')
     json.dump(list(unknown_formulations), output, indent=2)
     output.close()
-
 
 if __name__ == "__main__":
     scrape(sys.argv[1])

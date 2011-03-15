@@ -7,6 +7,7 @@ from sarpaminfohub.infohub.test_backend import TestBackend
 from sarpaminfohub.infohub.formulation_table import FormulationTable
 from sarpaminfohub.infohub.formulation_graph import FormulationGraph
 import re
+from sarpaminfohub.infohub.supplier_table import SupplierTable
 
 def get_backend(name):
     if name == "test":
@@ -76,3 +77,15 @@ def formulation(request, formulation_id, backend_name="django"):
                                'formulation_msh': formulation_msh,
                                'results_href' : results_href,
                                'search_form' : search_form});
+
+def supplier(request, formulation_id, backend_name="django"):
+    backend = get_backend(backend_name)
+    
+    drug_searcher = DrugSearcher(backend)
+    
+    rows = drug_searcher.get_products_based_on_formulation_with_id(formulation_id)
+    
+    supplier_table = SupplierTable(rows)
+    
+    return render_to_response('formulation_suppliers.html',
+                              {'supplier_table':supplier_table})

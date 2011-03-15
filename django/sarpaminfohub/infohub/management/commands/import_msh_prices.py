@@ -4,8 +4,8 @@ import csv
 
 from django.core.management.base import BaseCommand
 from django.db import IntegrityError
+from sarpaminfohub.infohub.models import Formulation, MSHPrice
 
-from infohub.models import Formulation, MSHPrice
 
 class Command(BaseCommand):
     args = '<csv_file>'
@@ -15,7 +15,7 @@ class Command(BaseCommand):
         csvReader = csv.reader(open(args[0]), delimiter="\t")
 
         currency_line = next(csvReader)
-        header_line = next(csvReader)
+        next(csvReader)
 
         period = currency_line[0].split(' ')[2]
 
