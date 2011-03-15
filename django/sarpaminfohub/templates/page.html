@@ -15,12 +15,13 @@
         <div id="header">
             <img src="/site_media/SARPAM-Logo.gif" width="201" height="68" alt="SARPAM" />
         </div>
-
+		{% if search_form %}
         <form id="search" action="/">
             {{ search_form.as_p }}
             <input type="submit" value="Search" />
         </form>
-    
+        {% endif %}
+        
         <div class='main'>
         {% block main %}
         <p>Nothing here yet...</p>

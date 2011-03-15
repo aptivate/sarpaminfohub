@@ -1,8 +1,8 @@
-from django.test.testcases import TestCase
+from django.test.testcases import TransactionTestCase
 from sarpaminfohub.infohub.models import Formulation, Price, Country,\
     ExchangeRate
 
-class SarpamTestCase(TestCase):
+class SarpamTestCase(TransactionTestCase):
     def setup_drc_ciprofloxacin(self, fob_price="1.8", landed_price="2.085",
                                 fob_currency='EUR', issue_unit=100,
                                 landed_currency='EUR'):

@@ -54,6 +54,11 @@ ADMIN_MEDIA_PREFIX = '/media/'
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'i6&2c0#+kh&wiep1#58al8y+%h3xcm7!$n%np@%p2c8hc^0m#7'
 
+# Haystack search options
+HAYSTACK_SITECONF = 'sarpaminfohub.search_sites'
+HAYSTACK_SEARCH_ENGINE = 'whoosh'
+HAYSTACK_WHOOSH_PATH = os.path.join(settings_dir, "..", 'search_index')
+
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
@@ -81,7 +86,10 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    'django.contrib.admin',
     'django_tables',
+    'haystack',
+    'sarpaminfohub.contactlist',
     'sarpaminfohub.infohub'
 )
 

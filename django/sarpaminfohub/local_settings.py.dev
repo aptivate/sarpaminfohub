@@ -2,8 +2,8 @@ import os
 
 from settings import settings_dir
 
-DATABASE_ENGINE = 'sqlite3'
-DATABASE_NAME = os.path.join(settings_dir, 'sarpaminfohub.sqlite')
-DATABASE_OPTIONS = {} # remove mysql-specific database options
+DATABASE_ENGINE = 'mysql'
+DATABASE_NAME = 'sarpaminfohub_dev'
 DATABASE_USER = 'sarpaminfohub'
-DATABASE_PASSWORD = 'sarpaminfohub'
+DATABASE_PASSWORD = 'aptivate'
+DATABASE_OPTIONS = {"init_command": "SET storage_engine=INNODB"}
