@@ -142,3 +142,6 @@ class DrugSearcher(object):
             product['suppliers'] = suppliers
             
         return products
+
+    def get_products_based_on_supplier_with_id(self, supplier_id):
+        return self.backend.get_products_based_on_supplier_with_id(supplier_id)

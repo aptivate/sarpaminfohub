@@ -1,0 +1,8 @@
+import django_tables as tables
+from sarpaminfohub.infohub.sarpam_table import SarpamTable
+
+class SupplierCatalogueTable(SarpamTable):
+    product = tables.Column()
+
+    def get_rows_template(self):
+        return "supplier_catalogue_rows.html"
