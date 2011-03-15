@@ -112,11 +112,14 @@ def main():
             if len(task_bits) == 1:
                 f()
             else:
-                f_args = task_bits[1]
-                f(f_args)
-        #except KeyError:
-        except AttributeError:
-            invalid_command(fname)
+                f_args = task_bits[1].split(',')
+                pos_args = [arg for arg in f_args if arg.find('=') == -1]
+                kwargs = [arg for arg in f_args if arg.find('=') >= 0]
+                kwargs_dict = {}
+                for kwarg in kwargs:
+                    kw, value = kwarg.split('=', 1)
+                    kwargs_dict[kw] = value
+                f(*pos_args, **kwargs_dict)
 
 
 if __name__ == '__main__':
