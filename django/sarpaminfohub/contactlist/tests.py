@@ -49,16 +49,6 @@ class SimpleTest(TestCase):
         self.login(client)
         response = client.get('/search/', {'q':"Person"})
         self.assertContains(response, 'Anew Person')
-            
-    def testSearchByAddress(self):
-        client = self.client
-        self.login(client)
-        response = client.get('/search/', {'q':"A Road Name"})
-        self.assertContains(response, 'My Name')
-        
-        response = client.get('/search/', {'q':"A Road"})
-        self.assertContains(response, 'My Name')
-        self.assertContains(response, 'Anew Person')
     
     def testSearchByNote(self):
         client = self.client
@@ -75,7 +65,7 @@ class SimpleTest(TestCase):
         self.assertContains(response, 'Search for a contact by First Name, ' +
         'Last Name, Email Address, Phone Number, Address or the content ' +
         'of notes made about them.')
-        
+    
     def testNoResults(self):
         client = self.client
         self.login(client)
