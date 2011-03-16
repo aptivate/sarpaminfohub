@@ -3,7 +3,7 @@ Created on 14 Mar 2011
 
 @author: daniell
 '''
-from haystack.indexes import RealTimeSearchIndex, CharField
+from haystack.indexes import RealTimeSearchIndex, CharField, MultiValueField
 from haystack import site
 from sarpaminfohub.contactlist.models import Contact
 
@@ -15,5 +15,5 @@ class ContactIndex(RealTimeSearchIndex):
     address_2=CharField(model_attr="address_line_2")
     address_3=CharField(model_attr="address_line_3")
     note=CharField(model_attr="note", null=True)
-    tags=CharField(model_attr="tags", null=True)
+    tags=MultiValueField(model_attr="tags", null=True)
 site.register(Contact, ContactIndex)
