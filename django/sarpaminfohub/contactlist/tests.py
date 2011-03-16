@@ -27,15 +27,19 @@ class SimpleTest(TestCase):
     def createContacts(self):
         c = Contact(given_name="My", family_name="Name", phone="(12345) 678910",
                    email="a@b.c", address_line_1="123 A Road Name, Somewhere", 
+                   role="Head of Surgery", organization="London Teaching Hospital",
                    note="Note Very Important")
         c.save()
         c = Contact(
                    given_name="Anew", family_name="Person", phone="(54321) 123456",
-                   email="d@e.f", address_line_1="456 A Road, Through the Looking Glass"
+                   email="d@e.f", address_line_1="456 A Road, Through the Looking Glass",
+                   role="Pharmacist", organization="Selby's Pharmacy"
                    )
         c.save()
         c = Contact(given_name="Aptivate", family_name="Employee", phone="(32543) 523566",
-                   email="g@h.i", address_line_1="999 Letsbe Avenue", note="Death Note")
+                   email="g@h.i", address_line_1="999 Letsbe Avenue", note="Death Note",
+                   role="Researcher", organization="Imperial College"
+                   )
         c.save()
     
     def test_search_by_given_name(self):
@@ -72,6 +76,22 @@ class SimpleTest(TestCase):
         self.assertContains(response, 'Search for a contact by Given Name, '
             +'Family Name, Email Address, Phone Number, Address '
             +'or the content of notes made about them.')
+    
+    def test_search_by_role(self):
+        client = self.client
+        self.login(client)
+        response = client.get('/search/', {'q':"Head of Surgery"})
+        self.assertContains(response, 'My Name')
+        self.assertNotContains(response, 'Aptivate Employee')
+        self.assertNotContains(response, 'Anew Person')
+    
+    def test_search_by_organization(self):
+        client = self.client
+        self.login(client)
+        response = client.get('/search/', {'q':"London Teaching Hospital"})
+        self.assertContains(response, 'My Name')
+        self.assertNotContains(response, 'Aptivate Employee')
+        self.assertNotContains(response, 'Anew Person')
     
     def test_no_results(self):
         client = self.client
