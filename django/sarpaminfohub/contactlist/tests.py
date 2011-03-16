@@ -92,4 +92,4 @@ class SimpleTest(TestCase):
         client = self.client
         self.login(client)
         response = client.get('/search/', {'q':"Invalid String"})
-        self.assertContains(response, 'No results found.')
+        self.assertContains(response, 'No Results found.')
