@@ -10,3 +10,4 @@ django/sarpaminfohub/fixtures/initial_data
 django/sarpaminfohub/sarpam_pma.sqlite
 django/sarpaminfohub/sarpaminfohub.sqlite
 scripts/*.json
+.DS_Store
