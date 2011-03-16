@@ -1,6 +1,6 @@
-{{ object.first_name }}
-{{ object.last_name }}
-{{ object.phone }}
-{{ object.email }}
-{{ object.address }}
+{{ object.given_name }}
+{{ object.family_name }}
+{{ object.address_1 }}
+{{ object.address_2 }}
+{{ object.address_3 }}
 {{ object.note }}
