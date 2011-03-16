@@ -211,7 +211,7 @@ def _manage_py_jenkins():
     args = ['jenkins', ]
     args += ['--pylint-rcfile', os.path.join(env['project_dir'], 'jenkins', 'pylint.rc')]
     args += project_settings.django_apps
-    _manage_py(args, cwd=env['project_dir'])
+    _manage_py(args, cwd=os.path.join(env['django_dir'], '..'))
 
 def run_jenkins():
     """ make sure the local settings is correct and the database exists """
