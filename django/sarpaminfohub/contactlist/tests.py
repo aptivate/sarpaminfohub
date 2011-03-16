@@ -77,7 +77,7 @@ class SimpleTest(TestCase):
             +'Family Name, Email Address, Phone Number, Address '
             +'or the content of notes made about them.')
     
-    def test_search_by_role(self):
+    def test_search_for_role(self):
         client = self.client
         self.login(client)
         response = client.get('/search/', {'q':"Head of Surgery"})
@@ -85,13 +85,29 @@ class SimpleTest(TestCase):
         self.assertNotContains(response, 'Aptivate Employee')
         self.assertNotContains(response, 'Anew Person')
     
-    def test_search_by_organization(self):
+    def test_search_for_organization(self):
         client = self.client
         self.login(client)
         response = client.get('/search/', {'q':"London Teaching Hospital"})
         self.assertContains(response, 'My Name')
         self.assertNotContains(response, 'Aptivate Employee')
         self.assertNotContains(response, 'Anew Person')
+    
+    def test_search_for_name_has_role(self):
+        client = self.client
+        self.login(client)
+        response = client.get('/search/', {'q':"My Name"})
+        self.assertContains(response, "Head of Surgery")
+        self.assertNotContains(response, "Pharmacist")
+        self.assertNotContains(response, "Researcher")
+    
+    def test_search_for_name_has_organization(self):
+        client = self.client
+        self.login(client)
+        response = client.get('/search/', {'q':"My Name"})
+        self.assertContains(response, "Head of Surgery")
+        self.assertNotContains(response, "Selby's Pharmacy")
+        self.assertNotContains(response, "Imperial College")
     
     def test_no_results(self):
         client = self.client
