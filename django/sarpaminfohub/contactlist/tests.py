@@ -25,71 +25,56 @@ class SimpleTest(TestCase):
         self.createContacts()
     
     def createContacts(self):
-        c = Contact(first_name="My", last_name="Name", phone="(12345) 678910",
-                   email="a@b.c", address="123 A Road Name, Somewhere", 
+        c = Contact(given_name="My", family_name="Name", phone="(12345) 678910",
+                   email="a@b.c", address_line_1="123 A Road Name, Somewhere", 
                    note="Note Very Important")
         c.save()
         c = Contact(
-                   first_name="Anew", last_name="Person", phone="(54321) 123456",
-                   email="d@e.f", address="456 A Road, Through the Looking Glass"
+                   given_name="Anew", family_name="Person", phone="(54321) 123456",
+                   email="d@e.f", address_line_1="456 A Road, Through the Looking Glass"
                    )
         c.save()
-        c = Contact(first_name="Aptivate", last_name="Employee", phone="(32543) 523566",
-                   email="g@h.i", address="999 Letsbe Avenue", note="Death Note")
+        c = Contact(given_name="Aptivate", family_name="Employee", phone="(32543) 523566",
+                   email="g@h.i", address_line_1="999 Letsbe Avenue", note="Death Note")
         c.save()
     
-    def testSearchByFirstName(self):
+    def test_search_by_given_name(self):
         client = self.client
         self.login(client)
         response = client.get('/search/', {'q':"My"})
         self.assertContains(response, 'My Name')
     
-    def testSearchByLastName(self):
+    def test_search_by_family_name(self):
         client = self.client
         self.login(client)
         response = client.get('/search/', {'q':"Person"})
         self.assertContains(response, 'Anew Person')
     
-    def testSearchByPhone(self):
-        client = self.client
-        self.login(client)
-        response = client.get('/search/', {'q':"523566"})
-        self.assertContains(response, 'Aptivate Employee')
-    
-    def testSearchByEmail(self):
-        client = self.client
-        self.login(client)
-        response = client.get('/search/', {'q':"g@h.i"})
-        self.assertContains(response, 'Aptivate Employee')
-    
-    def testSearchByAddress(self):
-        client = self.client
-        self.login(client)
-        response = client.get('/search/', {'q':"A Road Name"})
-        self.assertContains(response, 'My Name')
-        
-        response = client.get('/search/', {'q':"A Road"})
-        self.assertContains(response, 'My Name')
-        self.assertContains(response, 'Anew Person')
-    
-    def testSearchByNote(self):
+    def test_search_by_note_for_name(self):
         client = self.client
         self.login(client)
         
         response = client.get('/search/', {'q':"Note Very Important"})
         self.assertContains(response, 'My Name')
-        
+    
+    def test_search_has_note(self):
+        client = self.client
+        self.login(client)
         response = client.get('/search/', {'q':"Note"})
         self.assertContains(response, 'My Name')
         self.assertContains(response, 'Aptivate Employee')
+        self.assertNotContains(response, 'Anew Person')
         
+    def test_search_test_text(self):
+        client = self.client
+        self.login(client)
         response = client.get('/search/', {'q':""})
-        self.assertContains(response, 'Search for a contact by First Name, ' +
-        'Last Name, Email Address, Phone Number, Address or the content ' +
-        'of notes made about them.')
-        
-    def testNoResults(self):
+        self.assertContains(response, 'Search for a contact by Given Name, '
+            +'Family Name, Email Address, Phone Number, Address '
+            +'or the content of notes made about them.')
+    
+    def test_no_results(self):
         client = self.client
         self.login(client)
         response = client.get('/search/', {'q':"Invalid String"})
-        self.assertContains(response, 'No results found.')
+        self.assertContains(response, 'No Results found.')

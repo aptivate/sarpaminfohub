@@ -57,7 +57,7 @@ SECRET_KEY = 'i6&2c0#+kh&wiep1#58al8y+%h3xcm7!$n%np@%p2c8hc^0m#7'
 # Haystack search options
 HAYSTACK_SITECONF = 'sarpaminfohub.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'whoosh'
-HAYSTACK_WHOOSH_PATH = os.path.join(settings_dir, "..", 'search_index')
+HAYSTACK_WHOOSH_PATH = os.path.join(settings_dir, 'search_index')
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
