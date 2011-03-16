@@ -50,12 +50,6 @@ class SimpleTest(TestCase):
         response = client.get('/search/', {'q':"Person"})
         self.assertContains(response, 'Anew Person')
             
-    def testSearchByEmail(self):
-        client = self.client
-        self.login(client)
-        response = client.get('/search/', {'q':"g@h.i"})
-        self.assertContains(response, 'Aptivate Employee')
-    
     def testSearchByAddress(self):
         client = self.client
         self.login(client)
