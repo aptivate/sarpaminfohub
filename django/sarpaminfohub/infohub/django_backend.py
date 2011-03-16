@@ -90,6 +90,8 @@ class DjangoBackend(Backend):
         for product in products:
             record = {}
             record['product'] = product.name
+            record['formulation_name'] = product.formulation.name
+            record['formulation_url'] = product.formulation.get_url()
 
             results.append(record)
 
