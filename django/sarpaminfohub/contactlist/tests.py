@@ -38,26 +38,26 @@ class SimpleTest(TestCase):
                    email="g@h.i", address_line_1="999 Letsbe Avenue", note="Death Note")
         c.save()
     
-    def testSearchByGivenName(self):
+    def test_search_by_given_name(self):
         client = self.client
         self.login(client)
         response = client.get('/search/', {'q':"My"})
         self.assertContains(response, 'My Name')
     
-    def testSearchByFamilyName(self):
+    def test_search_by_family_name(self):
         client = self.client
         self.login(client)
         response = client.get('/search/', {'q':"Person"})
         self.assertContains(response, 'Anew Person')
     
-    def testSearchByNoteForName(self):
+    def test_search_by_note_for_name(self):
         client = self.client
         self.login(client)
         
         response = client.get('/search/', {'q':"Note Very Important"})
         self.assertContains(response, 'My Name')
     
-    def testSearchHasNote(self):
+    def test_search_has_note(self):
         client = self.client
         self.login(client)
         response = client.get('/search/', {'q':"Note"})
@@ -65,7 +65,7 @@ class SimpleTest(TestCase):
         self.assertContains(response, 'Aptivate Employee')
         self.assertNotContains(response, 'Anew Person')
         
-    def testSearchTestText(self):
+    def test_search_test_text(self):
         client = self.client
         self.login(client)
         response = client.get('/search/', {'q':""})
@@ -73,7 +73,7 @@ class SimpleTest(TestCase):
             +'Family Name, Email Address, Phone Number, Address '
             +'or the content of notes made about them.')
     
-    def testNoResults(self):
+    def test_no_results(self):
         client = self.client
         self.login(client)
         response = client.get('/search/', {'q':"Invalid String"})
