@@ -59,7 +59,7 @@
             
              "designation": "1",
             
-             "tags": "genius, Walter's Lab",
+             "tags": "Pharmacology, Research, Cutting Edge, Retrovirus",
             
              "country": "USA",
             
@@ -75,7 +75,7 @@
             
              "address_line_2": "",
             
-             "email": "walter@massivedynamic.com",
+             "email": "",
             
              "address_line_1": ""
         
@@ -100,7 +100,7 @@
             
              "designation": "5",
             
-             "tags": "FBI, Agent, Boston Office",
+             "tags": "Bioethics, Research",
             
              "country": "USA",
             
@@ -140,7 +140,7 @@
             
              "designation": "5",
             
-             "tags": "Robotic Arm, Massive Dynamic",
+             "tags": "Machine Human Interface, Research",
             
              "country": "USA",
             
@@ -164,44 +164,6 @@
         
     
     },
-    {
-        
-            "pk": 6,
-        
-             "model": "contactlist.contact",
-        
-             "fields": 
-            
-        {
-            
-                "family_name": "Bishop",
-            
-                 "designation": "2",
-            
-                 "tags": "alternate universe, genius, us government, Secretary of Defense, walternate",
-            
-                 "country": "USA",
-            
-                 "address_line_3": "",
-            
-                 "note": "",
-            
-                 "phone": "",
-            
-                 "given_name": "Walter",
-            
-                 "additional_family_name": "",
-            
-                 "address_line_2": "",
-            
-                 "email": "",
-            
-                 "address_line_1": ""
-            
-        }
-        
-        
-    },
     
         
     {
@@ -218,7 +180,7 @@
             
                  "designation": "5",
             
-                 "tags": "FBI, Junior Agent, Walter's Lab",
+                 "tags": "Assistant, Pharmocology",
             
                  "country": "USA",
             
@@ -258,7 +220,7 @@
             
                  "designation": "4",
             
-                 "tags": "FBI, Supervisory Agent, Boston Office",
+                 "tags": "Physiotherapy",
             
                  "country": "USA",
             
@@ -298,7 +260,7 @@
             
                  "designation": "3",
             
-                 "tags": "alternate universe, polymath, Walter's Lab, Consultant",
+                 "tags": "Psychology, Psychiatry",
             
                  "country": "USA",
             
@@ -338,7 +300,7 @@
             
                  "designation": "3",
             
-                 "tags": "First People, Bowling, Yoda",
+                 "tags": "Psychology, Therapy",
             
                  "country": "USA",
             
@@ -378,7 +340,7 @@
             
                  "designation": "3",
             
-                 "tags": "FBI, Agent, Boston Office",
+                 "tags": "Radiology, deceased",
             
                  "country": "USA",
             
@@ -416,7 +378,7 @@
 
                     "designation": "1",
 
-                    "tags": "Massive Dynamic, genius, deceased",
+                    "tags": "Oncology, deceased",
 
                     "country": "USA",
 
