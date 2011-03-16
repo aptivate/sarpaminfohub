@@ -23,6 +23,7 @@ def run_jenkins(svnuser, svnpass):
     tasklib.update_ve()
     tasklib._install_django_jenkins()
     tasklib.link_local_settings('jenkins')
+    tasklib.clean_db()
     tasklib.update_db()
     checkout_or_update_fixtures(svnuser, svnpass)
     load_fixtures()

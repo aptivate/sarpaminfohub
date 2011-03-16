@@ -214,6 +214,7 @@ def run_jenkins():
     update_ve()
     _install_django_jenkins()
     link_local_settings('jenkins')
+    clean_db()
     update_db()
     _manage_py_jenkins()
 
