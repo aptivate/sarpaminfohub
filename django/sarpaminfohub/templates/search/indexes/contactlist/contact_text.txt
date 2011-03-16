@@ -1,5 +1,7 @@
 {{ object.given_name }}
 {{ object.family_name }}
+{{ object.role }}
+{{ object.organization }}
 {{ object.address_1 }}
 {{ object.address_2 }}
 {{ object.address_3 }}
