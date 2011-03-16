@@ -128,10 +128,19 @@ def checkout_or_update_fixtures():
             with hide('running'):
                 sudo(cmd)
 
-def load_fixtures():
+def load_fixture(name):
     with cd(env.django_root):
-        sudo(env.python_bin + ' manage.py loaddata fixtures/initial_data/*.json')
+        sudo(env.python_bin + ' manage.py loaddata fixtures/initial_data/' + 
+             name + '.json')
 
+def load_fixtures():
+    # the order is important
+    fixtures = ['admin_user', 'formulations', 'countries', 'suppliers','prices',
+                'exchange_rates', 'msh_prices', 'products']
+    
+    for fixture in fixtures:
+        load_fixture(fixture)
+        
 def create_search_dir():
     """Allow Apache to write to files in the search index directory"""
     require('django_root', provided_by=env.valid_envs)
