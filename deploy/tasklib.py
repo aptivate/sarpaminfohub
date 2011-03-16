@@ -46,18 +46,22 @@ def _setup_paths():
     env['manage_py']   = os.path.join(env['django_dir'], 'manage.py')
 
 
-def _manage_py(args):
+def _manage_py(args, cwd=None):
     # if ve is not yet created then python_bin won't exist
     # so check before using manage.py
     if os.path.exists(env['python_bin']):
-        manage_cmd = [env['python_bin'], 'manage.py']
+        manage_cmd = [env['python_bin'], env['manage_py']]
     else:
-        manage_cmd = ['/usr/bin/python2.6', 'manage.py']
+        manage_cmd = ['/usr/bin/python2.6', env['manage_py']]
     if isinstance(args, str):
         manage_cmd.append(args)
     else:
         manage_cmd.extend(args)
-    popen = subprocess.Popen(manage_cmd, cwd=env['django_dir'], stdout=subprocess.PIPE,
+
+    if cwd == None:
+        cwd = env['django_dir']
+
+    popen = subprocess.Popen(manage_cmd, cwd=cwd, stdout=subprocess.PIPE,
                                 stderr=subprocess.STDOUT)
     for line in iter(popen.stdout.readline, ""):
         print line,
@@ -207,7 +211,7 @@ def _manage_py_jenkins():
     args = ['jenkins', ]
     args += ['--pylint-rcfile', os.path.join(env['project_dir'], 'jenkins', 'pylint.rc')]
     args += project_settings.django_apps
-    _manage_py(args)
+    _manage_py(args, cwd=env['project_dir'])
 
 def run_jenkins():
     """ make sure the local settings is correct and the database exists """
