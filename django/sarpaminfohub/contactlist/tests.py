@@ -50,21 +50,27 @@ class SimpleTest(TestCase):
         response = client.get('/search/', {'q':"Person"})
         self.assertContains(response, 'Anew Person')
     
-    # def testSearchByNote(self):
-    #     client = self.client
-    #     self.login(client)
-    #     
-    #     response = client.get('/search/', {'q':"Note Very Important"})
-    #     self.assertContains(response, 'My Name')
-    #     
-    #     response = client.get('/search/', {'q':"Note"})
-    #     self.assertContains(response, 'My Name')
-    #     self.assertContains(response, 'Aptivate Employee')
-    #     
-    #     response = client.get('/search/', {'q':""})
-    #     self.assertContains(response, 'Search for a contact by First Name, ' +
-    #     'Last Name, Email Address, Phone Number, Address or the content ' +
-    #     'of notes made about them.')
+    def testSearchByNoteForName(self):
+        client = self.client
+        self.login(client)
+        
+        response = client.get('/search/', {'q':"Note Very Important"})
+        self.assertContains(response, 'My Name')
+    
+    def testSearchHasNote(self):
+        client = self.client
+        self.login(client)
+        response = client.get('/search/', {'q':"Note"})
+        self.assertContains(response, 'My Name')
+        self.assertContains(response, 'Aptivate Employee')
+        
+    def testSearchTestText(self):
+        client = self.client
+        self.login(client)
+        response = client.get('/search/', {'q':""})
+        self.assertContains(response, 'Search for a contact by Given Name, '
+            +'Family Name, Email Address, Phone Number, Address '
+            +'or the content of notes made about them.')
     
     def testNoResults(self):
         client = self.client
