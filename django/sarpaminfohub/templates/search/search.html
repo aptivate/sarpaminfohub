@@ -1,0 +1,62 @@
+{% extends "page.html" %}
+
+{% block main %}
+    <h2>Search Contacts</h2>
+
+    <form method="get" action=".">{% csrf_token %}
+        <table>
+            {{ form.as_table }}
+            <tr>
+                <td>&nbsp;</td>
+                <td>
+                    <input type="submit" value="Search" />
+                </td>
+            </tr>
+        </table>
+	</form>
+        {% if query %}
+            <h3>Results</h3>
+						<table>
+							<tr>
+								<th>Name</th>
+								<th>Phone Number</th>
+								<th>Address</th>
+								<th>Notes</th>
+								<th>Tags</th>
+							</tr>
+            {% for result in page.object_list %}
+							<tr>
+                <td>
+									{{result.object}}
+								</td>
+								<td>
+									{{result.object.phone}}
+								</td>
+								<td>
+									{{result.object.address_line_1}}
+									{{result.object.address_line_2}}
+									{{result.object.address_line_3}}
+									{{result.object.country}}
+								</td>
+								<td>
+									{{result.object.notes}}
+								</td>
+								<td>
+									{{result.object.tags}}
+								</td>
+							</tr>
+            {% empty %}
+                <tr><td colspan=5>No Results found.</td></tr>
+            {% endfor %}
+						</table>
+            {% if page.has_previous or page.has_next %}
+                <div>
+                    {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous {% if page.has_previous %}</a>{% endif %}
+                    |
+                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            <p>Search for a contact by Given Name, Family Name, Email Address, Phone Number, Address or the content of notes made about them.</p>
+        {% endif %}  
+{% endblock main %}

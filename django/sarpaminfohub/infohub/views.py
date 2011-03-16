@@ -6,8 +6,8 @@ from sarpaminfohub.infohub.django_backend import DjangoBackend
 from sarpaminfohub.infohub.test_backend import TestBackend
 from sarpaminfohub.infohub.formulation_table import FormulationTable
 from sarpaminfohub.infohub.formulation_graph import FormulationGraph
-import re
 from sarpaminfohub.infohub.supplier_table import SupplierTable
+from django.core.urlresolvers import reverse
 
 def get_backend(name):
     if name == "test":
@@ -56,26 +56,17 @@ def formulation(request, formulation_id, backend_name="django"):
     formulation_table = FormulationTable(rows)
     formulation_graph = FormulationGraph(rows_graph, formulation_msh)
 
-    results_href = None
-
-    referer = request.META.get('HTTP_REFERER')
-
-    if referer is not None:
-        referer_parts = re.sub('^https?:\/\/', '', referer).split('/')
-
-        referer_host = referer_parts[0]
-
-        if referer_host == '' or referer_host == request.META.get('HTTP_HOST'):
-            results_href = referer
-
     search_form = SearchForm()
+
+    products_href = reverse('formulation_suppliers', args=[str(formulation_id),
+                                                           backend_name])
 
     return render_to_response('formulation.html',
                               {'formulation_table': formulation_table,
                                'formulation_graph': formulation_graph,
                                'formulation_name': formulation_name,
                                'formulation_msh': formulation_msh,
-                               'results_href' : results_href,
+                               'products_href' : products_href,
                                'search_form' : search_form});
 
 def supplier(request, formulation_id, backend_name="django"):
@@ -86,6 +77,14 @@ def supplier(request, formulation_id, backend_name="django"):
     rows = drug_searcher.get_products_based_on_formulation_with_id(formulation_id)
     
     supplier_table = SupplierTable(rows)
-    
+    search_form = SearchForm()
+
+    formulation_name = drug_searcher.get_formulation_name_with_id(formulation_id)
+    formulation_href = reverse('formulation', args=[str(formulation_id),
+                                                    backend_name])
+
     return render_to_response('formulation_suppliers.html',
-                              {'supplier_table':supplier_table})
+                              {'supplier_table' : supplier_table,
+                               'search_form' : search_form,
+                               'formulation_name' : formulation_name,
+                               'formulation_href' : formulation_href})

@@ -5,13 +5,16 @@
     <li class="selected">Search Results</li>
 
 {% else %}
-
-    {% if results_href != None %}
-
-    <li><a href="{{ results_href }}">Search Results</a></li>
-
-    {% endif %}
+    {% if products_href != None %}
 
     <li class="selected">{{ formulation_name }}</li>
+    <li><a href="{{ products_href }}">Products</a></li>
+
+    {% else %}
+
+    <li><a href="{{formulation_href }}">{{ formulation_name }}</a></li>
+    <li class="selected">Products</li>
+        
+    {% endif %}    
 {% endif %}
 </ul>

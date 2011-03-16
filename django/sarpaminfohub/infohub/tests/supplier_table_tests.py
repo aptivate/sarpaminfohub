@@ -30,6 +30,7 @@ class SupplierTableTest(TableTestCase):
                           supplier)
 
     def test_html_includes_table(self):
-        html = self.supplier_table.as_html()
-        self.assertTrue(self.contains(html, "<table>"))
-        self.assertTrue(self.contains(html, "</table>"))
+        self.check_html_includes_table(self.supplier_table)
+
+    def test_sorted_by_product_name(self):
+        self.check_ordered_by(self.supplier_table, 'product')

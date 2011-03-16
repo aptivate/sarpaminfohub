@@ -5,5 +5,8 @@ class SupplierTable(SarpamTable):
     product = tables.Column()
     suppliers = tables.Column()
 
+    def __init__(self, rows):
+        tables.MemoryTable.__init__(self, rows, order_by='product')
+    
     def get_rows_template(self):
         return "supplier_rows.html"
