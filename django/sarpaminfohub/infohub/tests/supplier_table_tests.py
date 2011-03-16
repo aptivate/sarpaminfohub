@@ -31,3 +31,6 @@ class SupplierTableTest(TableTestCase):
 
     def test_html_includes_table(self):
         self.check_html_includes_table(self.supplier_table)
+
+    def test_sorted_by_product_name(self):
+        self.check_ordered_by(self.supplier_table, 'product')

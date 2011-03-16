@@ -12,3 +12,8 @@ class TableTestCase(SarpamTestCase):
         html = table.as_html()
         self.assertTrue(self.contains(html, "<table class=\"data\">"))
         self.assertTrue(self.contains(html, "</table>"))
+
+    def check_ordered_by(self, table, order):
+        order_by = table.order_by
+        expected_order = (order,)
+        self.assertEquals(expected_order, order_by)

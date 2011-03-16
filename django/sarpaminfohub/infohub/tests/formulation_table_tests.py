@@ -37,6 +37,4 @@ class FormulationTableTest(TableTestCase):
         self.check_html_includes_table(self.formulation_table)
 
     def test_ordered_by_landed_price(self):
-        order_by = self.formulation_table.order_by
-        expected_order = ('landed_price',)
-        self.assertEquals(expected_order, order_by)
+        self.check_ordered_by(self.formulation_table, 'landed_price')
