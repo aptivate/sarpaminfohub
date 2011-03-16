@@ -1,8 +1,3 @@
-'''
-Created on 14 Mar 2011
-
-@author: daniell
-'''
 from haystack.indexes import RealTimeSearchIndex, CharField
 from haystack import site
 from sarpaminfohub.contactlist.models import Contact

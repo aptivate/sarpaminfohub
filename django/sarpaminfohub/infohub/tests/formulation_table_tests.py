@@ -34,9 +34,7 @@ class FormulationTableTest(TableTestCase):
         self.assertAlmostEquals(4.988, landed_price)
 
     def test_html_includes_table(self):
-        html = self.formulation_table.as_html()
-        self.assertTrue(self.contains(html, "<table>"))
-        self.assertTrue(self.contains(html, "</table>"))
+        self.check_html_includes_table(self.formulation_table)
 
     def test_ordered_by_landed_price(self):
         order_by = self.formulation_table.order_by

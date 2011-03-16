@@ -1,7 +1,0 @@
-{{ object.name_en }}
-{{ object.name_fr }}
-{{ object.author }}
-{{ object.theme.name_en }}
-{{ object.theme.name_fr }}
-{{ object.published_date }}
-{{ object.published_by }}

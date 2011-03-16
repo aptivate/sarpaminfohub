@@ -11,3 +11,4 @@ django/sarpaminfohub/sarpam_pma.sqlite
 django/sarpaminfohub/sarpaminfohub.sqlite
 scripts/*.json
 .settings
+.pydevproject

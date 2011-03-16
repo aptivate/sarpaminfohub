@@ -62,7 +62,6 @@ ul.menu li
   background-color:#7381d1;
   width:100%;
   float:left;
-/*  padding:1em;*/
 }
 
 h1
@@ -128,20 +127,20 @@ td, th
   background-color: white ; 
 }
 
-#pricedistribution table, #pricegraph table
+table.data, #pricegraph table
 {
     margin:1em auto;
     width:95%;
 	background-color: #C9D1FF;
 }
 
-#pricedistribution table td
+table.data td
 {
    	border-color: #5b66a6 ; 
 	border-width: 1px 0 ;
 }
 
-#pricedistribution table th
+table.data th
 {
     color: white;
 	background-color:#7381d1;

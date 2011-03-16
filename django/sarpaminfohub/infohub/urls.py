@@ -11,5 +11,5 @@ urlpatterns += patterns('sarpaminfohub.infohub.views',
                         url(r'formulation/(?P<formulation_id>\d+)/(?P<backend_name>[a-z]*)', 
                             'formulation', name='formulation'),
                         url(r'formulation_suppliers/(?P<formulation_id>\d+)/(?P<backend_name>[a-z]*)',
-                            'supplier'),
+                            'supplier', name='formulation_suppliers'),
                         )
