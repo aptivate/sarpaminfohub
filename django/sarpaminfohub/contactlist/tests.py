@@ -63,6 +63,7 @@ class SimpleTest(TestCase):
         response = client.get('/search/', {'q':"Note"})
         self.assertContains(response, 'My Name')
         self.assertContains(response, 'Aptivate Employee')
+        self.assertNotContains(response, 'Anew Person')
         
     def testSearchTestText(self):
         client = self.client
