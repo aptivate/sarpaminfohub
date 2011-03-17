@@ -8,6 +8,7 @@ from sarpaminfohub.infohub.formulation_table import FormulationTable
 from sarpaminfohub.infohub.formulation_graph import FormulationGraph
 from sarpaminfohub.infohub.supplier_table import SupplierTable
 from django.core.urlresolvers import reverse
+from sarpaminfohub.infohub.supplier_catalogue_table import SupplierCatalogueTable
 
 def get_backend(name):
     if name == "test":
@@ -88,3 +89,15 @@ def supplier(request, formulation_id, backend_name="django"):
                                'search_form' : search_form,
                                'formulation_name' : formulation_name,
                                'formulation_href' : formulation_href})
+
+def supplier_catalogue(request, supplier_id, backend_name="django"):
+    backend = get_backend(backend_name)
+
+    drug_searcher = DrugSearcher(backend)
+
+    rows = drug_searcher.get_products_based_on_supplier_with_id(supplier_id)
+
+    supplier_catalogue_table = SupplierCatalogueTable(rows)
+
+    return render_to_response('supplier_catalogue.html',
+                              {'supplier_catalogue_table':supplier_catalogue_table})

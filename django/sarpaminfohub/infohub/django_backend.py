@@ -81,3 +81,18 @@ class DjangoBackend(Backend):
             results.append(record)
             
         return results
+
+    def get_products_based_on_supplier_with_id(self, supplier_id):
+        products = Product.objects.filter(suppliers=supplier_id)
+
+        results = []
+
+        for product in products:
+            record = {}
+            record['product'] = product.name
+            record['formulation_name'] = product.formulation.name
+            record['formulation_url'] = product.formulation.get_url()
+
+            results.append(record)
+
+        return results
