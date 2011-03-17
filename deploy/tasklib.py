@@ -171,18 +171,22 @@ def update_db():
         db_exist = subprocess.call(
                     ['mysql', '-u', db_user, '-p'+db_pw, db_name, '-e', 'quit'])
         if db_exist != 0:
-            test_db_name = 'test_' + db_name
             # create the database and grant privileges
             root_pw = _get_mysql_root_password()
             mysql_cmd = 'CREATE DATABASE %s CHARACTER SET utf8' % db_name
             subprocess.call(['mysql', '-u', 'root', '-p'+root_pw, '-e', mysql_cmd])
-            mysql_cmd = 'CREATE DATABASE %s CHARACTER SET utf8' % test_db_name
-            subprocess.call(['mysql', '-u', 'root', '-p'+root_pw, '-e', mysql_cmd])
             mysql_cmd = ('GRANT ALL PRIVILEGES ON %s.* TO \'%s\'@\'localhost\' IDENTIFIED BY \'%s\'' % 
                 (db_name, db_user, db_pw))
             subprocess.call(['mysql', '-u', 'root', '-p'+root_pw, '-e', mysql_cmd])
+
+            # create the test database, grant privileges and drop it again
+            test_db_name = 'test_' + db_name
+            mysql_cmd = 'CREATE DATABASE %s CHARACTER SET utf8' % test_db_name
+            subprocess.call(['mysql', '-u', 'root', '-p'+root_pw, '-e', mysql_cmd])
             mysql_cmd = ('GRANT ALL PRIVILEGES ON %s.* TO \'%s\'@\'localhost\' IDENTIFIED BY \'%s\'' % 
                 (test_db_name, db_user, db_pw))
+            subprocess.call(['mysql', '-u', 'root', '-p'+root_pw, '-e', mysql_cmd])
+            mysql_cmd = ('DROP DATABASE %s' % test_db_name)
             subprocess.call(['mysql', '-u', 'root', '-p'+root_pw, '-e', mysql_cmd])
     # if we are using South we need to do the migrations aswell
     use_migrations = False
