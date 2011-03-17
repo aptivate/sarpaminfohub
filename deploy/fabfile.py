@@ -139,7 +139,7 @@ def load_fixture(name):
 def load_fixtures():
     # the order is important
     fixtures = ['admin_user', 'formulations', 'countries', 'suppliers','prices',
-                'exchange_rates', 'msh_prices', 'products']
+                'exchange_rates', 'msh_prices', 'products', 'temp_data']
     
     for fixture in fixtures:
         load_fixture(fixture)
