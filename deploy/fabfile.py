@@ -2,12 +2,12 @@
 # we deliberately import all of this to get all the commands it
 # provides as fabric commands
 import os
-from fabric.api import env, sudo, require, cd
+from fabric.api import env, sudo, require, cd, settings
 from fabric.contrib import files
 from fabric.context_managers import hide
 
-from fablib import apache_reload, apache_restart, checkout_or_update, \
-             configtest, create_virtualenv, deploy_clean, \
+from fablib import apache_cmd, apache_reload, apache_restart, \
+             checkout_or_update, configtest, deploy_clean, \
              link_apache_conf, link_local_settings, local_test, remote_test, \
              touch, update_db, update_requirements
 import fablib
@@ -36,6 +36,8 @@ env.project_type = "django"
 
 # does this virtualenv for python packages
 env.use_virtualenv = True
+
+env.use_apache = True
 
 # valid environments - used for require statements in fablib
 env.valid_non_prod_envs = ('dev_server', 'staging_test', 'staging')
@@ -88,16 +90,17 @@ def staging():
 def production():
     """ use production environment on remote host"""
     env.environment = 'production'
-    env.hosts = ['lin-sarpaminfohub.aptivate.org:48001']
+    env.hosts = ['lin-sarpam.aptivate.org:48001']
     _local_setup()
 
 
 def deploy(revision=None):
     """ update remote host environment (virtualenv, deploy, update) """
     require('project_root', provided_by=env.valid_envs)
+    with settings(warn_only=True):
+        apache_cmd('stop')
     if not files.exists(env.project_root):
         sudo('mkdir -p %(project_root)s' % env)
-    create_virtualenv()
     checkout_or_update(revision)
     checkout_or_update_fixtures()
     update_requirements()
@@ -106,7 +109,7 @@ def deploy(revision=None):
     update_db()
     load_fixtures()
     link_apache_conf()
-    apache_restart()
+    apache_cmd('start')
 
 def checkout_or_update_fixtures():
     """ checkout the project from subversion """

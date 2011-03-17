@@ -10,6 +10,9 @@ django/sarpaminfohub/fixtures/*.json
 django/sarpaminfohub/fixtures/initial_data
 django/sarpaminfohub/sarpam_pma.sqlite
 django/sarpaminfohub/sarpaminfohub.sqlite
+django/sarpaminfohub/reports
+django/sarpaminfohub/.ve
+django/sarpaminfohub/distribute-*.tar.gz
 scripts/*.json
 .settings
 .pydevproject
