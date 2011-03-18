@@ -5,6 +5,14 @@ from models import Price
 from sarpaminfohub.infohub.models import Formulation, Product, Supplier
 
 class DjangoBackend(Backend):
+    def get_msh_price_from_formulation(self, formulation):
+        try:
+            msh_price = formulation.mshprice.price
+        except ObjectDoesNotExist:
+            msh_price = None
+            
+        return msh_price
+    
     def get_formulations_that_match(self, search_term):
         prices = Price.objects.filter(formulation__name__icontains=search_term)
 
@@ -17,10 +25,7 @@ class DjangoBackend(Backend):
             record['country'] = price.country.name
             record['fob_price'] = price.fob_price
             record['landed_price'] = price.landed_price
-            try:
-                record['msh_price'] = price.formulation.mshprice.price
-            except ObjectDoesNotExist:
-                record['msh_price'] = ''
+            record['msh_price'] = self.get_msh_price_from_formulation(price.formulation)
             record['fob_currency'] = price.fob_currency
             record['period'] = price.period
             record['issue_unit'] = price.issue_unit
@@ -40,10 +45,7 @@ class DjangoBackend(Backend):
             record['country'] = price.country.name
             record['fob_price'] = price.fob_price
             record['landed_price'] = price.landed_price
-            try:
-                record['msh_price'] = price.formulation.mshprice.price
-            except ObjectDoesNotExist:
-                record['msh_price'] = ''
+            record['msh_price'] = self.get_msh_price_from_formulation(price.formulation)
             record['fob_currency'] = price.fob_currency
             record['period'] = price.period
             record['landed_currency'] = price.landed_currency
@@ -58,11 +60,7 @@ class DjangoBackend(Backend):
 
     def get_formulation_msh_with_id(self, formulation_id):
         formulation = Formulation.objects.get(pk=formulation_id)
-
-        try:
-            return formulation.mshprice.price
-        except ObjectDoesNotExist:
-            return None
+        return self.get_msh_price_from_formulation(formulation)
 
     def get_products_based_on_formulation_with_id(self, formulation_id):
         products = Product.objects.filter(formulation=formulation_id)

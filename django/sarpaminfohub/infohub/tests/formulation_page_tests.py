@@ -3,7 +3,7 @@ from sarpaminfohub.infohub.tests.page_display_test_case import PageDisplayTestCa
 
 class FormulationPageTest(PageDisplayTestCase):
     def setUp(self):
-        self.setup_exchange_rate_for_nad()
+        self.set_up_exchange_rate_for_nad()
         
     def test_display_formulation_uses_correct_template(self):
         response = self.load_page_for_formulation_amitriptyline_prices()

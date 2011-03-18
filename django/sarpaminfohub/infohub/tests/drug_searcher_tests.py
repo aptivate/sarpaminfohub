@@ -9,7 +9,7 @@ class DrugSearcherTest(SarpamTestCase):
         self.drug_searcher = DrugSearcher(test_backend)
     
     def test_prices_converted_to_usd(self):
-        self.setup_exchange_rate_for_nad()
+        self.set_up_exchange_rate_for_nad()
         
         fob_price_in_nad = 58.64
         landed_price_in_nad = 67.44
@@ -35,7 +35,7 @@ class DrugSearcherTest(SarpamTestCase):
         self.assertEquals(None, row['landed_price'])
         
     def test_prices_for_amoxycillin_is_converted_to_usd(self):
-        self.setup_exchange_rate_for_nad()
+        self.set_up_exchange_rate_for_nad()
         
         fob_price_in_nad = 58.64
         landed_price_in_nad = 67.44
@@ -57,9 +57,9 @@ class DrugSearcherTest(SarpamTestCase):
         self.assertEquals("amitriptyline 25mg tablet", name)
 
     def get_formulations_that_match_amox(self):
-        self.setup_exchange_rate_for_eur()
-        self.setup_exchange_rate_for_nad()
-        self.setup_exchange_rate_for_usd()
+        self.set_up_exchange_rate_for_eur()
+        self.set_up_exchange_rate_for_nad()
+        self.set_up_exchange_rate_for_usd()
         
         return self.drug_searcher.get_formulations_that_match("amox")
         

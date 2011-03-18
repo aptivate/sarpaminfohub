@@ -10,7 +10,7 @@ class DjangoBackendTest(SarpamTestCase):
         self.expected_ciprofloxacin_results = \
             {"formulation":"ciprofloxacin 500mg tablet",
              "country": "Democratic Republic of Congo",
-             "msh_price": Decimal("0.000002"),
+             "msh_price": Decimal("0.033"),
              "fob_price": Decimal("0.000003"),
              "landed_price": Decimal("0.000004"),
              "fob_currency": 'EUR',
@@ -19,19 +19,21 @@ class DjangoBackendTest(SarpamTestCase):
              "landed_currency": 'EUR',
              'url': '/formulation/1/'}
 
-        ciprofloxacin = self.setup_drc_ciprofloxacin(fob_price=Decimal("0.000003"),
-                                     msh_price=Decimal("0.000002"),
+        self.ciprofloxacin = self.set_up_drc_ciprofloxacin(fob_price=Decimal("0.000003"),
                                      landed_price=Decimal("0.000004"))
         
-        self.setup_suppliers_of_formulation(ciprofloxacin)
+        self.set_up_suppliers_of_formulation(self.ciprofloxacin)
     
     def test_search_for_ciprofloxacin_returns_ciprofloxacin_500mg(self):
+        self.set_up_msh_for_ciprofloxacin()
         results = self.backend.get_formulations_that_match('ciprofloxacin')
         self.assertEquals(self.expected_ciprofloxacin_results, results[0])
 
-    def test_search_is_case_sensitive(self):
+    def test_search_is_case_insensitive(self):
         results = self.backend.get_formulations_that_match('CIPROFLOXACIN')
-        self.assertEquals(self.expected_ciprofloxacin_results, results[0])
+        first_row = results[0]
+        self.assertEquals(self.expected_ciprofloxacin_results['formulation'],
+                          first_row['formulation'])
 
     def get_first_row_of_prices_with_formulation_id_1(self):
         rows = self.backend.get_prices_for_formulation_with_id(1)
@@ -51,9 +53,6 @@ class DjangoBackendTest(SarpamTestCase):
     def test_ciprofloxacin_landed_price_can_be_retrieved_by_id(self):
         self.check_column_matches_expected_field_with_name('landed_price')
 
-    def test_ciprofloxacin_msh_price_can_be_retrieved_by_id(self):
-        self.check_column_matches_expected_field_with_name('msh_price')
-
     def test_ciprofloxacin_fob_currency_can_be_retrieved_by_id(self):
         self.check_column_matches_expected_field_with_name('fob_currency')
         
@@ -71,8 +70,10 @@ class DjangoBackendTest(SarpamTestCase):
         self.assertEquals("ciprofloxacin 500mg tablet", name)
 
     def test_formulation_msh_can_be_retrieved_by_id(self):
-        msh = self.backend.get_formulation_msh_with_id(1)
-        self.assertEquals(self.expected_ciprofloxacin_results['msh_price'], msh)
+        self.set_up_msh_for_ciprofloxacin()
+        msh_price = self.backend.get_formulation_msh_with_id(1)
+        self.assertEquals(self.expected_ciprofloxacin_results['msh_price'], 
+                          msh_price)
 
     def test_ciprofloxacin_product_can_be_retrieved_by_id(self):
         products = self.backend.get_products_based_on_formulation_with_id(1)
@@ -97,3 +98,12 @@ class DjangoBackendTest(SarpamTestCase):
     def test_supplier_name_can_be_retrieved_by_id(self):
         supplier_name = self.backend.get_name_of_supplier_with_id(1)
         self.assertEquals("Biotech Laboratories", supplier_name)
+
+    def test_msh_price_none_for_formulation_with_no_msh(self):
+        first_row = self.get_first_row_of_prices_with_formulation_id_1()
+        self.assertEquals(None, first_row['msh_price'])
+
+    def test_msh_price_none_for_matching_formulation_with_no_msh(self):
+        results = self.backend.get_formulations_that_match('ciprofloxacin')
+        first_row = results[0]
+        self.assertEquals(None, first_row['msh_price'])

@@ -123,7 +123,7 @@ class SearchTest(SarpamTestCase):
         return parser.rows
     
     def test_search_for_ciprofloxacin_returns_south_africa_prices(self):
-        self.setup_exchange_rate_for_zar()
+        self.set_up_exchange_rate_for_zar()
         rows = self.get_rows_for_ciprofloxacin('test')
         expected_rows = [["ciprofloxacin 500mg tablet",
                           "0.044", "0.044", "0.033"]]
@@ -154,8 +154,9 @@ class SearchTest(SarpamTestCase):
                           parser.headings)
 
     def test_search_for_ciprofloxacin_with_django_backend_returns_drc_prices(self):
-        self.setup_drc_ciprofloxacin()
-        self.setup_exchange_rate_for_eur()
+        self.set_up_drc_ciprofloxacin()
+        self.set_up_msh_for_ciprofloxacin()
+        self.set_up_exchange_rate_for_eur()
         parser = self.parse_search_results_for("ciprofloxacin")
         
         expected_rows = [["ciprofloxacin 500mg tablet",
@@ -165,8 +166,8 @@ class SearchTest(SarpamTestCase):
         self.assertEquals(expected_rows, parser.rows)
         
     def test_null_prices_displayed_as_double_dash(self):
-        self.setup_drc_ciprofloxacin(fob_price=None, landed_price=None, msh_price=None)
-        self.setup_exchange_rate_for_eur()
+        self.set_up_drc_ciprofloxacin(fob_price=None, landed_price=None)
+        self.set_up_exchange_rate_for_eur()
         
         rows = self.get_rows_for_ciprofloxacin()
         
@@ -175,19 +176,21 @@ class SearchTest(SarpamTestCase):
         self.assertEquals(expected_rows, rows)
 
     def test_price_cells_are_in_number_class(self):
-        self.setup_exchange_rate_for_zar()
+        self.set_up_exchange_rate_for_zar()
         parser = self.parse_search_results_for("ciprofloxacin", backend='test')
-        self.assertEquals([None, "number", "number", "number"], parser.cell_classes)
+        self.assertEquals([None, "number", "number", "number"], 
+                          parser.cell_classes)
         
     def test_search_results_link_to_formulation_page(self):
-        self.setup_exchange_rate_for_usd()
-        self.setup_exchange_rate_for_eur()
-        self.setup_exchange_rate_for_nad()
+        self.set_up_exchange_rate_for_usd()
+        self.set_up_exchange_rate_for_eur()
+        self.set_up_exchange_rate_for_nad()
         parser = self.parse_search_results_for("amox", backend='test')
         self.assertEquals(3, len(parser.hrefs))
         amoxycillin125_href = "/formulation/9/"
         amoxycillin500_href = "/formulation/10/"
         tamoxifen_href = "/formulation/49/"
         
-        expected_hrefs = [amoxycillin125_href, amoxycillin500_href, tamoxifen_href] 
+        expected_hrefs = [amoxycillin125_href, amoxycillin500_href, 
+                          tamoxifen_href] 
         self.assertEquals(expected_hrefs, parser.hrefs)
