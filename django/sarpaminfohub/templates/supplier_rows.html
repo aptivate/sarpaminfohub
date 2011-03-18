@@ -1,6 +1,10 @@
 {% for row in table.rows %}
   <tr>
     <td>{{ row.product }}</td>
-    <td>{{ row.suppliers }}</td>    
+    <td>
+        {% for supplier in row.suppliers %}
+        <a href="{{supplier.url}}">{{ supplier.name }}</a>
+        {% endfor %}
+    </td>
   </tr>
 {% endfor %}

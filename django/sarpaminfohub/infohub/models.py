@@ -34,6 +34,9 @@ class MSHPrice(models.Model):
 class Supplier(models.Model):
     name = models.CharField(max_length=200)
 
+    def get_url(self):
+        return reverse('suppliers', args=[str(self.id), ""])
+
 class Product(models.Model):
     formulation = models.ForeignKey(Formulation)
     name = models.CharField(max_length=200)

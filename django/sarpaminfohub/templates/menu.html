@@ -1,20 +1,11 @@
+{% spaceless %}
 <ul class="menu">
-
-{% if formulation_name == None %}
-
-    <li class="selected">Search Results</li>
-
+{% for entry in menu.entries %}
+{% if entry.href == None %}
+    <li class="selected">{{ entry.text }}</li>
 {% else %}
-    {% if products_href != None %}
-
-    <li class="selected">{{ formulation_name }}</li>
-    <li><a href="{{ products_href }}">Products</a></li>
-
-    {% else %}
-
-    <li><a href="{{formulation_href }}">{{ formulation_name }}</a></li>
-    <li class="selected">Products</li>
-        
-    {% endif %}    
+    <li><a href="{{ entry.href }}">{{ entry.text }}</a></li>
 {% endif %}
+{% endfor %}
 </ul>
+{% endspaceless %}

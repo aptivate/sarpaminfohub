@@ -17,5 +17,8 @@ class Backend(object):
     def get_products_based_on_formulation_with_id(self, formulation_id):
         self.abstract()
 
-    def get_products_based_on_supplier_with_id(self, supplier_id):
+    def get_products_from_supplier_with_id(self, supplier_id):
+        self.abstract()
+
+    def get_name_of_supplier_with_id(self, supplier_id):
         self.abstract()

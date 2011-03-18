@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 from sarpaminfohub.infohub.tests.table_test_case import TableTestCase
-from sarpaminfohub.infohub.supplier_table import SupplierTable
-class SupplierTableTest(TableTestCase):
+from sarpaminfohub.infohub.product_table import ProductTable
+class ProductTableTest(TableTestCase):
     FIRST_ROW = 0
     
     PRODUCT_COLUMN = 0
@@ -14,7 +14,7 @@ class SupplierTableTest(TableTestCase):
                  "product":"AMITRILON-25",
                  "suppliers":suppliers}]
 
-        self.supplier_table = SupplierTable(supplier_records)
+        self.supplier_table = ProductTable(supplier_records)
         rows = self.supplier_table.rows
         self.first_row = rows[self.FIRST_ROW]
     

@@ -135,13 +135,10 @@ class DrugSearcher(object):
         return self.backend.get_formulation_msh_with_id(formulation_id)
 
     def get_products_based_on_formulation_with_id(self, formulation_id):
-        products = self.backend.get_products_based_on_formulation_with_id(formulation_id)
-        for product in products:
-            suppliers = product['suppliers']
-            suppliers = ', ' . join(suppliers)
-            product['suppliers'] = suppliers
-            
-        return products
+        return self.backend.get_products_based_on_formulation_with_id(formulation_id)
 
-    def get_products_based_on_supplier_with_id(self, supplier_id):
-        return self.backend.get_products_based_on_supplier_with_id(supplier_id)
+    def get_products_from_supplier_with_id(self, supplier_id):
+        return self.backend.get_products_from_supplier_with_id(supplier_id)
+
+    def get_name_of_supplier_with_id(self, supplier_id):
+        return self.backend.get_name_of_supplier_with_id(supplier_id)

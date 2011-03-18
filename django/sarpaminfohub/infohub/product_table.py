@@ -1,7 +1,7 @@
 import django_tables as tables
 from sarpaminfohub.infohub.sarpam_table import SarpamTable
 
-class SupplierTable(SarpamTable):
+class ProductTable(SarpamTable):
     product = tables.Column()
     suppliers = tables.Column()
 

@@ -20,10 +20,15 @@
             {{ search_form.as_p }}
             <input type="submit" value="Search" />
         </form>
-				<a href="/search/"><h3>Search contacts</h3></a>
         {% endif %}
         
+        <h2>{{ sub_title }}</h2>
+        
         <div class='main'>
+        {% if menu %}
+        {{ menu.as_html }}
+        {% endif %}
+        
         {% block main %}
         <p>Nothing here yet...</p>
         {% endblock %}

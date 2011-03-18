@@ -136,10 +136,34 @@ class TestBackend(Backend):
         return 0.0057
 
     def get_products_based_on_formulation_with_id(self, formulation_id):
-        suppliers = [u"Afrifármacia, Lda", "Aspen Pharmacare Ltd, S.A"]
+        amitrilon25 = self.get_amitrilon25()        
+        products = [amitrilon25]
+        return products
+    
+    def get_products_from_supplier_with_id(self, supplier_id):
+#        amitrilon25 = self.get_amitrilon25()
+
+        amitrilon25 = {}
+        amitrilon25['product'] = "AMITRILON-25"
+        amitrilon25['formulation_name'] = "amitriptyline 25mg tablet"
+        amitrilon25['formulation_url'] = "/formulation/1/test"
+
+        products = [amitrilon25]
+        return products
+
+    def get_amitrilon25(self):
+        afrifarmacia = {'name':u"Afrifármacia, Lda",
+                        'url':"/suppliers/1/test"}
+        
+        aspen_pharmacare = {'name': "Aspen Pharmacare Ltd, S.A",
+                            'url': "/suppliers/2/test"}
+
+        suppliers = [afrifarmacia, aspen_pharmacare]
 
         amitrilon25 = {'product': "AMITRILON-25", 
                        'suppliers': suppliers} 
-        
-        products = [amitrilon25]
-        return products
+
+        return amitrilon25
+
+    def get_name_of_supplier_with_id(self, supplier_id):
+        return u"Afrifármacia, Lda"

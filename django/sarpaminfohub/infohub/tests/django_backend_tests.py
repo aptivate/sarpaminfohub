@@ -84,7 +84,16 @@ class DjangoBackendTest(SarpamTestCase):
         products = self.backend.get_products_based_on_formulation_with_id(1)
         biofloxx = products[0]
         
-        expected_suppliers= ['Biotech Laboratories', \
-                             'Camox Pharmaceuticals (Pty) Ltd']
+        biotech_laboratories = {'name' : "Biotech Laboratories",
+                                'url' : "/suppliers/1/"}
+        
+        camox = {'name' : "Camox Pharmaceuticals (Pty) Ltd",
+                 'url' : "/suppliers/2/"}
+        
+        expected_suppliers= [biotech_laboratories, camox]
         
         self.assertEquals(expected_suppliers, biofloxx['suppliers'])
+
+    def test_supplier_name_can_be_retrieved_by_id(self):
+        supplier_name = self.backend.get_name_of_supplier_with_id(1)
+        self.assertEquals("Biotech Laboratories", supplier_name)
