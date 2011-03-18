@@ -64,7 +64,6 @@ def _local_setup():
 
 def dev_server():
     """ use dev environment on remote host to play with code in production-like env"""
-    utils.abort('remove this line when dev server setup')
     env.environment = 'dev_server'
     env.hosts = ['fen-vz-sarpaminfohub-dev']
     _local_setup()

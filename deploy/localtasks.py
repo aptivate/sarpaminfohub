@@ -29,8 +29,8 @@ def run_jenkins(svnuser, svnpass):
     load_fixtures()
     # for jenkins, link to sarpaminfohub directory so that we can read the nice
     # reports
-    if not os.path.exists(os.path.join(tasklib.env['project_dir'], 'sarpaminfohub')):
-        subprocess.call(['ln', '-s', 'django/sarpaminfohub'], cwd=tasklib.env['project_dir'])
+    if not os.path.exists(os.path.join(tasklib.env['project_dir'], 'infohub')):
+        subprocess.call(['ln', '-s', 'django/sarpaminfohub/infohub'], cwd=tasklib.env['project_dir'])
     tasklib._manage_py_jenkins()
 
 
