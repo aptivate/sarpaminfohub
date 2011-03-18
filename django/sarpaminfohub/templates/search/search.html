@@ -5,7 +5,11 @@
 
     <form method="get" action=".">{% csrf_token %}
         <table>
-            {{ form.as_table }}
+            {{ form.q }}
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
             <tr>
                 <td>&nbsp;</td>
                 <td>
