@@ -4,4 +4,4 @@
 # application
 django_dir = "django/sarpaminfohub"
 
-django_apps = ['infohub', ]
+django_apps = ['infohub', 'contactlist']

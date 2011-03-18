@@ -25,7 +25,7 @@ env.svnuser = ""
 env.svnpass = ""
 
 env.django_dir = "django/" + env.project
-env.django_apps = ['infohub', ]
+env.django_apps = ['infohub', 'contactlist']
 env.test_cmd = ' manage.py test -v0 ' + ' '.join(env.django_apps)
 
 
