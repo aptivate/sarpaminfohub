@@ -99,10 +99,13 @@ def deploy(revision=None):
         apache_cmd('stop')
     if not files.exists(env.project_root):
         sudo('mkdir -p %(project_root)s' % env)
+        
     checkout_or_update(revision)
     fablib._get_svn_user_and_pass()
-    sudo(env.tasks_bin + ' checkout_or_update_fixtures:svnuser=' + env.svnuser +
-                         ',svnpass=' + env.svnpass)
+    
+    with hide('running'):
+        sudo(env.tasks_bin + ' checkout_or_update_fixtures:svnuser=' + 
+             env.svnuser + ',svnpass=' + env.svnpass)
     update_requirements()
     link_local_settings()
     create_search_dir()
