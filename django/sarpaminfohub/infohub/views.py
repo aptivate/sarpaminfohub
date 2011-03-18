@@ -76,7 +76,7 @@ def formulation(request, formulation_id, backend_name="django"):
                                'formulation_msh': formulation_msh,
                                'menu' : menu,
                                'search_form' : search_form,
-                               'sub_title' : formulation_name});
+                               'sub_title' : formulation_name})
 
 def formulation_products(request, formulation_id, backend_name="django"):
     backend = get_backend(backend_name)
