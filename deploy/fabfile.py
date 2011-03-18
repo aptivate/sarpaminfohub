@@ -12,7 +12,6 @@ from fablib import apache_cmd, apache_reload, apache_restart, \
              touch, update_db, update_requirements
 import fablib
 
-
 env.home = '/var/django/'
 env.project = 'sarpaminfohub'
 # the top level directory on the server
@@ -101,47 +100,16 @@ def deploy(revision=None):
     if not files.exists(env.project_root):
         sudo('mkdir -p %(project_root)s' % env)
     checkout_or_update(revision)
-    checkout_or_update_fixtures()
+    fablib._get_svn_user_and_pass()
+    sudo(env.tasks_bin + ' checkout_or_update_fixtures:svnuser=' + env.svnuser +
+                         ',svnpass=' + env.svnpass)
     update_requirements()
     link_local_settings()
     create_search_dir()
     update_db()
-    load_fixtures()
+    sudo(env.tasks_bin + ' load_fixtures')
     link_apache_conf()
     apache_cmd('start')
-
-def checkout_or_update_fixtures():
-    """ checkout the project from subversion """
-    require('project_root', 'repo_type', 'vcs_root', 'repository',
-        provided_by=env.valid_envs)
-    # function to ask for svnuser and svnpass
-    fablib._get_svn_user_and_pass()
-    # if the .svn directory exists, do an update, otherwise do
-    # a checkout
-    if files.exists(os.path.join(env.fixtures_dir, ".svn")):
-        cmd = 'svn update --username %s --password %s' % (env.svnuser, env.svnpass)
-        with cd(env.fixtures_dir):
-            with hide('running'):
-                sudo(cmd)
-    else:
-        cmd = 'svn checkout --username %s --password %s %s' % \
-                        (env.svnuser, env.svnpass, env.fixtures_repo)
-        with cd(env.django_root):
-            with hide('running'):
-                sudo(cmd)
-
-def load_fixture(name):
-    with cd(env.django_root):
-        sudo(env.python_bin + ' manage.py loaddata fixtures/initial_data/' + 
-             name + '.json')
-
-def load_fixtures():
-    # the order is important
-    fixtures = ['admin_user', 'formulations', 'countries', 'suppliers','prices',
-                'exchange_rates', 'msh_prices', 'products', 'temp_data']
-    
-    for fixture in fixtures:
-        load_fixture(fixture)
         
 def create_search_dir():
     """Allow Apache to write to files in the search index directory"""
