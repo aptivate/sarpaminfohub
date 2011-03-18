@@ -26,7 +26,7 @@ class FormulationGraph(SarpamTable):
 
         self.msh_price = msh_price
 
-        tables.MemoryTable.__init__(self, rows)
+        SarpamTable.__init__(self, rows)
 
     def as_html(self):
         return render_to_string('formulation/graph.html',

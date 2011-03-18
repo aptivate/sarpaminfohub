@@ -1,10 +1,15 @@
 from django.test.testcases import TestCase
-from sarpaminfohub.infohub.models import Formulation, Price, Country,\
+from sarpaminfohub.infohub.models import Formulation, Price, Country, \
     ExchangeRate, Product, Supplier, MSHPrice
 from decimal import Decimal
 
 class SarpamTestCase(TestCase):
-    def set_up_biofloxx(self, formulation, suppliers=[]):
+    def __init__(self, method_name):
+        self.ciprofloxacin = None
+        TestCase.__init__(self, method_name)
+    
+    def set_up_biofloxx(self, formulation, suppliers=None):
+        suppliers = suppliers or []
         biofloxx = Product(formulation=formulation, name="BIOFLOXX 500 MG")
         biofloxx.save()
 

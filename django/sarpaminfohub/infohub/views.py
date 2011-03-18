@@ -1,5 +1,4 @@
 from django.shortcuts import render_to_response
-from forms import SearchForm
 from sarpaminfohub.infohub.results_table import ResultsTable
 from sarpaminfohub.infohub.drug_searcher import DrugSearcher
 from sarpaminfohub.infohub.django_backend import DjangoBackend
@@ -10,6 +9,9 @@ from django.core.urlresolvers import reverse
 from sarpaminfohub.infohub.supplier_catalogue_table import SupplierCatalogueTable
 from sarpaminfohub.infohub.product_table import ProductTable
 from sarpaminfohub.infohub.menu import Menu
+from sarpaminfohub.infohub.forms import SearchForm
+
+from copy import deepcopy
 
 def get_backend(name):
     if name == "test":
@@ -53,7 +55,6 @@ def formulation(request, formulation_id, backend_name="django"):
     rows = drug_searcher.get_prices_for_formulation_with_id(formulation_id)
 
     # Don't like that, but results is being changed in the constructor of the table.
-    from copy import deepcopy
     rows_graph = deepcopy(rows)
 
     formulation_name = drug_searcher.get_formulation_name_with_id(formulation_id)

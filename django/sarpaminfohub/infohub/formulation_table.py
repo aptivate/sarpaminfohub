@@ -12,7 +12,7 @@ class FormulationTable(SarpamTable):
             self.round_to_three_decimal_places(row, 'fob_price')
             self.round_to_three_decimal_places(row, 'landed_price')
                         
-        tables.MemoryTable.__init__(self, rows, order_by='landed_price')
+        SarpamTable.__init__(self, rows, order_by='landed_price')
 
     def get_rows_template(self):
         return "formulation_rows.html"

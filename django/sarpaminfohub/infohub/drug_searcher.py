@@ -54,7 +54,7 @@ class DrugSearcher(object):
         if num_set > 0:
             sorted_values = sorted(values)
             
-            (mid_point, remainder) = divmod(num_set,2)
+            (mid_point, remainder) = divmod(num_set, 2)
             
             if remainder == 1:
                 median = sorted_values[mid_point]

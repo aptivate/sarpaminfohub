@@ -1,8 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 
 from sarpaminfohub.infohub.backend import Backend
-from models import Price
-from sarpaminfohub.infohub.models import Formulation, Product, Supplier
+from sarpaminfohub.infohub.models import Formulation, Product, Supplier, Price
 
 class DjangoBackend(Backend):
     def get_msh_price_from_formulation(self, formulation):

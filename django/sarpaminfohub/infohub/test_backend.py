@@ -22,15 +22,6 @@ class TestBackend(Backend):
                                                 landed_price=3.74, 
                                                 msh_price=0.033,
                                                 formulation_id=20)
-        ciprofloxacin = {"formulation":"ciprofloxacin 500mg tablet",
-             "fob_price":"3.74",
-             "landed_price":"3.74",
-             "country":"South Africa",
-             "fob_currency":"ZAR",
-             "period":"2009",
-             "issue_unit":"10",
-             "landed_currency":"ZAR"}
-        return ciprofloxacin
     
     def get_amitriptyline_with_issue_unit_none(self):
         amitriptyline = self.get_amitriptyline()
@@ -129,10 +120,10 @@ class TestBackend(Backend):
         
         return [amitriptyline]
     
-    def get_formulation_name_with_id(self,formulation_id):
+    def get_formulation_name_with_id(self, formulation_id):
         return "amitriptyline 25mg tablet"
 
-    def get_formulation_msh_with_id(self,formulation_id):
+    def get_formulation_msh_with_id(self, formulation_id):
         return 0.0057
 
     def get_products_based_on_formulation_with_id(self, formulation_id):

@@ -16,11 +16,11 @@ class ResultsTable(SarpamTable):
             self.round_to_three_decimal_places(row, 'landed_price')
             self.round_to_three_decimal_places(row, 'msh_price')
 
-        tables.MemoryTable.__init__(self, rows)
+        SarpamTable.__init__(self, rows)
         self.search_string = search_string
 
     def as_html(self):
-        return render_to_string('results.html',\
+        return render_to_string('results.html', \
                                 {'table':self, \
                                  'search_string':self.search_string})
 

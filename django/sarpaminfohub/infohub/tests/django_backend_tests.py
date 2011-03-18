@@ -41,7 +41,7 @@ class DjangoBackendTest(SarpamTestCase):
 
     def check_column_matches_expected_field_with_name(self, name):
         first_row = self.get_first_row_of_prices_with_formulation_id_1()
-        self.assertEquals(self.expected_ciprofloxacin_results[name],\
+        self.assertEquals(self.expected_ciprofloxacin_results[name],
                           first_row[name])
 
     def test_ciprofloxacin_country_can_be_retrieved_by_id(self):
@@ -91,7 +91,7 @@ class DjangoBackendTest(SarpamTestCase):
         camox = {'name' : "Camox Pharmaceuticals (Pty) Ltd",
                  'url' : "/suppliers/2/"}
         
-        expected_suppliers= [biotech_laboratories, camox]
+        expected_suppliers = [biotech_laboratories, camox]
         
         self.assertEquals(expected_suppliers, biofloxx['suppliers'])
 
