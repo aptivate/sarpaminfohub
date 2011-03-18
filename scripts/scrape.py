@@ -189,7 +189,9 @@ def scrape(db_file):
 
     # Build Martin's schema
     output_json("exchange_rates", exchange_rates)
-    output_json("countries", countries)
+
+    # Temporarily disabled - using fictitious names instead
+    # output_json("countries", countries)
     output_json("suppliers", suppliers)
 
     # formulations
