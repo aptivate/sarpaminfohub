@@ -45,13 +45,13 @@ class SimpleTest(TestCase):
     def test_search_by_given_name(self):
         client = self.client
         self.login(client)
-        response = client.get('/search/', {'q':"My"})
+        response = client.post('/contacts/', {'search_term':"My"})
         self.assertContains(response, 'My Name')
     
     def test_search_by_family_name(self):
         client = self.client
         self.login(client)
-        response = client.get('/search/', {'q':"Person"})
+        response = client.post('/contacts/', {'search_term':"Person"})
         self.assertContains(response, 'Anew Person')
     
     def test_search_by_note_for_name(self):
