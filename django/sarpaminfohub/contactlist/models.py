@@ -1,5 +1,6 @@
 from django.db import models
 from tagging.fields import TagField
+from tagging.utils import parse_tag_input
 import custom_fields
 DESIGNATION = (
 ('1', 'Dr'),
@@ -27,6 +28,10 @@ class Contact(models.Model):
     country = custom_fields.CountryField()
     note = models.TextField(null=True, blank=True)
     tags = TagField()
+        
+    def _get_tag_list(self):
+            return parse_tag_input(self.tags)
+    tag_list = property(_get_tag_list)
     
     def get_absolute_url(self):
         return "/contacts/%d/"%self.id
