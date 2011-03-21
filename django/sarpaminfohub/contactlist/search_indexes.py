@@ -17,5 +17,5 @@ class ContactIndex(RealTimeSearchIndex):
     address_2=CharField(model_attr="address_line_2")
     address_3=CharField(model_attr="address_line_3")
     note=CharField(model_attr="note", null=True)
-    tags=MultiValueField(model_attr="tags", null=True)
+    tag_list=MultiValueField(model_attr="tag_list", null=True)
 site.register(Contact, ContactIndex)
