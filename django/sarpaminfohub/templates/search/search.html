@@ -4,7 +4,14 @@
     <h2>Search Contacts</h2>
 
     <form method="get" action=".">{% csrf_token %}
-			{{ form.q }}
+		<table>
+			<tr>
+				<td>{{ form.search_term }}</td>
+			</tr>
+			<tr>
+				<td>{{ form.tag }}</td>
+			</tr>
+		</table>
 			
 		<input type="submit" value="Search" />
 		</form>
