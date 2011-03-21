@@ -27,17 +27,17 @@ class SimpleTest(TestCase):
     def createContacts(self):
         c = Contact(given_name="My", family_name="Name", phone="(12345) 678910",
                    email="a@b.c", address_line_1="123 A Road Name, Somewhere", 
-                   role="Head of Surgery", organization="London Teaching Hospital",
+                   role="Head of Surgery", tags="Hospital, Medicine, Surgeon", organization="London Teaching Hospital",
                    note="Note Very Important")
         c.save()
         c = Contact(
                    given_name="Anew", family_name="Person", phone="(54321) 123456",
                    email="d@e.f", address_line_1="456 A Road, Through the Looking Glass",
-                   role="Pharmacist", organization="Selby's Pharmacy"
+                   role="Pharmacist", tags="Medicine", organization="Selby's Pharmacy"
                    )
         c.save()
         c = Contact(given_name="Aptivate", family_name="Employee", phone="(32543) 523566",
-                   email="g@h.i", address_line_1="999 Letsbe Avenue", note="Death Note",
+                   email="g@h.i", address_line_1="999 Letsbe Avenue", tag="academia", note="Death Note",
                    role="Researcher", organization="Imperial College"
                    )
         c.save()
@@ -114,3 +114,9 @@ class SimpleTest(TestCase):
         self.login(client)
         response = client.post('/contacts/', {'search_term':"Invalid String"})
         self.assertContains(response, 'No Results found.')
+    
+    def test_search_by_tag(self):
+        client = self.client
+        self.login(client)
+        response = client.post('/contacts/', {'search_term':"My","tag":"Medicine"})
+        self.assertContains(response, 'My Name')
