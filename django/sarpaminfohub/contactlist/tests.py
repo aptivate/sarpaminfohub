@@ -155,10 +155,10 @@ class SimpleTest(TestCase):
         client = self.client
         self.login(client)
         response = client.post('/contacts/tags/Medicine/')
-        self.assertContains(response,"My Name")
+        self.assertContains(response, "My Name")
     
     def test_tag_view_absence(self):
         client = self.client
         self.login(client)
         response = client.post('/contacts/tags/Medicine/')
-        self.assertNotContains(response,"Aptivate")
+        self.assertNotContains(response, "Aptivate")
