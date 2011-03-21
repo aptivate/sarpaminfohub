@@ -11,6 +11,9 @@ import json
 import sqlite3
 import sys
 import pprint
+
+import csv
+
 from decimal import Decimal
 
 country_codes = {}
@@ -131,12 +134,13 @@ def scrapeManufacturers(conn):
         
     return results, manufacturer_dict
 
-def scrapeProducts(conn):
+def scrapeProducts(conn, drug_lookups):
     """
     Returns suppliers and products.
 
     conn - a connection to the Sqlite database
     """
+    
     query = """SELECT c.name, f1.item, f1.product_name, f1.manufacturer,
         f1.supplier, c.id
         FROM form1_row AS f1
@@ -149,15 +153,19 @@ def scrapeProducts(conn):
         result={}
         result['country'] = row[0]
         result['formulation'] = row[1].replace('*', '')
-        result['product'] = row[2]
+        
+        product_name = row[2]
+        if product_name in drug_lookups:
+            product_name = drug_lookups[product_name]
+        
+        result['product'] = product_name
         result['manufacturer'] = row[3]
         result['supplier'] = row[4] or None
         result['country_id'] = row[5]
         results.append(result)
     return results
 
-
-def scrapeFormulations(conn):
+def scrapeFormulations(conn, drug_lookups):
     """
     Returns a list of formulation dicts to be turned into a JSON dump.
 
@@ -175,7 +183,13 @@ def scrapeFormulations(conn):
     results = []
     for row in c:
         result = {}
-        result['formulation'] = row[0].replace('*', '')
+        
+        description = row[0].replace('*', '')
+        
+        if description.upper() in drug_lookups:
+            description = drug_lookups[description.upper()].lower()
+        
+        result['formulation'] = description
         result['landed_cost_price'] = row[1] or None
         result['fob_price'] = row[2] or None
         result['period'] = row[3]
@@ -189,8 +203,8 @@ def scrapeFormulations(conn):
     return results
 
 
-def output_json(name, data):
-    fixtures_path = os.environ['INFOHUB_FIXTURES']
+def output_json(data_dir, name, data):
+    fixtures_path = '%s/fixtures/initial_data' % (data_dir)
     filename = '%s/%s.json' % (fixtures_path, name)
 
     output = open(filename, 'w')
@@ -198,25 +212,41 @@ def output_json(name, data):
     output.close()
 
 
-def scrape(db_file):
+def loadAndReturnDrugLookups(data_dir):
+    drug_lookup_file = '%s/drugs2.csv' % (data_dir)
+    
+    csv_reader = csv.reader(open(drug_lookup_file), delimiter="\t")
+
+    drug_lookups = {}
+    
+    for row in csv_reader:
+        (name, standardised_name) = row
+        drug_lookups[name] = standardised_name
+        
+    return drug_lookups 
+
+def scrape(data_dir):
     """
     Opens the database, scrapes a bunch of data and writes it all out to JSON
     """
+    db_file = '%s/file.db' % (data_dir)
     conn = sqlite3.connect(db_file)
 
-    formulations = scrapeFormulations(conn)
-    products = scrapeProducts(conn)
+    drug_lookups = loadAndReturnDrugLookups(data_dir)
+    
+    formulations = scrapeFormulations(conn, drug_lookups)
+    products = scrapeProducts(conn, drug_lookups)
     countries = scrapeCountries(conn)
     exchange_rates = scrapeExchangeRate(conn)
     suppliers, supplier_dict = scrapeSuppliers(conn)
     manufacturers, manufacturer_dict = scrapeManufacturers(conn)
 
-    output_json("exchange_rates", exchange_rates)
+    output_json(data_dir, "exchange_rates", exchange_rates)
 
     # Temporarily disabled - using fictitious names instead
     # output_json("countries", countries)
-    output_json("suppliers", suppliers)
-    output_json("manufacturers", manufacturers)
+    output_json(data_dir, "suppliers", suppliers)
+    output_json(data_dir, "manufacturers", manufacturers)
 
     # formulations
     counter = 0
@@ -250,8 +280,8 @@ def scrape(db_file):
         price_fields['issue_unit'] = f['unit']
         price_fields['period'] = f['period']
         price_table.append(price_record)
-    output_json('formulations', formulation_table)
-    output_json('prices', price_table)
+    output_json(data_dir,'formulations', formulation_table)
+    output_json(data_dir,'prices', price_table)
 
     # Product
     product_table = []
@@ -262,7 +292,10 @@ def scrape(db_file):
 
     for p in products:
         counter+=1
-        if not p['product'] in product_dict:
+        
+        product_name = p['product']
+        
+        if not product_name in product_dict:
             record = {}
             product_fields = {}
             record['pk'] = counter
@@ -275,14 +308,14 @@ def scrape(db_file):
                 unknown_formulations.add(p['formulation'])
                 continue
 
-            product_fields['name'] = p['product']
+            product_fields['name'] = product_name
             # Where does Country belongs ? HELP
             # There are more than one manufacturer per product. HELP
             #product_fields['manufacturer'] = p['manufacturer']
             product_fields['suppliers'] = []
             product_table.append(record)
 
-            product_dict[p['product']] = counter
+            product_dict[product_name] = counter
 
             supplier_name = p['supplier']
             
@@ -298,7 +331,7 @@ def scrape(db_file):
                 manufacturer_id = manufacturer_dict[manufacturer_name]
                 product_fields['manufacturers'].append(manufacturer_id)
 
-    output_json('products', product_table)
+    output_json(data_dir,'products', product_table)
 
     output = open('unknownFormulationsInProducts.json', 'w')
     json.dump(list(unknown_formulations), output, indent=2)
