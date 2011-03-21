@@ -27,17 +27,17 @@ class SimpleTest(TestCase):
     def createContacts(self):
         c = Contact(given_name="My", family_name="Name", phone="(12345) 678910",
                    email="a@b.c", address_line_1="123 A Road Name, Somewhere", 
-                   role="Head of Surgery", organization="London Teaching Hospital",
+                   role="Head of Surgery", tags="Hospital, Medicine, Surgeon", organization="London Teaching Hospital",
                    note="Note Very Important")
         c.save()
         c = Contact(
                    given_name="Anew", family_name="Person", phone="(54321) 123456",
                    email="d@e.f", address_line_1="456 A Road, Through the Looking Glass",
-                   role="Pharmacist", organization="Selby's Pharmacy"
+                   role="Pharmacist", tags="Medicine", organization="Selby's Pharmacy"
                    )
         c.save()
         c = Contact(given_name="Aptivate", family_name="Employee", phone="(32543) 523566",
-                   email="g@h.i", address_line_1="999 Letsbe Avenue", note="Death Note",
+                   email="g@h.i", address_line_1="999 Letsbe Avenue", tags="academia", note="Death Note",
                    role="Researcher", organization="Imperial College"
                    )
         c.save()
@@ -45,26 +45,26 @@ class SimpleTest(TestCase):
     def test_search_by_given_name(self):
         client = self.client
         self.login(client)
-        response = client.get('/search/', {'q':"My"})
+        response = client.post('/contacts/', {'search_term':"My"})
         self.assertContains(response, 'My Name')
     
     def test_search_by_family_name(self):
         client = self.client
         self.login(client)
-        response = client.get('/search/', {'q':"Person"})
+        response = client.post('/contacts/', {'search_term':"Person"})
         self.assertContains(response, 'Anew Person')
     
     def test_search_by_note_for_name(self):
         client = self.client
         self.login(client)
         
-        response = client.get('/search/', {'q':"Note Very Important"})
+        response = client.post('/contacts/', {'search_term':"Note Very Important"})
         self.assertContains(response, 'My Name')
     
     def test_search_has_note(self):
         client = self.client
         self.login(client)
-        response = client.get('/search/', {'q':"Note"})
+        response = client.post('/contacts/', {'search_term':"Note"})
         self.assertContains(response, 'My Name')
         self.assertContains(response, 'Aptivate Employee')
         self.assertNotContains(response, 'Anew Person')
@@ -72,7 +72,7 @@ class SimpleTest(TestCase):
     def test_search_test_text(self):
         client = self.client
         self.login(client)
-        response = client.get('/search/', {'q':""})
+        response = client.post('/contacts/', {'search_term':""})
         self.assertContains(response, 'Search for a contact by Given Name, '
             +'Family Name, Email Address, Phone Number, Address '
             +'or the content of notes made about them.')
@@ -80,7 +80,7 @@ class SimpleTest(TestCase):
     def test_search_for_role(self):
         client = self.client
         self.login(client)
-        response = client.get('/search/', {'q':"Head of Surgery"})
+        response = client.post('/contacts/', {'search_term':"Head of Surgery"})
         self.assertContains(response, 'My Name')
         self.assertNotContains(response, 'Aptivate Employee')
         self.assertNotContains(response, 'Anew Person')
@@ -88,7 +88,7 @@ class SimpleTest(TestCase):
     def test_search_for_organization(self):
         client = self.client
         self.login(client)
-        response = client.get('/search/', {'q':"London Teaching Hospital"})
+        response = client.post('/contacts/', {'search_term':"London Teaching Hospital"})
         self.assertContains(response, 'My Name')
         self.assertNotContains(response, 'Aptivate Employee')
         self.assertNotContains(response, 'Anew Person')
@@ -96,7 +96,7 @@ class SimpleTest(TestCase):
     def test_search_for_name_has_role(self):
         client = self.client
         self.login(client)
-        response = client.get('/search/', {'q':"My Name"})
+        response = client.post('/contacts/', {'search_term':"My Name"})
         self.assertContains(response, "Head of Surgery")
         self.assertNotContains(response, "Pharmacist")
         self.assertNotContains(response, "Researcher")
@@ -104,7 +104,7 @@ class SimpleTest(TestCase):
     def test_search_for_name_has_organization(self):
         client = self.client
         self.login(client)
-        response = client.get('/search/', {'q':"My Name"})
+        response = client.post('/contacts/', {'search_term':"My Name"})
         self.assertContains(response, "Head of Surgery")
         self.assertNotContains(response, "Selby's Pharmacy")
         self.assertNotContains(response, "Imperial College")
@@ -112,5 +112,60 @@ class SimpleTest(TestCase):
     def test_no_results(self):
         client = self.client
         self.login(client)
-        response = client.get('/search/', {'q':"Invalid String"})
+        response = client.post('/contacts/', {'search_term':"Invalid String"})
         self.assertContains(response, 'No Results found.')
+    
+    def test_search_by_tag(self):
+        client = self.client
+        self.login(client)
+        response = client.post('/contacts/', {'search_term':"My","tags":[2]})
+        self.assertContains(response, 'My Name')
+    
+    def test_search_by_not_tag(self):
+        client = self.client
+        self.login(client)
+        response = client.post('/contacts/', {'search_term':"My","tags":[4]})
+        self.assertContains(response, 'No Results found.')
+    
+    def test_search_by_tag_faux(self):
+        client = self.client
+        self.login(client)
+        response = client.post('/contacts/', {'search_term':"My Medicine"})
+        self.assertContains(response, 'My Name')
+    
+    def test_search_by_not_tag_faux(self):
+        client = self.client
+        self.login(client)
+        response = client.post('/contacts/', {'search_term':"My academia"})
+        self.assertContains(response, 'No Results found.')
+    
+    def test_contact_view_tag_presence(self):
+        client = self.client
+        self.login(client)
+        response = client.post("/contacts/1/",{})
+        self.assertContains(response,"Medicine</a></li>")
+    
+    def test_contact_view_tag_absence(self):
+        client = self.client
+        self.login(client)
+        response = client.post('/contacts/3/')
+        self.assertNotContains(response,"Medicine</a></li>")
+    
+    def test_tag_view_presence(self):
+        client = self.client
+        self.login(client)
+        response = client.post('/contacts/tags/Medicine/')
+        self.assertContains(response, "My Name")
+    
+    def test_tag_view_absence(self):
+        client = self.client
+        self.login(client)
+        response = client.post('/contacts/tags/Medicine/')
+        self.assertNotContains(response, "Aptivate")
+    
+    def test_multiple_tag_select(self):
+        client = self.client
+        self.login(client)
+        response = client.post('/contacts/',{"tags":[1,2,3]})
+        self.assertContains(response, 'My Name')
+        self.assertNotContains(response, "Aptivate")
