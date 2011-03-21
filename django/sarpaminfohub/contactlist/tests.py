@@ -118,13 +118,13 @@ class SimpleTest(TestCase):
     def test_search_by_tag(self):
         client = self.client
         self.login(client)
-        response = client.post('/contacts/', {'search_term':"My","tag":2})
+        response = client.post('/contacts/', {'search_term':"My","tags":[2]})
         self.assertContains(response, 'My Name')
     
     def test_search_by_not_tag(self):
         client = self.client
         self.login(client)
-        response = client.post('/contacts/', {'search_term':"My","tag":4})
+        response = client.post('/contacts/', {'search_term':"My","tags":[4]})
         self.assertContains(response, 'No Results found.')
     
     def test_search_by_tag_faux(self):
