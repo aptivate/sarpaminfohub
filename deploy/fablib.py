@@ -51,6 +51,7 @@ def deploy_clean(revision=None):
     with settings(warn_only=True):
         apache_cmd('stop')
     sudo('rm -rf %s' % env.project_root)
+    clean_db()
     deploy(revision)
 
 
@@ -127,6 +128,13 @@ def update_requirements():
     require('tasks_bin', provided_by=env.valid_envs)
     sudo(env.tasks_bin + ' update_ve')
 
+
+def clean_db(revision=None):
+    """ delete the entire database """
+    if env.environment == 'production':
+        utils.abort('do not delete the production database!!!')
+    require('tasks_bin', provided_by=env.valid_non_prod_envs)
+    sudo(env.tasks_bin + " clean_db")
 
 def update_db():
     """ create and/or update the database, do migrations etc """
