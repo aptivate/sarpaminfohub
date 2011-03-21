@@ -3,13 +3,13 @@
 {% block main %}
     <h2>Search Contacts</h2>
 
-    <form method="post" action="">{% csrf_token %}
+    <form method="post" action="">{# {% csrf_token %} #}
 		<table>
 			<tr>
 				<td>{{ form.search_term }}{{form.search_term.errors}}</td>
 			</tr>
 			<tr>
-				<td>{{ form.tag }}{{form.tag.errors}}</td>
+				<td>{{ form.tags }}{{form.tags.errors}}</td>
 			</tr>
 		</table>
 			

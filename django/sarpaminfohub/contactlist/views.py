@@ -8,8 +8,10 @@ def tag_search(request):
     if request.method == 'POST':
         form = SearchForm(request.POST)
         if form.is_valid():
-            if form.cleaned_data.get('tag', False):
-                search_term = "%s %s"%(form.cleaned_data['search_term'],form.cleaned_data['tag'])
+            if form.cleaned_data.get('tags', False):
+                string_tags = [tag.name for tag in form.cleaned_data.get('tags')]
+                tag_string = " ".join(string_tags)
+                search_term = "%s %s"%(form.cleaned_data['search_term'],tag_string)
             else:
                 search_term = form.cleaned_data['search_term']
             query = SearchQuerySet().auto_query(search_term)
