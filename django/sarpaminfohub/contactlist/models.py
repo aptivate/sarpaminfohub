@@ -27,9 +27,9 @@ class Contact(models.Model):
     country = custom_fields.CountryField()
     note = models.TextField(null=True, blank=True)
     tags = TagField()
-    @models.permalink
+    
     def get_absolute_url(self):
-        return ('client', (), {'id': self.id})
+        return "/contacts/%d/"%self.id
     
     def __unicode__(self):
         return self.given_name + " " + self.family_name

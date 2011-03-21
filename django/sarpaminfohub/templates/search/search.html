@@ -29,6 +29,7 @@
 								<th>Address</th>
 								<th>Notes</th>
 								<th>Tags</th>
+								<th>Profile</th>
 							</tr>
             {% for result in page.object_list %}
 							<tr>
@@ -55,6 +56,9 @@
 								</td>
 								<td>
 									{{result.object.tags}}
+								</td>
+								<td>
+									<a href="{{result.object.get_absolute_url}}">Link</a>
 								</td>
 							</tr>
             {% empty %}
