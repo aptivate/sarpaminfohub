@@ -20,6 +20,6 @@ urlpatterns = patterns('',
 
 urlpatterns = patterns('',
     (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.MEDIA_ROOT }),
-    (r'^search/', include('haystack.urls')),
+    (r'^contacts/', include('sarpaminfohub.contactlist.urls')),
     (r'', include('sarpaminfohub.infohub.urls')),
 )
