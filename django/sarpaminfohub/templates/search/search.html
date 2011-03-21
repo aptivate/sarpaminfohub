@@ -23,11 +23,9 @@
 						<table>
 							<tr>
 								<th>Name</th>
-								<th>Phone Number</th>
 								<th>Role</th>
 								<th>Organization</th>
-								<th>Address</th>
-								<th>Notes</th>
+								<th>Country</th>
 								<th>Tags</th>
 								<th>Profile</th>
 							</tr>
@@ -37,23 +35,15 @@
 									{{result.object}}
 								</td>
 								<td>
-									{{result.object.phone}}
-								</td>
-								<td>
 									{{result.object.role}}
 								</td>
 								<td>
 									{{result.object.organization}}
 								</td>
 								<td>
-									{{result.object.address_line_1}}
-									{{result.object.address_line_2}}
-									{{result.object.address_line_3}}
 									{{result.object.country}}
 								</td>
-								<td>
-									{{result.object.notes}}
-								</td>
+
 								<td>
 									{{result.object.tags}}
 								</td>
