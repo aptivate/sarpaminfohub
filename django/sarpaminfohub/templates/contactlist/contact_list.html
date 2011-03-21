@@ -1,0 +1,43 @@
+{%  extends 'page.html' %}
+
+{% block main %}
+
+<h1>{{tag}}</h1>
+		<table>
+			<tr>
+				<th>Name</th>
+				<th>Role</th>
+				<th>Organization</th>
+				<th>Country</th>
+				<th>Tags</th>
+				<th>Profile</th>
+			</tr>
+    {% for contact in tag.items.all %}
+			<tr>
+        <td>
+					{{contact.object}}
+				</td>
+				<td>
+					{{contact.object.role}}
+				</td>
+				<td>
+					{{contact.object.organization}}
+				</td>
+				<td>
+					{{contact.object.country}}
+				</td>
+
+				<td>
+					{{contact.object.tags}}
+				</td>
+				<td>
+					<a href="{{contact.object.get_absolute_url}}">Link</a>
+				</td>
+			</tr>
+    {% empty %}
+        <tr><td colspan=6>No Contacts found.</td></tr>
+    {% endfor %}
+		</table>
+		
+		<p>Back to <a href="/contacts/">Search</a></p>
+{% endblock main %}

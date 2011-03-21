@@ -6,4 +6,4 @@
 {{ object.address_2 }}
 {{ object.address_3 }}
 {{ object.note }}
-{{ object.tags}}
+{{ object.tag_list}}

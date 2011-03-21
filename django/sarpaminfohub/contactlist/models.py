@@ -1,5 +1,6 @@
 from django.db import models
 from tagging.fields import TagField
+from tagging.utils import parse_tag_input
 import custom_fields
 DESIGNATION = (
 ('1', 'Dr'),
@@ -13,6 +14,7 @@ DESIGNATION = (
 )
 
 class Contact(models.Model):
+    """Searchable contact for the sarpaminfohub project"""
     designation = models.CharField(max_length=1,choices=DESIGNATION)
     given_name = models.CharField(max_length=128)
     family_name = models.CharField(max_length=128)
@@ -27,9 +29,13 @@ class Contact(models.Model):
     country = custom_fields.CountryField()
     note = models.TextField(null=True, blank=True)
     tags = TagField()
-    @models.permalink
+        
+    def _get_tag_list(self):
+            return parse_tag_input(self.tags)
+    tag_list = property(_get_tag_list)
+    
     def get_absolute_url(self):
-        return ('client', (), {'id': self.id})
+        return "/contacts/%d/"%self.id
     
     def __unicode__(self):
         return self.given_name + " " + self.family_name

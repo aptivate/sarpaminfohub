@@ -1,0 +1,34 @@
+{%  extends 'page.html' %}
+
+{% block main %}
+<h1>{{object}}</h1>
+
+<h2>Phone Number</h2>
+<p>{{object.phone}}</p>
+
+<h2>E-mail</h2>
+<p><a href="mailto:{{email}}">{{email}}</a></p>
+
+<h2>Role</h2>
+<p>{{object.role}}</p>
+
+<h2>Organization</h2>
+<p>{{object.organization}}</p>
+
+<h2>Notes</h2>
+<p>{{object.notes}}</p>
+
+<h2>Address</h2>
+<p>{{address_line_1}}</p>
+<p>{{address_line_2}}</p>
+<p>{{address_line_3}}</p>
+
+<h2>Tags</h2>
+<ul>
+{%for tag in object.tag_list%}
+<li><a href="/contacts/tags/{{tag}}/">{{tag}}</a></li>
+{%endfor%}
+</ul>
+
+<p>Back to <a href="/contacts/">Search</a></p>
+{% endblock main %}
