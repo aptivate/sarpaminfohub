@@ -14,6 +14,7 @@ DESIGNATION = (
 )
 
 class Contact(models.Model):
+    """Searchable contact for the sarpaminfohub project"""
     designation = models.CharField(max_length=1,choices=DESIGNATION)
     given_name = models.CharField(max_length=128)
     family_name = models.CharField(max_length=128)

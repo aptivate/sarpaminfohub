@@ -4,20 +4,10 @@
     <h2>Search Contacts</h2>
 
     <form method="get" action=".">{% csrf_token %}
-        <table>
-            {{ form.q }}
-						<tr>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-						</tr>
-            <tr>
-                <td>&nbsp;</td>
-                <td>
-                    <input type="submit" value="Search" />
-                </td>
-            </tr>
-        </table>
-	</form>
+			{{ form.q }}
+			
+		<input type="submit" value="Search" />
+		</form>
         {% if query %}
             <h3>Results</h3>
 						<table>
