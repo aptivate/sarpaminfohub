@@ -87,54 +87,70 @@ def scrapeExchangeRate(conn):
     return results
 
 
-def scrapeSuppliers(conn):
+def scrapeSuppliers(conn, manufacturer_lookups):
     query = "SELECT DISTINCT supplier FROM form1_row"
     c = conn.cursor()
     c.execute(query)
     results = []
-    counter = 0
+    counter = 1
     supplier_dict = {}
 
     for row in c:
-        result = {}
-        supplier_fields = {}
+        name = getStandardisedManufacturerName(manufacturer_lookups, row[0])
+        
+        if name != "" and name not in supplier_dict:
+            result = {}
+            supplier_fields = {}
+    
+            result['pk'] = counter
+            result['model'] = "infohub.supplier"
+            result['fields'] = supplier_fields
+            supplier_fields['name'] = name
 
-        result['pk'] = counter
-        result['model'] = "infohub.supplier"
-        result['fields'] = supplier_fields
-        supplier_fields['name'] = row[0]
-        supplier_dict[row[0]] = counter
-
-        results.append(result)
-        counter += 1
+            supplier_dict[name] = counter
+    
+            results.append(result)
+            counter += 1
 
     return results, supplier_dict
 
-def scrapeManufacturers(conn):
+def scrapeManufacturers(conn, manufacturer_lookups):
     query = "SELECT DISTINCT manufacturer FROM form1_row"
     c = conn.cursor()
     c.execute(query)
     results = []
-    counter = 0
+    counter = 1
     manufacturer_dict = {}
     
     for row in c:
-        result = {}
-        manufacturer_fields = {}
+        name = getStandardisedManufacturerName(manufacturer_lookups, row[0])
         
-        result['pk'] = counter
-        result['model'] = "infohub.manufacturer"
-        result['fields'] = manufacturer_fields
-        name = row[0]
-        manufacturer_fields['name'] = name
-        manufacturer_dict[name] = counter
+        if name != "" and name not in manufacturer_dict:
+            result = {}
+            manufacturer_fields = {}
         
-        results.append(result)
-        counter += 1
+            result['pk'] = counter
+            result['model'] = "infohub.manufacturer"
+            result['fields'] = manufacturer_fields
+
+            manufacturer_fields['name'] = name
+        
+            manufacturer_dict[name] = counter
+        
+            results.append(result)
+            counter += 1
         
     return results, manufacturer_dict
 
-def scrapeProducts(conn, drug_lookups):
+def getStandardisedManufacturerName(manufacturer_lookups, name):
+    name = name.strip()
+    
+    name = manufacturer_lookups.get(name.lower(), name)
+        
+    return name
+
+
+def scrapeProducts(conn, drug_lookups, manufacturer_lookups):
     """
     Returns suppliers and products.
 
@@ -152,15 +168,13 @@ def scrapeProducts(conn, drug_lookups):
     for row in c:
         result={}
         result['country'] = row[0]
-        result['formulation'] = row[1].replace('*', '')
-        
-        product_name = row[2]
-        if product_name in drug_lookups:
-            product_name = drug_lookups[product_name]
-        
-        result['product'] = product_name
-        result['manufacturer'] = row[3]
-        result['supplier'] = row[4] or None
+        result['formulation'] = getStandardisedFormulationName(drug_lookups, 
+                                                               row[1])       
+        result['product'] = getStandardisedDrugName(drug_lookups, row[2])
+        result['manufacturer'] = getStandardisedManufacturerName(manufacturer_lookups,
+                                                                 row[3])
+        result['supplier'] = getStandardisedManufacturerName(manufacturer_lookups, 
+                                                             row[4]) or None
         result['country_id'] = row[5]
         results.append(result)
     return results
@@ -184,12 +198,8 @@ def scrapeFormulations(conn, drug_lookups):
     for row in c:
         result = {}
         
-        description = row[0].replace('*', '')
-        
-        if description.upper() in drug_lookups:
-            description = drug_lookups[description.upper()].lower()
-        
-        result['formulation'] = description
+        result['formulation'] = getStandardisedFormulationName(drug_lookups,
+                                                                  row[0])
         result['landed_cost_price'] = row[1] or None
         result['fob_price'] = row[2] or None
         result['period'] = row[3]
@@ -203,27 +213,24 @@ def scrapeFormulations(conn, drug_lookups):
     return results
 
 
-def output_json(data_dir, name, data):
+def getStandardisedFormulationName(drug_lookups, name):
+    name = name.replace('*', '').upper()
+    
+    return getStandardisedDrugName(drug_lookups, name).lower()
+
+def getStandardisedDrugName(drug_lookups, name):
+    if name in drug_lookups:
+        name = drug_lookups[name]
+        
+    return name
+
+def outputJson(data_dir, name, data):
     fixtures_path = '%s/fixtures/initial_data' % (data_dir)
     filename = '%s/%s.json' % (fixtures_path, name)
 
     output = open(filename, 'w')
     json.dump(data, output, indent=2)
     output.close()
-
-
-def loadAndReturnDrugLookups(data_dir):
-    drug_lookup_file = '%s/drugs2.csv' % (data_dir)
-    
-    csv_reader = csv.reader(open(drug_lookup_file), delimiter="\t")
-
-    drug_lookups = {}
-    
-    for row in csv_reader:
-        (name, standardised_name) = row
-        drug_lookups[name] = standardised_name
-        
-    return drug_lookups 
 
 def scrape(data_dir):
     """
@@ -233,20 +240,22 @@ def scrape(data_dir):
     conn = sqlite3.connect(db_file)
 
     drug_lookups = loadAndReturnDrugLookups(data_dir)
+    manufacturer_lookups = loadAndReturnManufacturerLookups(data_dir)
     
     formulations = scrapeFormulations(conn, drug_lookups)
-    products = scrapeProducts(conn, drug_lookups)
+    products = scrapeProducts(conn, drug_lookups, manufacturer_lookups)
     countries = scrapeCountries(conn)
     exchange_rates = scrapeExchangeRate(conn)
-    suppliers, supplier_dict = scrapeSuppliers(conn)
-    manufacturers, manufacturer_dict = scrapeManufacturers(conn)
+    suppliers, supplier_dict = scrapeSuppliers(conn, manufacturer_lookups)
+    manufacturers, manufacturer_dict = scrapeManufacturers(conn,
+                                                           manufacturer_lookups)
 
-    output_json(data_dir, "exchange_rates", exchange_rates)
+    outputJson(data_dir, "exchange_rates", exchange_rates)
 
     # Temporarily disabled - using fictitious names instead
-    # output_json("countries", countries)
-    output_json(data_dir, "suppliers", suppliers)
-    output_json(data_dir, "manufacturers", manufacturers)
+    # outputJson("countries", countries)
+    outputJson(data_dir, "suppliers", suppliers)
+    outputJson(data_dir, "manufacturers", manufacturers)
 
     # formulations
     counter = 0
@@ -280,8 +289,8 @@ def scrape(data_dir):
         price_fields['issue_unit'] = f['unit']
         price_fields['period'] = f['period']
         price_table.append(price_record)
-    output_json(data_dir,'formulations', formulation_table)
-    output_json(data_dir,'prices', price_table)
+    outputJson(data_dir,'formulations', formulation_table)
+    outputJson(data_dir,'prices', price_table)
 
     # Product
     product_table = []
@@ -331,11 +340,49 @@ def scrape(data_dir):
                 manufacturer_id = manufacturer_dict[manufacturer_name]
                 product_fields['manufacturers'].append(manufacturer_id)
 
-    output_json(data_dir,'products', product_table)
+    outputJson(data_dir,'products', product_table)
 
     output = open('unknownFormulationsInProducts.json', 'w')
     json.dump(list(unknown_formulations), output, indent=2)
     output.close()
 
+def loadAndReturnDrugLookups(data_dir):
+    csv_reader = getCsvReader(data_dir, 'drugs2')
+    
+    return loadAndReturnNameStandardisedNameEntries(csv_reader)
+
+def loadAndReturnManufacturerLookups(data_dir):
+    csv_reader = getCsvReader(data_dir, 'manufacturers')
+    
+    return loadAndReturnStandardisedNameNameEntries(csv_reader)
+
+def loadAndReturnNameStandardisedNameEntries(csv_reader):
+    lookups = {}
+    
+    for row in csv_reader:
+        (name, standardised_name) = row
+        lookups[name.lower()] = standardised_name
+        
+    return lookups 
+
+def loadAndReturnStandardisedNameNameEntries(csv_reader):
+    lookups = {}
+    
+    for row in csv_reader:
+        (standardised_name, name) = row
+        
+        if standardised_name == "":
+            standardised_name = name
+            
+        lookups[name.lower()] = standardised_name
+        
+    return lookups 
+
+def getCsvReader(data_dir, filename):
+    lookup_file = '%s/%s.csv' % (data_dir, filename)
+    return csv.reader(open(lookup_file), delimiter="\t")
+    
+    
+    
 if __name__ == "__main__":
     scrape(sys.argv[1])
