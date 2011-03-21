@@ -150,3 +150,15 @@ class SimpleTest(TestCase):
         self.login(client)
         response = client.post('/contacts/3/')
         self.assertNotContains(response,"Medicine</a></li>")
+    
+    def test_tag_view_presence(self):
+        client = self.client
+        self.login(client)
+        response = client.post('/contacts/tags/Medicine/')
+        self.assertContains(response,"My Name")
+    
+    def test_tag_view_absence(self):
+        client = self.client
+        self.login(client)
+        response = client.post('/contacts/tags/Medicine/')
+        self.assertNotContains(response,"Aptivate")
