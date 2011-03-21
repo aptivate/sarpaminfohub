@@ -22,7 +22,13 @@ class DjangoBackendTest(SarpamTestCase):
         self.ciprofloxacin = self.set_up_drc_ciprofloxacin(fob_price=Decimal("0.000003"),
                                      landed_price=Decimal("0.000004"))
         
-        self.set_up_suppliers_of_formulation(self.ciprofloxacin)
+        biofloxx = self.set_up_biofloxx(self.ciprofloxacin)
+        suppliers = self.set_up_suppliers()
+        manufacturers = self.set_up_manufacturers()
+
+        biofloxx.suppliers = suppliers
+        biofloxx.manufacturers = manufacturers
+        biofloxx.save()
     
     def test_search_for_ciprofloxacin_returns_ciprofloxacin_500mg(self):
         self.set_up_msh_for_ciprofloxacin()
@@ -94,6 +100,17 @@ class DjangoBackendTest(SarpamTestCase):
         expected_suppliers = [biotech_laboratories, camox]
         
         self.assertEquals(expected_suppliers, biofloxx['suppliers'])
+
+    def test_ciprofloxacin_manufacturers_can_be_retrieved_by_id(self):
+        products = self.backend.get_products_based_on_formulation_with_id(1)
+        biofloxx = products[0]
+        
+        unique_pharmaceuticals = {'name' : "Unique Pharmaceutical Labs, India"}
+        
+        expected_manufacturers = [unique_pharmaceuticals]
+        
+        self.assertEquals(expected_manufacturers, biofloxx['manufacturers'])
+
 
     def test_supplier_name_can_be_retrieved_by_id(self):
         supplier_name = self.backend.get_name_of_supplier_with_id(1)

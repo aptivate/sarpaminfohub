@@ -48,6 +48,10 @@ class ProductPageTest(PageDisplayTestCase):
         response = self.load_page_with_suppliers_of_amitriptyline()
         self.check_sub_title_is(response, "amitriptyline 25mg tablet")
         
+    def test_manufacturers_for_amitriptyline_includes_stallion_laboratories(self):
+        response = self.load_page_with_suppliers_of_amitriptyline()
+        self.assertContains(response, "STALLION LABORATORIES LTD-INDIA")
+        
     def load_page_with_suppliers_of_amitriptyline(self):
         return self.client.get('/formulation_products/1/test')
     

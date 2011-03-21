@@ -107,6 +107,29 @@ def scrapeSuppliers(conn):
 
     return results, supplier_dict
 
+def scrapeManufacturers(conn):
+    query = "SELECT DISTINCT manufacturer FROM form1_row"
+    c = conn.cursor()
+    c.execute(query)
+    results = []
+    counter = 0
+    manufacturer_dict = {}
+    
+    for row in c:
+        result = {}
+        manufacturer_fields = {}
+        
+        result['pk'] = counter
+        result['model'] = "infohub.manufacturer"
+        result['fields'] = manufacturer_fields
+        name = row[0]
+        manufacturer_fields['name'] = name
+        manufacturer_dict[name] = counter
+        
+        results.append(result)
+        counter += 1
+        
+    return results, manufacturer_dict
 
 def scrapeProducts(conn):
     """
@@ -186,13 +209,14 @@ def scrape(db_file):
     countries = scrapeCountries(conn)
     exchange_rates = scrapeExchangeRate(conn)
     suppliers, supplier_dict = scrapeSuppliers(conn)
+    manufacturers, manufacturer_dict = scrapeManufacturers(conn)
 
-    # Build Martin's schema
     output_json("exchange_rates", exchange_rates)
 
     # Temporarily disabled - using fictitious names instead
     # output_json("countries", countries)
     output_json("suppliers", suppliers)
+    output_json("manufacturers", manufacturers)
 
     # formulations
     counter = 0
@@ -231,7 +255,6 @@ def scrape(db_file):
 
     # Product
     product_table = []
-    supplier_table = []
     product_dict = {}
     counter = 0
     unknown_formulations = set()
@@ -245,17 +268,20 @@ def scrape(db_file):
             record['pk'] = counter
             record['model'] = "infohub.product"
             record['fields'] = product_fields
+
             try:
                 product_fields['formulation'] = formulation_dict[p['formulation']]
             except:
                 unknown_formulations.add(p['formulation'])
                 continue
+
             product_fields['name'] = p['product']
             # Where does Country belongs ? HELP
             # There are more than one manufacturer per product. HELP
             #product_fields['manufacturer'] = p['manufacturer']
             product_fields['suppliers'] = []
             product_table.append(record)
+
             product_dict[p['product']] = counter
 
             supplier_name = p['supplier']
@@ -263,6 +289,14 @@ def scrape(db_file):
             if supplier_name in supplier_dict:
                 supplier_id = supplier_dict[supplier_name]
                 product_fields['suppliers'].append(supplier_id)
+
+            product_fields['manufacturers'] = []
+            
+            manufacturer_name = p['manufacturer']
+            
+            if manufacturer_name in manufacturer_dict:
+                manufacturer_id = manufacturer_dict[manufacturer_name]
+                product_fields['manufacturers'].append(manufacturer_id)
 
     output_json('products', product_table)
 

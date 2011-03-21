@@ -6,5 +6,10 @@
         <a href="{{supplier.url}}">{{ supplier.name }}</a>
         {% endfor %}
     </td>
+    <td>
+        {% for manufacturer in row.manufacturers %}
+        {{ manufacturer.name }}
+        {% endfor %}        
+    </td>
   </tr>
 {% endfor %}

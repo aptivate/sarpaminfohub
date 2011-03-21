@@ -37,7 +37,11 @@ class Supplier(models.Model):
     def get_url(self):
         return reverse('suppliers', args=[str(self.id), ""])
 
+class Manufacturer(models.Model):
+    name = models.CharField(max_length=200)
+
 class Product(models.Model):
     formulation = models.ForeignKey(Formulation)
     name = models.CharField(max_length=200)
     suppliers = models.ManyToManyField(Supplier)
+    manufacturers = models.ManyToManyField(Manufacturer)

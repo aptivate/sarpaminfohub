@@ -167,3 +167,12 @@ class DrugSearcherTest(SarpamTestCase):
         
         self.assertEquals(expected_suppliers, amitrilon25['suppliers'])
         
+    def test_stallion_laboratories_returned_as_manufacturer_of_amitryptyline(self):
+        amitrilon25 = self.get_amitrilon_25()
+        
+        stallion = {'name':"STALLION LABORATORIES LTD-INDIA"}
+        
+        expected_manufacturers = [stallion]
+        
+        self.assertEquals(expected_manufacturers, amitrilon25['manufacturers'])
+        

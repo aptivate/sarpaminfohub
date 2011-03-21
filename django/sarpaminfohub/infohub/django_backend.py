@@ -69,18 +69,31 @@ class DjangoBackend(Backend):
         for product in products:
             record = {}
             record['product'] = product.name
-            
-            suppliers = []
-            for supplier in product.suppliers.all():
-                supplier_record = {}
-                supplier_record['name'] = supplier.name
-                supplier_record['url'] = supplier.get_url()       
-                suppliers.append(supplier_record)
-                
-            record['suppliers'] = suppliers
+            record['suppliers'] = self.get_supplier_records_for_product(product)
+            record['manufacturers'] = self.get_manufacturer_records_for_product(product)
             results.append(record)
             
         return results
+    
+    def get_supplier_records_for_product(self, product):
+        suppliers = []
+        for supplier in product.suppliers.all():
+            record = {}
+            record['name'] = supplier.name
+            record['url'] = supplier.get_url()       
+            suppliers.append(record)
+
+        return suppliers
+
+    def get_manufacturer_records_for_product(self, product):
+        manufacturers = []
+        
+        for manufacturer in product.manufacturers.all():
+            record = {}
+            record['name'] = manufacturer.name
+            manufacturers.append(record)
+        
+        return manufacturers
 
     def get_products_from_supplier_with_id(self, supplier_id):
         products = Product.objects.filter(suppliers=supplier_id)

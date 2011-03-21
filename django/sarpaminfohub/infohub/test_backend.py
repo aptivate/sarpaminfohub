@@ -132,8 +132,6 @@ class TestBackend(Backend):
         return products
     
     def get_products_from_supplier_with_id(self, supplier_id):
-#        amitrilon25 = self.get_amitrilon25()
-
         amitrilon25 = {}
         amitrilon25['product'] = "AMITRILON-25"
         amitrilon25['formulation_name'] = "amitriptyline 25mg tablet"
@@ -149,10 +147,14 @@ class TestBackend(Backend):
         aspen_pharmacare = {'name': "Aspen Pharmacare Ltd, S.A",
                             'url': "/suppliers/2/test"}
 
+        stallion = {'name' : "STALLION LABORATORIES LTD-INDIA"}
+
         suppliers = [afrifarmacia, aspen_pharmacare]
+        manufacturers = [stallion]
 
         amitrilon25 = {'product': "AMITRILON-25", 
-                       'suppliers': suppliers} 
+                       'suppliers': suppliers,
+                       'manufacturers': manufacturers} 
 
         return amitrilon25
 
