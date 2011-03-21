@@ -162,3 +162,10 @@ class SimpleTest(TestCase):
         self.login(client)
         response = client.post('/contacts/tags/Medicine/')
         self.assertNotContains(response, "Aptivate")
+    
+    def test_multiple_tag_select(self):
+        client = self.client
+        self.login(client)
+        response = client.post('/contacts/',{"tags":[1,2,3]})
+        self.assertContains(response, 'My Name')
+        self.assertNotContains(response, "Aptivate")

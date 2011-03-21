@@ -5,6 +5,7 @@ from tagging.models import Tag
 
 def tag_search(request):
     query = None
+    search = False
     if request.method == 'POST':
         form = SearchForm(request.POST)
         if form.is_valid():
@@ -14,10 +15,15 @@ def tag_search(request):
                 search_term = "%s %s"%(form.cleaned_data['search_term'],tag_string)
             else:
                 search_term = form.cleaned_data['search_term']
-            query = SearchQuerySet().auto_query(search_term)
+            if search_term.strip(' '):
+                query = SearchQuerySet().auto_query(search_term)
+                search = True
+            else:
+                form = SearchForm()
     else:
         form = SearchForm()
     extra_context = {
+        'search':search,
         'query': query,
         'form': form,
     }

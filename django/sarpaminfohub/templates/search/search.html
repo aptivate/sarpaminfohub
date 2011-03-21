@@ -15,6 +15,7 @@
 			
 		<input type="submit" value="Search" />
 		</form>
+			{% if search %}
         {% if not form.errors %}
             <h3>Results</h3>
 						<table>
@@ -52,13 +53,7 @@
                 <tr><td colspan=5>No Results found.</td></tr>
             {% endfor %}
 						</table>
-            {% if page.has_previous or page.has_next %}
-                <div>
-                    {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous {% if page.has_previous %}</a>{% endif %}
-                    |
-                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
-                </div>
-            {% endif %}
+						{%endif%}
         {% else %}
             <p>Search for a contact by Given Name, Family Name, Email Address, Phone Number, Address or the content of notes made about them.</p>
         {% endif %}  
