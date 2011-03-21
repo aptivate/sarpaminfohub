@@ -37,7 +37,7 @@ class SimpleTest(TestCase):
                    )
         c.save()
         c = Contact(given_name="Aptivate", family_name="Employee", phone="(32543) 523566",
-                   email="g@h.i", address_line_1="999 Letsbe Avenue", tag="academia", note="Death Note",
+                   email="g@h.i", address_line_1="999 Letsbe Avenue", tags="academia", note="Death Note",
                    role="Researcher", organization="Imperial College"
                    )
         c.save()
@@ -118,5 +118,23 @@ class SimpleTest(TestCase):
     def test_search_by_tag(self):
         client = self.client
         self.login(client)
-        response = client.post('/contacts/', {'search_term':"My","tag":"Medicine"})
+        response = client.post('/contacts/', {'search_term':"My","tag":2})
         self.assertContains(response, 'My Name')
+    
+    def test_search_by_not_tag(self):
+        client = self.client
+        self.login(client)
+        response = client.post('/contacts/', {'search_term':"My","tag":4})
+        self.assertContains(response, 'No Results found.')
+    
+    def test_search_by_tag_faux(self):
+        client = self.client
+        self.login(client)
+        response = client.post('/contacts/', {'search_term':"My Medicine"})
+        self.assertContains(response, 'My Name')
+    
+    def test_search_by_not_tag_faux(self):
+        client = self.client
+        self.login(client)
+        response = client.post('/contacts/', {'search_term':"My academia"})
+        self.assertContains(response, 'No Results found.')
