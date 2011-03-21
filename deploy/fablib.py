@@ -148,7 +148,7 @@ def update_db():
 
 def setup_db_dumps():
     """ set up mysql database dumps """
-    require('dump_dir', provided_by=valid_envs)
+    require('dump_dir', provided_by=env.valid_envs)
     sudo(env.tasks_bin + ' setup_db_dumps:' + env.dump_dir)
 
 def touch():

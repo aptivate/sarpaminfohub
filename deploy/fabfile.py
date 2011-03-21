@@ -9,7 +9,7 @@ from fabric.context_managers import hide
 from fablib import apache_cmd, apache_reload, apache_restart, \
              checkout_or_update, clean_db, configtest, deploy_clean, \
              link_apache_conf, link_local_settings, local_test, remote_test, \
-             touch, update_db, update_requirements
+             setup_db_dumps, touch, update_db, update_requirements
 import fablib
 
 env.home = '/var/django/'
