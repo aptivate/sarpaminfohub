@@ -17,6 +17,8 @@ def _setup_path():
         env.project_root    = os.path.join(env.home, env.project_dir)
     if not env.has_key('vcs_root'):
         env.vcs_root        = os.path.join(env.project_root, 'dev')
+    if not env.has_key('dump_dir'):
+        env.dump_dir        = os.path.join(env.project_root, 'dbdumps')
     if not env.has_key('deploy_root'):
         env.deploy_root     = os.path.join(env.vcs_root, 'deploy')
     env.tasks_bin = os.path.join(env.deploy_root, 'tasks.py')
@@ -31,6 +33,7 @@ def _setup_path():
             env.python_bin      = os.path.join(env.virtualenv_root, 'bin', 'python2.6')
     if not env.has_key('settings'):
         env.settings        = '%(project)s.settings' % env
+
 
 def _get_svn_user_and_pass():
     if not env.has_key('svnuser') or len(env.svnuser) == 0:
@@ -68,6 +71,8 @@ def deploy(revision=None):
     if env.project_type == "django":
         link_local_settings()
         update_db()
+        if env.environment == 'production':
+            setup_db_dumps()
     link_apache_conf()
     apache_cmd('start')
 
@@ -140,6 +145,11 @@ def update_db():
     """ create and/or update the database, do migrations etc """
     require('tasks_bin', provided_by=env.valid_envs)
     sudo(env.tasks_bin + ' update_db')
+
+def setup_db_dumps():
+    """ set up mysql database dumps """
+    require('dump_dir', provided_by=valid_envs)
+    sudo(env.tasks_bin + ' setup_db_dumps:' + env.dump_dir)
 
 def touch():
     """ touch wsgi file to trigger reload """

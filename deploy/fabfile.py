@@ -110,6 +110,8 @@ def deploy(revision=None):
     link_local_settings()
     create_search_dir()
     update_db()
+    if env.environment == 'production':
+        setup_db_dumps()
     sudo(env.tasks_bin + ' load_fixtures')
     link_apache_conf()
     apache_cmd('start')
