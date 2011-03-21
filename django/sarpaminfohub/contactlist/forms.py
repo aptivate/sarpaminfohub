@@ -3,6 +3,6 @@ from tagging.models import Tag
 
 
 class SearchForm(forms.Form):
-    search_term = forms.CharField()
-    tag = forms.ModelChoiceField(Tag.objects.all())
+    search_term = forms.CharField(required=True)
+    tag = forms.ModelChoiceField(required=False,queryset=Tag.objects.all())
     
