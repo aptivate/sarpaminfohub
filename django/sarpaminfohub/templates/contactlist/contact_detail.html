@@ -26,7 +26,7 @@
 <h2>Tags</h2>
 <ul>
 {%for tag in object.tag_list%}
-<li>{{tag}}</li>
+<li><a href="/contacts/tags/{{tag}}/">{{tag}}</a></li>
 {%endfor%}
 </ul>
 {% endblock main %}
