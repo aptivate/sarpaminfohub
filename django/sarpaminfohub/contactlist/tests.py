@@ -138,3 +138,15 @@ class SimpleTest(TestCase):
         self.login(client)
         response = client.post('/contacts/', {'search_term':"My academia"})
         self.assertContains(response, 'No Results found.')
+    
+    def test_contact_view_tag_presence(self):
+        client = self.client
+        self.login(client)
+        response = client.post("/contacts/1/",{})
+        self.assertContains(response,"Medicine</a></li>")
+    
+    def test_contact_view_tag_absence(self):
+        client = self.client
+        self.login(client)
+        response = client.post('/contacts/3/')
+        self.assertNotContains(response,"Medicine</a></li>")
