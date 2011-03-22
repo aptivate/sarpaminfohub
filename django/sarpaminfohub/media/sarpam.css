@@ -324,6 +324,7 @@ margin: 0 0 0 10em;
 
 .number
 {
+    width:100px;
     text-align:right;
 }
 
