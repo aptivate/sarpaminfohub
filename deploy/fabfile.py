@@ -9,7 +9,7 @@ from fabric.context_managers import hide
 from fablib import apache_cmd, apache_reload, apache_restart, \
              checkout_or_update, clean_db, configtest, deploy_clean, \
              link_apache_conf, link_local_settings, local_test, remote_test, \
-             touch, update_db, update_requirements
+             setup_db_dumps, touch, update_db, update_requirements
 import fablib
 
 env.home = '/var/django/'
@@ -110,6 +110,8 @@ def deploy(revision=None):
     link_local_settings()
     create_search_dir()
     update_db()
+    if env.environment == 'production':
+        setup_db_dumps()
     sudo(env.tasks_bin + ' load_fixtures')
     link_apache_conf()
     apache_cmd('start')

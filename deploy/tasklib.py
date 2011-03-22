@@ -197,6 +197,37 @@ def update_db():
     if use_migrations:
         _manage_py(['migrate', '--noinput'])
 
+def setup_db_dumps(dump_dir):
+    """ set up mysql database dumps in root crontab """
+    if not os.path.isabs(dump_dir):
+        print 'dump_dir must be an absolute path, you gave %s' % dump_dir
+        sys.exit(1)
+    project_name = project_settings.django_dir.split('/')[-1]
+    cron_file = os.path.join('/etc', 'cron.daily', 'dump_'+project_name)
+
+    db_engine, db_name, db_user, db_pw = _get_django_db_settings()
+    if db_engine == 'mysql':
+        if not os.path.exists(dump_dir):
+            subprocess.call(['mkdir', '-p', dump_dir])
+        dump_file_stub = os.path.join(dump_dir, 'daily-dump-')
+
+        # has it been set up already
+        cron_grep = subprocess.call('sudo crontab -l | grep mysqldump', shell=True)
+        if cron_grep == 0:
+            return
+        if os.path.exists(cron_file):
+            return
+
+        # write something like:
+        # 30 1 * * * mysqldump --user=osiaccounting --password=aptivate --host=127.0.0.1 osiaccounting >  /var/osiaccounting/dumps/daily-dump-`/bin/date +\%d`.sql
+        with open(cron_file, 'w') as f:
+            f.write('15 1 * * * ')
+            f.write('mysqldump --user=%s --password=%s --host=127.0.0.1 %s > %s' %
+                    (db_user, db_pw, db_name, dump_file_stub))
+            f.write(r'`/bin/date +\%d`.sql')
+            f.write('\n')
+        os.chmod(cron_file, 0755)
+
 
 def run_tests():
     args = ['test', '-v0']

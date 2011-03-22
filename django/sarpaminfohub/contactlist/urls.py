@@ -1,9 +1,8 @@
-from django.conf.urls.defaults import *
 from django.views.generic import list_detail
-from contactlist.models import Contact
-from tagging.models import TaggedItem
 from tagging.views import tagged_object_list
-from contactlist.views import tag_search
+from sarpaminfohub.contactlist.models import Contact
+from django.conf.urls.defaults import patterns
+from sarpaminfohub.contactlist.views import tag_search
 
 contacts_info = {
     'queryset': Contact.objects.all()
