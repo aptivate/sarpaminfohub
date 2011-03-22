@@ -1,6 +1,19 @@
 body
 {
   font-family:Verdana,sans-serif;
+  background-color:#ddd;
+}
+
+#page 
+{
+    padding-top:50px;
+    width:960px;
+    margin-left:auto;
+    margin-right:auto;
+    background-color:#ffffff;
+    padding-left:10px;
+    padding-right:10px;
+    height:100pc;
 }
 
 #map
