@@ -178,7 +178,7 @@ class SearchTest(SarpamTestCase):
     def test_price_cells_are_in_number_class(self):
         self.set_up_exchange_rate_for_zar()
         parser = self.parse_search_results_for("ciprofloxacin", backend='test')
-        self.assertEquals([None, "number", "number", "number"], 
+        self.assertEquals(['first', 'second number', 'third number', 'fourth number'], 
                           parser.cell_classes)
         
     def test_search_results_link_to_formulation_page(self):
