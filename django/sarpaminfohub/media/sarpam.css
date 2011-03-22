@@ -326,3 +326,22 @@ margin: 0 0 0 10em;
 {
     text-align:right;
 }
+
+.country
+{
+    text-align:right;
+}
+
+td.first, td.second, td.third, td.fourth
+{
+    padding-left:10px;
+    padding-right:20px;
+}
+
+td.first, td.third {
+    background-color:#C9D1FF;
+}
+
+td.second, td.fourth {
+    background-color:#969CFF;
+}

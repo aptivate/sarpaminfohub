@@ -1,8 +1,8 @@
 {% for row in table.rows %}
   <tr>
-    <td><a href="{{ row.data.href }}">{{ row.formulation }}</a></td>
-    <td class="number">{{ row.fob_price }}</td>
-    <td class="number">{{ row.landed_price }}</td>
-    <td class="number">{{ row.msh_price }}</td>
+    <td class="first"><a href="{{ row.data.href }}">{{ row.formulation }}</a></td>
+    <td class="second">{{ row.fob_price }}</td>
+    <td class="third">{{ row.landed_price }}</td>
+    <td class="fourth">{{ row.msh_price }}</td>
   </tr>
 {% endfor %}
