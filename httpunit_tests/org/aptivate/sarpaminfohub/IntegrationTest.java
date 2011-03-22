@@ -7,9 +7,11 @@ import com.meterware.httpunit.WebResponse;
 
 public class IntegrationTest extends SarpamInfoHubTest
 {
+	private static String host = "http://localhost:8000/";
+	
 	private String getSearchPageUrl()
 	{
-		return "http://localhost:8000/";
+		return host;
 	}
 	
 	private WebResponse loadSearchPage(String query) throws Exception
@@ -69,5 +71,59 @@ public class IntegrationTest extends SarpamInfoHubTest
 	{
 		WebResponse response = loadSearchPage("formulation_suppliers/1/test");
 		validatePage(response);
+	}
+	
+	public void testContactSearchPageValidates() throws Exception
+	{
+		WebResponse response = loadContactSearchPage("");
+		validatePage(response);
+	}
+	
+	public void testContactTagsPageValidates() throws Exception
+	{
+		WebResponse response = loadContactSearchPage("tags/Bioethics/");
+		validatePage(response);
+	}
+	
+	public void testContactPageValidates() throws Exception
+	{
+		WebResponse response = loadContactSearchPage("2/");
+		validatePage(response);
+	}
+	
+	public void testContactSearchResultsValidates() throws Exception
+	{
+		WebResponse response = loadContactSearchPage("");
+		WebForm searchForm = response.getForms()[0];
+		
+		searchForm.setParameter("search_term", "Bell");
+		
+		response = searchForm.submit();
+		validatePage(response);
+	}
+	
+	public void testContactSearchWithNoResultsValidates() throws Exception
+	{
+		WebResponse response = loadContactSearchPage("");
+		WebForm searchForm = response.getForms()[0];
+		
+		searchForm.setParameter("search_term", "Flooble");
+		
+		response = searchForm.submit();
+		validatePage(response);
+	}
+	
+	private WebResponse loadContactSearchPage(String path) throws Exception
+	{
+		String url = getContactSearchPageUrl(path);
+		
+		WebResponse response = loadUrl(url);
+		
+		return response;
+	}
+	
+	private String getContactSearchPageUrl(String path)
+	{
+		return host + "contacts/" + path; 
 	}
 }
