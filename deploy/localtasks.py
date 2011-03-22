@@ -31,6 +31,8 @@ def run_jenkins(svnuser, svnpass):
     # reports
     if not os.path.exists(os.path.join(tasklib.env['project_dir'], 'infohub')):
         subprocess.call(['ln', '-s', 'django/sarpaminfohub/infohub'], cwd=tasklib.env['project_dir'])
+    if not os.path.exists(os.path.join(tasklib.env['project_dir'], 'contactlist')):
+        subprocess.call(['ln', '-s', 'django/sarpaminfohub/contactlist'], cwd=tasklib.env['project_dir'])
     tasklib._manage_py_jenkins()
 
 
