@@ -39,7 +39,13 @@
 {% endfor %}
 
 <tr class="foot">
-	<td colspan="2"><span>MSH Price: {{ msh_price }}</span></td>
+	<td colspan="2">
+		<span class="noborder" id="fobkey">&nbsp;&nbsp;&nbsp;</span>
+		<span class="noborder">FOB Price</span>
+		<span class="noborder" id="landedkey">&nbsp;&nbsp;&nbsp;</span>
+		<span class="noborder">Landed Price</span>
+		<span class="mshborder">MSH Price: {{ msh_price }}</span>
+	</td>
 </tr>
 
 </table>
