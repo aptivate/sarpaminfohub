@@ -168,8 +168,7 @@ def scrapeProducts(conn, drug_lookups, manufacturer_lookups):
     for row in c:
         result={}
         result['country'] = row[0]
-        result['formulation'] = getStandardisedFormulationName(drug_lookups, 
-                                                               row[1])       
+        result['formulation'] = getStandardisedFormulationName(row[1])       
         result['product'] = getStandardisedDrugName(drug_lookups, row[2])
         result['manufacturer'] = getStandardisedManufacturerName(manufacturer_lookups,
                                                                  row[3])
@@ -198,8 +197,7 @@ def scrapeFormulations(conn, drug_lookups):
     for row in c:
         result = {}
         
-        result['formulation'] = getStandardisedFormulationName(drug_lookups,
-                                                                  row[0])
+        result['formulation'] = getStandardisedFormulationName(row[0])
         result['landed_cost_price'] = row[1] or None
         result['fob_price'] = row[2] or None
         result['period'] = row[3]
@@ -213,10 +211,8 @@ def scrapeFormulations(conn, drug_lookups):
     return results
 
 
-def getStandardisedFormulationName(drug_lookups, name):
-    name = name.replace('*', '').upper()
-    
-    return getStandardisedDrugName(drug_lookups, name).lower()
+def getStandardisedFormulationName(name):
+    return name.replace('*', '')
 
 def getStandardisedDrugName(drug_lookups, name):
     if name in drug_lookups:
