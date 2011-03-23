@@ -15,7 +15,7 @@ class FormulationPageTest(PageDisplayTestCase):
         self.assertContains(response, "Namibia")
 
     def get_expected_price_table_cell(self, price):
-        return '<td class="number">%s</td>' % \
+        return 'number">%s</td>' % \
             round(float(price),3)
 
     def test_fob_price_appears_right_aligned_in_formulation_table(self):

@@ -1,6 +1,19 @@
 body
 {
   font-family:Verdana,sans-serif;
+  background-color:#ddd;
+}
+
+#page 
+{
+    padding-top:50px;
+    width:960px;
+    margin-left:auto;
+    margin-right:auto;
+    background-color:#ffffff;
+    padding-left:10px;
+    padding-right:10px;
+    height:100pc;
 }
 
 #map
@@ -152,7 +165,7 @@ table.data th
     -moz-border-radius: 10px 10px 10px 10px;
     background-color: #FFFFFF;
     border-collapse: separate;
-  width:1030px;
+  width:940px;
     padding: 10px 50px 10px 20px;
 }
 
@@ -190,7 +203,7 @@ table.data th
 #pricegraph .graph .grid .msh_price{position:absolute;width:1px;border-right:2px solid red;top:0;height:36px;z-index:10;}
 #pricegraph .graph tr.foot{border-top:1px solid #5b66a6;}
 #pricegraph .graph tr.foot td{text-align:right;}
-#pricegraph .graph tr.foot td span{border-left:2px solid red;padding-left:6px;}
+/*#pricegraph .graph tr.foot td span{border-left:2px solid red;padding-left:6px;}*/
 
 #formulation_msh{width:95%;margin:0 auto;color:white;}
 
@@ -311,5 +324,45 @@ margin: 0 0 0 10em;
 
 .number
 {
+    width:100px;
     text-align:right;
+}
+
+.country
+{
+    text-align:left;
+}
+
+td.first, td.second, td.third, td.fourth
+{
+    padding-left:10px;
+    padding-right:20px;
+}
+
+td.first, td.third {
+    background-color:#C9D1FF;
+}
+
+td.second, td.fourth {
+    background-color:#969CFF;
+}
+
+#fobkey {
+    background-color:#7381D1;
+}
+
+#landedkey {
+    background-color:#93A1F1;
+}
+
+span {
+    margin-left:10px;
+}
+
+.noborder {
+    border-left:0px;
+}
+
+.mshborder {
+    border-left:2px solid red;padding-left:6px;
 }

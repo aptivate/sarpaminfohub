@@ -7,7 +7,7 @@ class SarpamTableTest(SarpamTestCase):
         first_column = 0
         table.round_to_three_decimal_places(test_data, first_column)
         
-        self.assertAlmostEquals(0.123, test_data[first_column]) 
+        self.assertAlmostEquals(0.123, float(test_data[first_column])) 
         
     def test_no_data_return_when_none_value_rounded(self):
         table = SarpamTable(None)

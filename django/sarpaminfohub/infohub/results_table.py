@@ -5,9 +5,9 @@ from sarpaminfohub.infohub.sarpam_table import SarpamTable
 
 class ResultsTable(SarpamTable):
     formulation = tables.Column()
-    fob_price = tables.Column(verbose_name="Median FOB Price")
-    landed_price = tables.Column(verbose_name="Median Landed Price")
-    msh_price = tables.Column(verbose_name="MSH International Median")
+    fob_price = tables.Column(verbose_name="Median FOB Price (USD)")
+    landed_price = tables.Column(verbose_name="Median Landed Price (USD)")
+    msh_price = tables.Column(verbose_name="MSH International Median (USD)")
     rows_template = "drug_price_rows.html"
 
     def __init__(self, rows, search_string):
