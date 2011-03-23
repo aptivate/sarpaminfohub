@@ -1,7 +1,7 @@
 {% for row in table.rows %}
   <tr>
     <td class="first country">{{ row.country }}</td>
-    <td class="second number">{{ row.fob_price }}</td>
-    <td class="third number">{{ row.landed_price }}</td>    
+    <td class="second number">{{ row.fob_price|stringformat:".03f" }}</td>
+    <td class="third number">{{ row.landed_price|stringformat:".03f" }}</td>    
   </tr>
 {% endfor %}
