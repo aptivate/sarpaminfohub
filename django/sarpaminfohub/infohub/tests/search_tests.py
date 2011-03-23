@@ -148,9 +148,9 @@ class SearchTest(SarpamTestCase):
         parser = self.parse_search_results_for("ciprofloxacin")
         self.assertEquals(parser.FINISHED, parser.state)
         self.assertEquals(["Formulation",
-                           "Median FOB Price",
-                           "Median Landed Price",
-                           "MSH International Median"],
+                           "Median FOB Price (USD)",
+                           "Median Landed Price (USD)",
+                           "MSH International Median (USD)"],
                           parser.headings)
 
     def test_search_for_ciprofloxacin_with_django_backend_returns_drc_prices(self):

@@ -20,7 +20,7 @@ class FormulationPageTest(PageDisplayTestCase):
 
     def test_fob_price_appears_right_aligned_in_formulation_table(self):
         response = self.load_page_for_formulation_amitriptyline_prices()
-        self.assertContains(response, "FOB Price")
+        self.assertContains(response, "FOB Price (USD)")
         
         fob_price_in_nad = 58.64
         exchange_rate = 0.12314
@@ -33,7 +33,7 @@ class FormulationPageTest(PageDisplayTestCase):
 
     def test_landed_price_appears_right_aligned_in_formulation_table(self):
         response = self.load_page_for_formulation_amitriptyline_prices()
-        self.assertContains(response, "Landed Price")
+        self.assertContains(response, "Landed Price (USD)")
         
         landed_price_in_nad = 67.44
         exchange_rate = 0.12314

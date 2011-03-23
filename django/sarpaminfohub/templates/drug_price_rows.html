@@ -1,8 +1,20 @@
 {% for row in table.rows %}
   <tr>
     <td class="first"><a href="{{ row.data.href }}">{{ row.formulation }}</a></td>
-    <td class="second number">{{ row.fob_price|stringformat:".03f" }}</td>
-    <td class="third number">{{ row.landed_price|stringformat:".03f" }}</td>
-    <td class="fourth number">{{ row.msh_price|stringformat:".03f" }}</td>
+		{% ifequal row.fob_price "--" %}
+		    <td class="second number">--</td>
+		{% else %}
+		    <td class="second number">{{ row.fob_price|stringformat:".03f" }}</td>
+		{% endifequal%}
+		{% ifequal row.fob_price "--" %}
+		    <td class="third number">--</td>
+		{% else %}
+		    <td class="third number">{{ row.landed_price|stringformat:".03f" }}</td>
+		{% endifequal%}
+		{% ifequal row.fob_price "--" %}
+		    <td class="fourth number">--</td>
+		{% else %}
+		    <td class="fourth number">{{ row.msh_price|stringformat:".03f" }}</td>
+		{% endifequal%}
   </tr>
 {% endfor %}
