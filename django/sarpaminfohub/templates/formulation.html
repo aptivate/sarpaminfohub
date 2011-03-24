@@ -8,7 +8,7 @@
 
 	{% if formulation_msh %}
 	<div id="formulation_msh">
-		MSH International Median Price: {{ formulation_msh }}
+		MSH International Median Price: {{ formulation_msh|stringformat:".03f" }} (USD)
 	</div>
 	{% endif %}
 
