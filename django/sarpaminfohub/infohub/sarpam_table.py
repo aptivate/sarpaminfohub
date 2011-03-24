@@ -14,8 +14,7 @@ class SarpamTable(tables.MemoryTable):
         if value is None:
             value = self.NO_DATA
         else:
-            value = value = round(float(value), 3)
-            
+            value = round(float(value), 3)
          
         row[column] = value
 

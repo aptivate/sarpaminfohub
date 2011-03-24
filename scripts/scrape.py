@@ -150,7 +150,7 @@ def getStandardisedManufacturerName(manufacturer_lookups, name):
     return name
 
 
-def scrapeProducts(conn, drug_lookups, manufacturer_lookups):
+def scrapeProductRegistrations(conn, drug_lookups, manufacturer_lookups):
     """
     Returns suppliers and products.
 
@@ -168,14 +168,13 @@ def scrapeProducts(conn, drug_lookups, manufacturer_lookups):
     for row in c:
         result={}
         result['country'] = row[0]
-        result['formulation'] = getStandardisedFormulationName(drug_lookups, 
-                                                               row[1])       
+        result['formulation'] = getStandardisedFormulationName(row[1])       
         result['product'] = getStandardisedDrugName(drug_lookups, row[2])
         result['manufacturer'] = getStandardisedManufacturerName(manufacturer_lookups,
                                                                  row[3])
         result['supplier'] = getStandardisedManufacturerName(manufacturer_lookups, 
                                                              row[4]) or None
-        result['country_id'] = row[5]
+        result['country_id'] = country_codes[row[5]]
         results.append(result)
     return results
 
@@ -198,8 +197,7 @@ def scrapeFormulations(conn, drug_lookups):
     for row in c:
         result = {}
         
-        result['formulation'] = getStandardisedFormulationName(drug_lookups,
-                                                                  row[0])
+        result['formulation'] = getStandardisedFormulationName(row[0])
         result['landed_cost_price'] = row[1] or None
         result['fob_price'] = row[2] or None
         result['period'] = row[3]
@@ -213,10 +211,8 @@ def scrapeFormulations(conn, drug_lookups):
     return results
 
 
-def getStandardisedFormulationName(drug_lookups, name):
-    name = name.replace('*', '').upper()
-    
-    return getStandardisedDrugName(drug_lookups, name).lower()
+def getStandardisedFormulationName(name):
+    return name.replace('*', '')
 
 def getStandardisedDrugName(drug_lookups, name):
     if name in drug_lookups:
@@ -243,7 +239,7 @@ def scrape(data_dir):
     manufacturer_lookups = loadAndReturnManufacturerLookups(data_dir)
     
     formulations = scrapeFormulations(conn, drug_lookups)
-    products = scrapeProducts(conn, drug_lookups, manufacturer_lookups)
+    registrations = scrapeProductRegistrations(conn, drug_lookups, manufacturer_lookups)
     countries = scrapeCountries(conn)
     exchange_rates = scrapeExchangeRate(conn)
     suppliers, supplier_dict = scrapeSuppliers(conn, manufacturer_lookups)
@@ -295,56 +291,75 @@ def scrape(data_dir):
     # Product
     product_table = []
     product_dict = {}
-    counter = 0
+    product_counter = 0
+    
+    registration_table = []
+    registration_counter = 0
+    
     unknown_formulations = set()
     pp = pprint.PrettyPrinter(indent=4)
 
-    for p in products:
-        counter+=1
+    num_dup = 0
+    num_unknown = 0
+
+    for registration in registrations:
+        try:
+            formulation_id = formulation_dict[registration['formulation']]
+        except:
+            unknown_formulations.add(registration['formulation'])
+            num_unknown+=1
+            continue
         
-        product_name = p['product']
+        registration_counter+=1
+        
+        registration_record = {}
+        registration_fields = {}
+        registration_record['pk'] = registration_counter
+        registration_record['model'] = 'infohub.productregistration'
+        registration_record['fields'] = registration_fields
+        
+        product_name = registration['product']
         
         if not product_name in product_dict:
-            record = {}
+            product_counter+=1
+            product_dict[product_name] = product_counter
+            product_record = {}
             product_fields = {}
-            record['pk'] = counter
-            record['model'] = "infohub.product"
-            record['fields'] = product_fields
+            product_record['pk'] = product_counter
+            product_record['model'] = "infohub.product"
+            product_record['fields'] = product_fields
 
-            try:
-                product_fields['formulation'] = formulation_dict[p['formulation']]
-            except:
-                unknown_formulations.add(p['formulation'])
-                continue
-
+            product_fields['formulation'] = formulation_id
             product_fields['name'] = product_name
-            # Where does Country belongs ? HELP
-            # There are more than one manufacturer per product. HELP
-            #product_fields['manufacturer'] = p['manufacturer']
-            product_fields['suppliers'] = []
-            product_table.append(record)
+            product_table.append(product_record)
+        else:
+            num_dup+=1
 
-            product_dict[product_name] = counter
+        registration_fields['product'] = product_dict[product_name] 
 
-            supplier_name = p['supplier']
-            
-            if supplier_name in supplier_dict:
-                supplier_id = supplier_dict[supplier_name]
-                product_fields['suppliers'].append(supplier_id)
+        supplier_name = registration['supplier']    
+        if supplier_name in supplier_dict:
+            supplier_id = supplier_dict[supplier_name]
+            registration_fields['supplier'] = supplier_id
+                        
+        manufacturer_name = registration['manufacturer']
+        if manufacturer_name in manufacturer_dict:
+            manufacturer_id = manufacturer_dict[manufacturer_name]
+            registration_fields['manufacturer'] = manufacturer_id
 
-            product_fields['manufacturers'] = []
-            
-            manufacturer_name = p['manufacturer']
-            
-            if manufacturer_name in manufacturer_dict:
-                manufacturer_id = manufacturer_dict[manufacturer_name]
-                product_fields['manufacturers'].append(manufacturer_id)
+        registration_fields['country'] = registration['country_id']
 
-    outputJson(data_dir,'products', product_table)
+        registration_table.append(registration_record)
+
+    outputJson(data_dir, 'products', product_table)
+    outputJson(data_dir, 'product_registrations', registration_table) 
 
     output = open('unknownFormulationsInProducts.json', 'w')
     json.dump(list(unknown_formulations), output, indent=2)
     output.close()
+
+    print "Number of duplicate products: %d" % num_dup
+    print "Number of unknown formulations: %d" % num_unknown
 
 def loadAndReturnDrugLookups(data_dir):
     csv_reader = getCsvReader(data_dir, 'drugs2')

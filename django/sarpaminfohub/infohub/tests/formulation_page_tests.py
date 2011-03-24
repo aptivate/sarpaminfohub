@@ -4,7 +4,8 @@ from sarpaminfohub.infohub.tests.page_display_test_case import PageDisplayTestCa
 class FormulationPageTest(PageDisplayTestCase):
     def setUp(self):
         self.set_up_exchange_rate_for_nad()
-        
+        self.set_up_exchange_rate_for_usd()
+                
     def test_display_formulation_uses_correct_template(self):
         response = self.load_page_for_formulation_amitriptyline_prices()
         self.assertTemplateUsed(response, 'formulation.html')
@@ -15,7 +16,7 @@ class FormulationPageTest(PageDisplayTestCase):
         self.assertContains(response, "Namibia")
 
     def get_expected_price_table_cell(self, price):
-        return 'number">%s</td>' % \
+        return 'number">%.3f</td>' % \
             round(float(price),3)
 
     def test_fob_price_appears_right_aligned_in_formulation_table(self):
@@ -41,7 +42,10 @@ class FormulationPageTest(PageDisplayTestCase):
         
         landed_price_in_usd = (landed_price_in_nad * exchange_rate) / issue_unit
         expected_output = self.get_expected_price_table_cell(landed_price_in_usd)
+        self.assertContains(response, expected_output)
         
+        # test a drug with only a landed price, no FOB price
+        expected_output = self.get_expected_price_table_cell(1234.56)
         self.assertContains(response, expected_output)
 
     def test_formulation_name_appears_above_formulation_table(self):

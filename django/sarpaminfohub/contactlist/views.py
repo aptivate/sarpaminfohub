@@ -1,7 +1,6 @@
 from haystack.query import SearchQuerySet
-from contactlist.forms import SearchForm
 from django.shortcuts import render_to_response
-from tagging.models import Tag
+from sarpaminfohub.contactlist.forms import SearchForm
 
 def tag_search(request):
     query = None

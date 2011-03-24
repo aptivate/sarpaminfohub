@@ -36,6 +36,7 @@ class DrugSearcherTest(SarpamTestCase):
         
     def test_prices_for_amoxycillin_is_converted_to_usd(self):
         self.set_up_exchange_rate_for_nad()
+        self.set_up_exchange_rate_for_usd()
         
         fob_price_in_nad = 58.64
         landed_price_in_nad = 67.44
@@ -146,33 +147,40 @@ class DrugSearcherTest(SarpamTestCase):
         median = self.drug_searcher.get_median_prices(price_list)
         self.assertAlmostEquals(0.09, median[1])
 
-    def get_amitrilon_25(self):
-        products = self.drug_searcher.get_products_based_on_formulation_with_id(1)
-        
-        amitrilon25 = products[0]
-        
-        return amitrilon25
-
     def test_amitrilon_25_returned_as_product_based_on_amitryptyline(self):
-        amitrilon25 = self.get_amitrilon_25()
-        self.assertEquals("AMITRILON-25", amitrilon25['product'])
+        registrations = self.get_amitrilon_25_registrations()
+        self.assertEquals("AMITRILON-25", registrations[0]['product'])
+        self.assertEquals("AMITRILON-25", registrations[1]['product'])
 
     def test_afrifarmacia_and_aspen_returned_as_suppliers_of_amitryptyline(self):
-        amitrilon25 = self.get_amitrilon_25()
+        registrations = self.get_amitrilon_25_registrations()
         
         afrifarmacia = {'name':u"Afrifármacia, Lda", 'url':"/suppliers/1/test"}
         aspen_pharmacare = {'name':"Aspen Pharmacare Ltd, S.A", 'url':"/suppliers/2/test"}
         
-        expected_suppliers = [afrifarmacia, aspen_pharmacare]
-        
-        self.assertEquals(expected_suppliers, amitrilon25['suppliers'])
+        self.assertEquals(afrifarmacia, registrations[0]['supplier'])
+        self.assertEquals(aspen_pharmacare, registrations[1]['supplier'])
         
     def test_stallion_laboratories_returned_as_manufacturer_of_amitryptyline(self):
-        amitrilon25 = self.get_amitrilon_25()
+        registrations = self.get_amitrilon_25_registrations()
         
         stallion = {'name':"STALLION LABORATORIES LTD-INDIA"}
         
-        expected_manufacturers = [stallion]
+        self.assertEquals(stallion, registrations[0]['manufacturer'])
+        self.assertEquals(stallion, registrations[1]['manufacturer'])
+
+    def get_amitrilon_25_registrations(self):
+        registrations = self.drug_searcher.get_product_registrations_based_on_formulation_with_id(1)
         
-        self.assertEquals(expected_manufacturers, amitrilon25['manufacturers'])
-        
+        return registrations
+
+    def test_amitrilon_25_returned_as_product_supplied_by_afrifarmacia(self):
+        products = self.drug_searcher.get_products_from_supplier_with_id(1)
+
+        amitrilon25 = {}
+        amitrilon25['product'] = "AMITRILON-25"
+        amitrilon25['formulation_name'] = "amitriptyline 25mg tablet"
+        amitrilon25['formulation_url'] = "/formulation/1/test"
+
+        expected_products = [amitrilon25]
+        self.assertEquals(expected_products, products)

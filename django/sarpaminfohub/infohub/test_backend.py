@@ -116,9 +116,15 @@ class TestBackend(Backend):
         return formulations
 
     def get_prices_for_formulation_with_id(self, formulation_id):
-        amitriptyline = self.get_amitriptyline()
+        amitriptyline_namibia = self.get_amitriptyline()
+        amitriptyline_za = self.get_amitriptyline()
+        amitriptyline_za['country'] = "South Africa"
+        amitriptyline_za['fob_price'] = None
+        amitriptyline_za['landed_price'] = 1234.56
+        amitriptyline_za['landed_currency'] = "USD"
+        amitriptyline_za['issue_unit'] = 1
         
-        return [amitriptyline]
+        return [amitriptyline_namibia, amitriptyline_za]
     
     def get_formulation_name_with_id(self, formulation_id):
         return "amitriptyline 25mg tablet"
@@ -126,10 +132,9 @@ class TestBackend(Backend):
     def get_formulation_msh_with_id(self, formulation_id):
         return 0.0057
 
-    def get_products_based_on_formulation_with_id(self, formulation_id):
-        amitrilon25 = self.get_amitrilon25()        
-        products = [amitrilon25]
-        return products
+    def get_product_registrations_based_on_formulation_with_id(self,
+                                                               formulation_id):
+        return self.get_amitrilon25_registrations()        
     
     def get_products_from_supplier_with_id(self, supplier_id):
         amitrilon25 = {}
@@ -140,23 +145,29 @@ class TestBackend(Backend):
         products = [amitrilon25]
         return products
 
-    def get_amitrilon25(self):
+    def get_amitrilon25_registrations(self):
         afrifarmacia = {'name':u"Afrifármacia, Lda",
                         'url':"/suppliers/1/test"}
         
-        aspen_pharmacare = {'name': "Aspen Pharmacare Ltd, S.A",
-                            'url': "/suppliers/2/test"}
+        aspen_pharmacare = {'name':"Aspen Pharmacare Ltd, S.A",
+                            'url':"/suppliers/2/test"}
 
-        stallion = {'name' : "STALLION LABORATORIES LTD-INDIA"}
+        stallion = {'name':"STALLION LABORATORIES LTD-INDIA"}
 
-        suppliers = [afrifarmacia, aspen_pharmacare]
-        manufacturers = [stallion]
+        nibia = {'name':"Nibia"}
+        samgola = {'name':"Samgola"}
+        
+        registration1 = {'product':"AMITRILON-25", 
+                         'supplier':afrifarmacia,
+                         'manufacturer':stallion,
+                         'country':nibia} 
 
-        amitrilon25 = {'product': "AMITRILON-25", 
-                       'suppliers': suppliers,
-                       'manufacturers': manufacturers} 
+        registration2 = {'product':"AMITRILON-25", 
+                         'supplier':aspen_pharmacare,
+                         'manufacturer':stallion,
+                         'country':samgola} 
 
-        return amitrilon25
+        return [registration1, registration2]
 
     def get_name_of_supplier_with_id(self, supplier_id):
         return u"Afrifármacia, Lda"

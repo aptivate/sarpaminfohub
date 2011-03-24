@@ -5,7 +5,6 @@ class FormulationTable(SarpamTable):
     country = tables.Column()
     fob_price = tables.Column(verbose_name="FOB Price (USD)")
     landed_price = tables.Column(verbose_name="Landed Price (USD)")
-    rows_template = "formulation_rows.html"
 
     def __init__(self, rows):
         for row in rows:
