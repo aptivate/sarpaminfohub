@@ -8,13 +8,13 @@ class SarpamTestCase(TestCase):
         self.ciprofloxacin = None
         TestCase.__init__(self, method_name)
     
-    def set_up_biofloxx(self, formulation):
+    def set_up_and_return_biofloxx(self, formulation):
         biofloxx = Product(formulation=formulation, name="BIOFLOXX 500 MG")
         biofloxx.save()
 
         return biofloxx
     
-    def set_up_drc_ciprofloxacin(self, fob_price="1.8", landed_price="2.085",
+    def set_up_and_return_drc_ciprofloxacin(self, fob_price="1.8", landed_price="2.085",
                                 fob_currency='EUR', issue_unit=100,
                                 landed_currency='EUR'):
         self.ciprofloxacin = Formulation(name="ciprofloxacin 500mg tablet") 
@@ -36,25 +36,6 @@ class SarpamTestCase(TestCase):
         msh = MSHPrice(formulation=self.ciprofloxacin, period=2009, 
                        price=Decimal("0.033"))
         msh.save()
-
-    def set_up_suppliers(self):
-        biotech_laboratories = Supplier(name="Biotech Laboratories")
-        biotech_laboratories.save()
-        
-        camox_pharmaceuticals = Supplier(name="Camox Pharmaceuticals (Pty) Ltd")
-        camox_pharmaceuticals.save()
-        
-        suppliers = [biotech_laboratories, camox_pharmaceuticals]
-        
-        return suppliers
-
-    def set_up_manufacturers(self):
-        unique_pharmaceuticals = Manufacturer(name="Unique Pharmaceutical Labs, India")
-        unique_pharmaceuticals.save()
-        
-        manufacturers = [unique_pharmaceuticals]
-        
-        return manufacturers
 
     def set_up_exchange_rate(self, symbol, rate, year):
         exchange_rate = ExchangeRate(symbol=symbol, rate=rate, year=year)

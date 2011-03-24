@@ -8,6 +8,7 @@ from media_tests import *
 from menu_tests import *
 from price_tests import *
 from product_page_tests import *
+from product_registration_tests import *
 from product_table_tests import *
 from results_table_tests import *
 from sarpam_table_tests import *

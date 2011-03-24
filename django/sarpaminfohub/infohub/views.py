@@ -84,7 +84,7 @@ def formulation_products(request, formulation_id, backend_name="django"):
     
     drug_searcher = DrugSearcher(backend)
     
-    rows = drug_searcher.get_products_based_on_formulation_with_id(formulation_id)
+    rows = drug_searcher.get_product_registrations_based_on_formulation_with_id(formulation_id)
     
     supplier_table = ProductTable(rows)
     search_form = SearchForm()

@@ -2,14 +2,13 @@
   <tr>
     <td class="first">{{ row.product }}</td>
     <td class="second">
-        {% for supplier in row.suppliers %}
-        <a href="{{supplier.url}}">{{ supplier.name }}</a>
-        {% endfor %}
+        <a href="{{row.supplier.url}}">{{ row.supplier.name }}</a>
     </td>
     <td class="third">
-        {% for manufacturer in row.manufacturers %}
-        {{ manufacturer.name }}
-        {% endfor %}        
+        {{ row.manufacturer.name }}
+    </td>
+    <td>
+        {{ row.country.name }}
     </td>
   </tr>
 {% endfor %}

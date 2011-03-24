@@ -52,6 +52,14 @@ class ProductPageTest(PageDisplayTestCase):
         response = self.load_page_with_suppliers_of_amitriptyline()
         self.assertContains(response, "STALLION LABORATORIES LTD-INDIA")
         
+    def test_countries_supplying_amitriptyline_includes_nibia(self):
+        response = self.load_page_with_suppliers_of_amitriptyline()
+        self.assertContains(response, "Nibia", 1)
+        
+    def test_countries_supplying_amitriptyline_includes_samgola(self):
+        response = self.load_page_with_suppliers_of_amitriptyline()
+        self.assertContains(response, "Samgola", 1)
+
     def load_page_with_suppliers_of_amitriptyline(self):
         return self.client.get('/formulation_products/1/test')
     

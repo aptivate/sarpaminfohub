@@ -154,7 +154,7 @@ class SearchTest(SarpamTestCase):
                           parser.headings)
 
     def test_search_for_ciprofloxacin_with_django_backend_returns_drc_prices(self):
-        self.set_up_drc_ciprofloxacin()
+        self.set_up_and_return_drc_ciprofloxacin()
         self.set_up_msh_for_ciprofloxacin()
         self.set_up_exchange_rate_for_eur()
         parser = self.parse_search_results_for("ciprofloxacin")
@@ -166,7 +166,7 @@ class SearchTest(SarpamTestCase):
         self.assertEquals(expected_rows, parser.rows)
         
     def test_null_prices_displayed_as_double_dash(self):
-        self.set_up_drc_ciprofloxacin(fob_price=None, landed_price=None)
+        self.set_up_and_return_drc_ciprofloxacin(fob_price=None, landed_price=None)
         self.set_up_exchange_rate_for_eur()
         
         rows = self.get_rows_for_ciprofloxacin()
