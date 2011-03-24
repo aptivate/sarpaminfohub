@@ -6,7 +6,7 @@
 		{% else %}
 		    <td class="second number">{{ row.fob_price|stringformat:".03f" }}</td>
 		{% endifequal%}
-		{% ifequal row.fob_price "--" %}
+		{% ifequal row.landed_price "--" %}
 		    <td class="third number">--</td>
 		{% else %}
 		    <td class="third number">{{row.landed_price|stringformat:".03f"}}</td>    

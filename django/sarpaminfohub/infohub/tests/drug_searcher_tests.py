@@ -36,6 +36,7 @@ class DrugSearcherTest(SarpamTestCase):
         
     def test_prices_for_amoxycillin_is_converted_to_usd(self):
         self.set_up_exchange_rate_for_nad()
+        self.set_up_exchange_rate_for_usd()
         
         fob_price_in_nad = 58.64
         landed_price_in_nad = 67.44

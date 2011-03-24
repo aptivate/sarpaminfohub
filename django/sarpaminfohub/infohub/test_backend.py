@@ -116,9 +116,15 @@ class TestBackend(Backend):
         return formulations
 
     def get_prices_for_formulation_with_id(self, formulation_id):
-        amitriptyline = self.get_amitriptyline()
+        amitriptyline_namibia = self.get_amitriptyline()
+        amitriptyline_za = self.get_amitriptyline()
+        amitriptyline_za['country'] = "South Africa"
+        amitriptyline_za['fob_price'] = None
+        amitriptyline_za['landed_price'] = 1234.56
+        amitriptyline_za['landed_currency'] = "USD"
+        amitriptyline_za['issue_unit'] = 1
         
-        return [amitriptyline]
+        return [amitriptyline_namibia, amitriptyline_za]
     
     def get_formulation_name_with_id(self, formulation_id):
         return "amitriptyline 25mg tablet"
