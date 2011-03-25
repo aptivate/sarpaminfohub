@@ -1,6 +1,10 @@
 body
 {
   font-family:Verdana,sans-serif;
+}
+
+body.standalone
+{
   background-color:#ddd;
 }
 
