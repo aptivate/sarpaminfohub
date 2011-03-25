@@ -1,6 +1,6 @@
 from django.test.testcases import TestCase
 from sarpaminfohub.infohub.models import Formulation, Price, Country, \
-    ExchangeRate, Product, Supplier, MSHPrice, Manufacturer
+    ExchangeRate, Product, MSHPrice
 from decimal import Decimal
 
 class SarpamTestCase(TestCase):

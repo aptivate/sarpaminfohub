@@ -6,4 +6,3 @@ class ProductRegistrationTest(SarpamTestCase):
 
     def test_manufacturer_may_be_null(self):
         ProductRegistration(manufacturer=None)
- 
