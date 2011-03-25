@@ -1,0 +1,59 @@
+/* colorize */
+.better-tag-cloud-shortcode {
+	text-align:				center;
+	padding:				0 1cm;
+}
+.better-tag-cloud-shortcode a {
+	vertical-align:			middle;
+	line-height:			25px;
+	margin:					0 2px;
+}
+a.nktagcloud-8 {
+	color:					#d1c052;
+}
+a.nktagcloud-9 {
+	color:					#CDB34C;
+}
+a.nktagcloud-10 {
+	color:					#CAA746;
+}
+a.nktagcloud-11 {
+	color:					#C79A41;
+}
+a.nktagcloud-12 {
+	color:					#C48E3B;
+}
+a.nktagcloud-13 {
+	color:					#C18135;
+}
+a.nktagcloud-14 {
+	color:					#BE7530;
+}
+a.nktagcloud-15 {
+	color:					#BB682A;
+}
+a.nktagcloud-16 {
+	color:					#B85C24;
+}
+a.nktagcloud-17 {
+	color:					#B54F1F;
+}
+a.nktagcloud-18 {
+	color:					#B24319;
+}
+a.nktagcloud-19 {
+	color:					#AF3613;
+}
+a.nktagcloud-20 {
+	color:					#AC2A0E;
+}
+a.nktagcloud-21 {
+	color:					#A91D08;
+}
+a.nktagcloud-22 {
+	color:					#A61103;
+}
+a:hover {
+	color:					#0d0d0d;
+	text-decoration:		none;
+}

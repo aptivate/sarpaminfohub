@@ -1,0 +1,95 @@
+/*
+Theme Name: BuddyPress Social
+Theme URI: http://premium.wpmudev.org/
+Description: A Social BuddyPress Theme that connect people, friends and family. Compatible with WordPress with or without BuddyPress, WordPress MU with or without BuddyPress and WP/WPMU installation with BuddyPress 1.2+ only.
+Version: 1.1.8
+Author: Richard Kiew at Dezzain Studio (incsub)
+Author URI: http://dezzain.com
+WDP ID: 116
+Tags: buddypress, White, Blue, Three Column, Two Column, Left Sidebar, Right Sidebar, Fixed Width, Custom Colors, Custom Header, Theme Options, Threaded Comments
+
+Copyright 2007-2010 Incsub (http://incsub.com)
+The CSS, XHTML and design is released under GPL:
+http://www.opensource.org/licenses/gpl-license.php
+
+
+changelog
+v1.1.8
+- add border line for activity stream
+- update adminbar to new bp 1.2 style
+- fixed adminbar dropdown missing in sub blog
+
+v1.1.7
+- updated documentation
+
+v1.1.6
+- fixed css for cancel friendship button
+- fixed css for single item activity avatar
+- if you are updating from v1.1.5, just update the _inc/css/member.css
+
+v1.1.5
+- added missing modify to theme option php to stylesheet sync
+- fix ie issue, especially missing avatar block in ie8..some css ruling needed apply
+- compatible up to buddypress 1.2.1
+- missing depth=0 for navigation subpage
+- added li border line for directory
+
+
+v1.1.4
+- fixed recent sitewide blockquote padding issue
+- fixed group item-content css overlay issue
+- replace php theme option stylesheet with style sync theme option for better compatible with various server host
+- fixed navigation for if multiblog enable
+
+
+v1.1.3
+- added compatible with BuddyPress 1.2+
+- added compatible with single wordpress install or wpmu install with or without BuddyPress enable.
+- frontpage activity stream support
+
+
+v1.1.2b
+- refixed admin bar style across all blogs
+
+v1.1.2
+- added widget for group slug - group left and group right
+- fixed ie major bug
+- fixed admin bar default core css overwrite the theme option css
+- fixed facebook avatar image scale
+- added global button css
+
+v1.1
+- added gallery style and articles style featured block controllable via theme options
+- added home and blog layout option - choose between 2 column or 3 column
+- added page template - full width and 2 column
+- fixed slug for setting and member on custom component and avatar post
+- fixed custom-function copy.function error in earlier version
+- added bp-social-childtheme
+- refine css for new bp 1.1.3 activity blockquote css
+- fixed group layout break if no member detected - problem cause by endif was close before </div>
+- add optional advertisment or script block in header image position..user can used ads here instead of custom image header...suitable for skywide 720x90 ads
+
+v1.0
+- new version
+
+
+
+
+*/
+
+
+/* Load the base styles */
+
+@import url(reset.css);
+@import url(base.css);
+@import url(global.css);
+@import url(comments.css);
+@import url(member.css);
+
+@import url(jd.gallery.css);
+
+/* Load the your custom styles */
+@import url(custom.css);
+
+/* Load the adminbar styles */
+@import url(adminbar.css);
