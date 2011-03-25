@@ -1,0 +1,110 @@
+form
+{
+	margin:0;
+}
+
+* 
+{
+	margin: 0;
+}
+
+html, body 
+{
+	font-size: 13px;
+	font-family: Arial;
+	color: #444;
+	margin: 0;
+	padding: 0;
+}
+
+a
+{
+	text-decoration: none;
+	color: #1a74b0;
+}
+
+a:hover
+{
+	text-decoration: underline;
+}
+
+div.main
+{
+	width: 385px;
+	border: solid #e2e2e2 1px;
+	padding: 15px;
+	float: left;
+	position: relative;
+	background-color: #fff;
+}
+
+
+div.main div.head
+{
+	border-bottom: solid #eee 1px;
+	margin-bottom: 18px;
+	padding-bottom: 18px;
+}
+
+div.main div.head h2
+{
+	color: #2d81bd;
+	font-weight:normal;
+	font-size: 22px;	
+}
+
+div.main div.head span
+{
+	display: block;
+	font-weight:normal;
+	font-size: 12px;
+	margin-top: 10px;	
+}
+
+td.field
+{	
+	padding-right: 5px;
+}
+
+td.field_top
+{
+	vertical-align: top;
+}
+
+textarea, td.input input
+{
+	border: solid #ddd 1px;
+	width: 268px;
+}
+
+td.submit
+{
+	text-align: center;
+}
+
+textarea
+{
+	height: 60px;	
+}
+
+table
+{
+	margin-bottom: 20px;
+}
+
+div.main img
+{
+	position: absolute;
+	right: 15px;
+	bottom: 15px;
+	border: none;
+}
+
+div.main img.not_valid
+{
+	position: relative;
+	right: 0;
+	bottom: 0;
+	float: right;
+	margin-top: -20px;
+}

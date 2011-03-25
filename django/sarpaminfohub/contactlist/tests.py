@@ -69,14 +69,6 @@ class SimpleTest(TestCase):
         self.assertContains(response, 'Aptivate Employee')
         self.assertNotContains(response, 'Anew Person')
         
-    def test_search_test_text(self):
-        client = self.client
-        self.login(client)
-        response = client.post('/contacts/', {'search_term':""})
-        self.assertContains(response, 'Search for a contact by Given Name, ' + 
-                            'Family Name, Notes, and select multiple tags to ' +
-                            'refine your search.')
-    
     def test_search_for_role(self):
         client = self.client
         self.login(client)

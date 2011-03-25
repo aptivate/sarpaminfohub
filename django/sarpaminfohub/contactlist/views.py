@@ -27,4 +27,5 @@ def tag_search(request):
         'query': query,
         'form': form,
     }
-    return render_to_response('search/search.html', extra_context)
+
+    return render_to_response('search/search_embedded.html', extra_context)
