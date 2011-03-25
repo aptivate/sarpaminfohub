@@ -1,0 +1,11 @@
+{% extends "page.html" %}
+
+{% block main %}
+    <h2>Search Contacts</h2>
+    
+    {% include 'search/search_common.inc.html' %}
+
+	{% if not search %}
+		<p>Search for a contact by Given Name, Family Name, Notes, and select multiple tags to refine your search.</p>
+	{% endif %}  
+{% endblock main %}
