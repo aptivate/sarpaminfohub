@@ -145,11 +145,17 @@ class TestBackend(Backend):
         products = [amitrilon25]
         return products
 
+    def get_registrations_from_supplier_with_id(self, supplier_id):
+        return [reg for reg in self.get_amitrilon25_registrations()
+            if reg['supplier']['id'] == 1]
+
     def get_amitrilon25_registrations(self):
-        afrifarmacia = {'name':u"Afrifármacia, Lda",
+        afrifarmacia = {'id': 1,
+                        'name':u"Afrifármacia, Lda",
                         'url':"/suppliers/1/test"}
         
-        aspen_pharmacare = {'name':"Aspen Pharmacare Ltd, S.A",
+        aspen_pharmacare = {'id': 2,
+                            'name':"Aspen Pharmacare Ltd, S.A",
                             'url':"/suppliers/2/test"}
 
         stallion = {'name':"STALLION LABORATORIES LTD-INDIA"}
@@ -157,17 +163,33 @@ class TestBackend(Backend):
         nibia = {'name':"Nibia"}
         samgola = {'name':"Samgola"}
         
-        registration1 = {'product':"AMITRILON-25", 
+        amitriptyline = {'id': 10,
+            'name': 'amitriptyline 25mg tablet'}
+        
+        amitrilon25 = {'id': 1,
+            'name': 'AMITRILON-25',
+            'formulation': amitriptyline}
+
+        amitrolline = {'id': 3,
+            'name': 'Amitrolline',
+            'formulation': amitriptyline}
+        
+        registration1 = {'product':amitrilon25, 
                          'supplier':afrifarmacia,
                          'manufacturer':stallion,
                          'country':nibia} 
 
-        registration2 = {'product':"AMITRILON-25", 
+        registration2 = {'product':amitrilon25, 
                          'supplier':aspen_pharmacare,
                          'manufacturer':stallion,
                          'country':samgola} 
 
-        return [registration1, registration2]
+        registration3 = {'product':amitrolline, 
+                         'supplier':afrifarmacia,
+                         'manufacturer':stallion,
+                         'country':samgola} 
+
+        return [registration1, registration2, registration3]
 
     def get_name_of_supplier_with_id(self, supplier_id):
         return u"Afrifármacia, Lda"

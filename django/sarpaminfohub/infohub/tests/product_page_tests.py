@@ -38,11 +38,9 @@ class ProductPageTest(PageDisplayTestCase):
     def test_suppliers_list_to_supplier_catalogue(self):
         response = self.load_page_with_suppliers_of_amitriptyline()
         self.check_link_visible_on_page(response,
-                                        href="/suppliers/1/test",
-                                        text=u"Afrifármacia, Lda")
+            href="/suppliers/1/test", text=u"Afrifármacia, Lda", count=2)
         self.check_link_visible_on_page(response,
-                                        href="/suppliers/2/test",
-                                        text="Aspen Pharmacare Ltd, S.A")
+            href="/suppliers/2/test", text="Aspen Pharmacare Ltd, S.A", count=1)
 
     def test_title_appears_above_table(self):
         response = self.load_page_with_suppliers_of_amitriptyline()
@@ -58,7 +56,7 @@ class ProductPageTest(PageDisplayTestCase):
         
     def test_countries_supplying_amitriptyline_includes_samgola(self):
         response = self.load_page_with_suppliers_of_amitriptyline()
-        self.assertContains(response, "Samgola", 1)
+        self.assertContains(response, "Samgola", count=2)
 
     def load_page_with_suppliers_of_amitriptyline(self):
         return self.client.get('/formulation_products/1/test')
