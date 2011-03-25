@@ -11,7 +11,8 @@ def tag_search(request):
             if form.cleaned_data.get('tags', False):
                 string_tags = [tag.name for tag in form.cleaned_data.get('tags')]
                 tag_string = " ".join(string_tags)
-                search_term = "%s %s"%(form.cleaned_data['search_term'],tag_string)
+                search_term = "%s %s"%(form.cleaned_data['search_term'],
+                                       tag_string)
             else:
                 search_term = form.cleaned_data['search_term']
             if search_term.strip(' '):
