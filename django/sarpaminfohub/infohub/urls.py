@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import patterns, url, include
 from django.contrib import admin
-from infohub.views import formulation
+from sarpaminfohub.infohub.views import formulation
 
 admin.autodiscover()
 

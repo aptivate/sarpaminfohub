@@ -9,7 +9,6 @@ from django.core.urlresolvers import reverse
 from sarpaminfohub.infohub.product_table import ProductTable
 from sarpaminfohub.infohub.menu import Menu
 from sarpaminfohub.infohub.forms import SearchForm
-import logging 
 
 from copy import deepcopy
 
