@@ -1,7 +1,4 @@
 DATABASE_ENGINE = 'mysql'
 DATABASE_NAME = 'sarpaminfohub'
-# DATABASE_OPTIONS = {"init_command": "SET storage_engine=INNODB"} # remove mysql-specific database options
 DATABASE_USER = 'sarpaminfohub'
 DATABASE_PASSWORD = 'sarpaminfohub'
-# DATABASE_HOST = '127.0.0.1'
-# DATABASE_PORT = '3307'

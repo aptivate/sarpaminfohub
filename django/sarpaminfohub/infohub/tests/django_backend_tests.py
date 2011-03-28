@@ -2,7 +2,7 @@ from sarpaminfohub.infohub.django_backend import DjangoBackend
 from decimal import Decimal
 from sarpaminfohub.infohub.tests.sarpam_test_case import SarpamTestCase
 from sarpaminfohub.infohub.models import Country, Supplier, Manufacturer,\
-    ProductRegistration
+    ProductRegistration, Formulation
 from django.core.urlresolvers import reverse
 
 class DjangoBackendTest(SarpamTestCase):
@@ -39,12 +39,12 @@ class DjangoBackendTest(SarpamTestCase):
         self.assertEquals(self.expected_ciprofloxacin_results['formulation'],
                           first_row['formulation'])
 
-    def get_first_row_of_prices_with_formulation_id_1(self):
-        rows = self.backend.get_prices_for_formulation_with_id(1)
+    def get_first_row_of_prices_for_ciprofloxacin(self):
+        rows = self.backend.get_prices_for_formulation_with_id(self.ciprofloxacin.id)
         return rows[0]
 
     def check_column_matches_expected_field_with_name(self, name):
-        first_row = self.get_first_row_of_prices_with_formulation_id_1()
+        first_row = self.get_first_row_of_prices_for_ciprofloxacin()
         self.assertEquals(self.expected_ciprofloxacin_results[name],
                           first_row[name])
 
@@ -70,12 +70,12 @@ class DjangoBackendTest(SarpamTestCase):
         self.check_column_matches_expected_field_with_name('landed_currency')
 
     def test_formulation_name_can_be_retrieved_by_id(self):
-        name = self.backend.get_formulation_name_with_id(1)
+        name = self.backend.get_formulation_name_with_id(self.ciprofloxacin.id)
         self.assertEquals("ciprofloxacin 500mg tablet", name)
 
     def test_formulation_msh_can_be_retrieved_by_id(self):
         self.set_up_msh_for_ciprofloxacin()
-        msh_price = self.backend.get_formulation_msh_with_id(1)
+        msh_price = self.backend.get_formulation_msh_with_id(self.ciprofloxacin.id)
         self.assertEquals(self.expected_ciprofloxacin_results['msh_price'], 
                           msh_price)
 
@@ -89,14 +89,22 @@ class DjangoBackendTest(SarpamTestCase):
         self.set_up_biofloxx_registrations_with_suppliers_and_manufacturers()
         registrations = self.get_product_registrations_based_on_ciprofloxacin()
         
-        biotech_labs = {'name' : "Biotech Laboratories",
-                                'url' : "/suppliers/1/"}
+        biotech_labs = self.get_supplier_record(self.biotech_labs,
+                                                "Biotech Laboratories")
         
-        camox = {'name' : "Camox Pharmaceuticals (Pty) Ltd",
-                 'url' : "/suppliers/2/"}
+        camox = self.get_supplier_record(self.camox,
+                                         "Camox Pharmaceuticals (Pty) Ltd")
         
         self.assertEquals(biotech_labs, registrations[0]['supplier'])
         self.assertEquals(camox, registrations[1]['supplier'])
+
+    def get_supplier_record(self, supplier, name):
+        url = "/suppliers/%d/" % (supplier.id)
+        
+        record = {'name' : name,
+                  'url' : url}
+        return record
+    
 
     def test_null_suppliers_can_be_retrieved_by_id(self):
         self.set_up_minimal_biofloxx_registrations()
@@ -138,7 +146,7 @@ class DjangoBackendTest(SarpamTestCase):
         self.assertEquals("Biotech Laboratories", supplier_name)
 
     def test_msh_price_none_for_formulation_with_no_msh(self):
-        first_row = self.get_first_row_of_prices_with_formulation_id_1()
+        first_row = self.get_first_row_of_prices_for_ciprofloxacin()
         self.assertEquals(None, first_row['msh_price'])
 
     def test_msh_price_none_for_matching_formulation_with_no_msh(self):
@@ -159,7 +167,7 @@ class DjangoBackendTest(SarpamTestCase):
         self.assertEquals(expected_products, products)
     
     def get_product_registrations_based_on_ciprofloxacin(self):
-        registrations = self.backend.get_product_registrations_based_on_formulation_with_id(1)
+        registrations = self.backend.get_product_registrations_based_on_formulation_with_id(self.ciprofloxacin.id)
         return registrations
 
     def set_up_biofloxx_registrations_with_suppliers_and_manufacturers(self):

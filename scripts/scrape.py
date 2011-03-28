@@ -17,19 +17,62 @@ import csv
 from decimal import Decimal
 
 country_codes = {}
-country_codes[1] = 'SC'
-country_codes[2] = 'AO'
-country_codes[3] = 'ZA'
-country_codes[4] = 'TZ'
-country_codes[5] = 'MW'
-country_codes[6] = 'LS'
-country_codes[7] = 'ZW'
-country_codes[8] = 'MZ'
-country_codes[9] = 'SZ'
-country_codes[10] = 'NA'
-country_codes[11] = 'CD'
-country_codes[12] = 'BW'
-country_codes[13] = 'ZM'
+country_codes[1] = 'XA'
+country_codes[2] = 'XB'
+country_codes[3] = 'XC'
+country_codes[4] = 'XD'
+country_codes[5] = 'XE'
+country_codes[6] = 'XF'
+country_codes[7] = 'XG'
+country_codes[8] = 'XH'
+country_codes[9] = 'XI'
+country_codes[10] = 'XJ'
+country_codes[11] = 'XK'
+country_codes[12] = 'XL'
+country_codes[13] = 'XM'
+
+supplier_country_translations = {'holland' : 'NL',
+                      'mozambique' : 'MZ',
+                      'india' : 'IN',
+                      'tanzania' : 'TZ',
+                      'malawi' : 'MW',
+                      'danmark' : 'DK',
+                      'denmark' : 'DK',
+                      'cyprus' : 'CY',
+                      'lesotho' : 'LS',
+                      'kenya' : 'KE',
+                      'south africa' : 'ZA',
+                      'rwanda' : 'RW',
+                      'india/germany' : 'IG',
+                      'uganda' : 'UG'}
+
+supplier_countries = {'NL' : "Netherlands",
+                      'MZ' : "Mozambique",
+                      'IN' : "India",
+                      'TZ' : "Tanzania",
+                      'MW' : "Malawi",
+                      'DK' : "Denmark",
+                      'CY' : "Cyprus",
+                      'LS' : "Lesotho",
+                      'KE' : "Kenya",
+                      'ZA' : "South Africa",
+                      'RW' : "Rwanda",
+                      'IG' : "India/Germany",
+                      'UG' : "Uganda"}
+
+fictitious_countries = {'XA' : "Azania",
+                        'XB' : "Buranda",
+                        'XC' : "Equatorial Kundu",
+                        'XD' : "Kambawe",
+                        'XE' : "Katanga",
+                        'XF' : "Matobo",
+                        'XG' : "Moloni Republic",
+                        'XH' : "Nagonia",
+                        'XI' : "Natumbe",
+                        'XJ' : "Zambawi",
+                        'XK' : "Samgola",
+                        'XL' : "Sangala",
+                        'XM' : "Nibia"}
 
 def normalisePrice(raw):
     """
@@ -51,19 +94,36 @@ def scrapeCountries(conn):
     query = "SELECT * FROM country"
     c = conn.cursor()
     c.execute(query)
-    results = []
+    records = []
     for row in c:
-        result={}
-        country_fields = {}
+        appendCountryRecord(records, country_codes[row[0]], row[1])
+    return records
 
-        result['pk'] = country_codes[row[0]]
-        result['model'] = "infohub.country"
-        result['fields'] = country_fields
-        country_fields['name'] = row[1]
+def createSupplierCountries():
+    return createCountries(supplier_countries)
 
-        results.append(result)
-    return results
+def createFictitiousCountries():
+    return createCountries(fictitious_countries)
 
+def createCountries(countries):
+    records = []
+    for country_code in countries:
+        appendCountryRecord(records, country_code, countries[country_code])
+        
+    return records
+    
+
+def appendCountryRecord(records, country_code, country_name):
+    record={}
+    country_fields = {}
+
+    record['pk'] = country_code
+    record['model'] = "infohub.country"
+    record['fields'] = country_fields
+    country_fields['name'] = country_name
+
+    records.append(record)
+    
 
 def scrapeExchangeRate(conn):
     query = "SELECT * FROM exchange_rate"
@@ -86,16 +146,9 @@ def scrapeExchangeRate(conn):
         counter += 1
     return results
 
-
-def scrapeSuppliers(conn, manufacturer_lookups):
-    query = "SELECT DISTINCT supplier FROM form1_row"
-    c = conn.cursor()
-    c.execute(query)
-    results = []
-    counter = 1
-    supplier_dict = {}
-
-    for row in c:
+def appendSupplierAndReturnIndex(results, manufacturer_lookups, supplier_dict,
+                                 cursor, counter):
+    for row in cursor:
         name = getStandardisedManufacturerName(manufacturer_lookups, row[0])
         
         if name != "" and name not in supplier_dict:
@@ -111,6 +164,28 @@ def scrapeSuppliers(conn, manufacturer_lookups):
     
             results.append(result)
             counter += 1
+    
+    return counter
+
+def scrapeSuppliers(conn, manufacturer_lookups):
+    query = "SELECT DISTINCT supplier FROM form1_row"
+    cursor = conn.cursor()
+    cursor.execute(query)
+
+    results = []
+    
+    counter = 1
+    supplier_dict = {}
+
+    counter = appendSupplierAndReturnIndex(results, manufacturer_lookups, 
+                                           supplier_dict, cursor, counter)
+    
+    query = "SELECT DISTINCT supplier FROM form10_row"
+    cursor = conn.cursor()
+    cursor.execute(query)
+    
+    counter = appendSupplierAndReturnIndex(results, manufacturer_lookups, 
+                                           supplier_dict, cursor, counter)
 
     return results, supplier_dict
 
@@ -178,7 +253,7 @@ def scrapeProductRegistrations(conn, drug_lookups, manufacturer_lookups):
         results.append(result)
     return results
 
-def scrapeFormulations(conn, drug_lookups):
+def scrapeFormulations(conn, drug_lookups, manufacturer_lookups):
     """
     Returns a list of formulation dicts to be turned into a JSON dump.
 
@@ -188,7 +263,9 @@ def scrapeFormulations(conn, drug_lookups):
     # Return the results as discussed with Adi
     query = """SELECT f10.description, f10.landed_cost_price, f10.fob_price,
         f10.period, f10.issue_unit, country.name, country.id,
-        f10.fob_currency, f10.landed_cost_currency, f10.period
+        f10.fob_currency, f10.landed_cost_currency, f10.period,
+        f10.incoterm, f10.volume, f10.supplier, f10.supplier_country,
+        f10.manufacture_country
         FROM form10_row AS f10
         INNER JOIN country ON f10.country = country.id
         ORDER BY f10.description, country.name"""
@@ -207,6 +284,12 @@ def scrapeFormulations(conn, drug_lookups):
         result['fob_currency'] = row[7]
         result['landed_currency'] = row[8]
         result['period'] = int(row[9])
+        result['incoterm'] = row[10].strip()
+        result['volume'] = row[11]
+        result['supplier'] = getStandardisedManufacturerName(manufacturer_lookups, row[12])
+        result['supplier_country'] = row[13].lower()
+        result['manufacture_country'] = row[14]
+        
         results.append(result)
     return results
 
@@ -238,29 +321,40 @@ def scrape(data_dir):
     drug_lookups = loadAndReturnDrugLookups(data_dir)
     manufacturer_lookups = loadAndReturnManufacturerLookups(data_dir)
     
-    formulations = scrapeFormulations(conn, drug_lookups)
-    registrations = scrapeProductRegistrations(conn, drug_lookups, manufacturer_lookups)
+    formulations = scrapeFormulations(conn, drug_lookups, manufacturer_lookups)
+    registrations = scrapeProductRegistrations(conn, drug_lookups, 
+                                               manufacturer_lookups)
     countries = scrapeCountries(conn)
+    supplier_country_records = createSupplierCountries()
+    fictitious_country_records = createFictitiousCountries()
     exchange_rates = scrapeExchangeRate(conn)
     suppliers, supplier_dict = scrapeSuppliers(conn, manufacturer_lookups)
     manufacturers, manufacturer_dict = scrapeManufacturers(conn,
                                                            manufacturer_lookups)
 
-    outputJson(data_dir, "exchange_rates", exchange_rates)
+    outputJson(data_dir, "00_exchange_rates", exchange_rates)
 
     # Temporarily disabled - using fictitious names instead
-    # outputJson("countries", countries)
-    outputJson(data_dir, "suppliers", suppliers)
-    outputJson(data_dir, "manufacturers", manufacturers)
+    # outputJson(data_dir, "00_countries", countries)
+    outputJson(data_dir, "00_fictitious_countries", fictitious_country_records)
+    outputJson(data_dir, "00_supplier_countries", supplier_country_records)
+    outputJson(data_dir, "00_suppliers", suppliers)
+    outputJson(data_dir, "00_manufacturers", manufacturers)
 
     # formulations
-    counter = 0
     form_counter = 0
     formulation_table = []
-    price_table = []
     formulation_dict = {}
+
+    price_counter = 0
+    price_table = []
+
+    incoterm_counter = 0
+    incoterm_table = []
+    incoterm_dict = {}
+    
     for f in formulations:
-        counter+=1
+        price_counter+=1
         if not f['formulation'] in formulation_dict:
             form_counter+=1
             formulation_fields = {}
@@ -269,13 +363,29 @@ def scrape(data_dir):
                                       'fields' : formulation_fields})
 
             formulation_fields['name'] = f['formulation']
-#            formulation_fields['unit'] = f['unit']
             formulation_dict[f['formulation']] = form_counter
+            
+        incoterm = f['incoterm']
+        if incoterm == "":
+            incoterm_id = None
+        else:
+            if not incoterm in incoterm_dict:
+                incoterm_counter+=1
+                incoterm_fields = {}
+                incoterm_table.append({'pk' : incoterm_counter,
+                                       'model' : "infohub.incoterm",
+                                       'fields' : incoterm_fields})
+                incoterm_fields['name'] = incoterm
+                incoterm_dict[incoterm] = incoterm_counter
+                   
+            incoterm_id = incoterm_dict[incoterm]
+            
         price_record = {}
         price_fields = {}
-        price_record['pk'] = counter
+        price_record['pk'] = price_counter
         price_record['fields'] = price_fields
         price_record['model'] = "infohub.price"
+
         price_fields['formulation'] = formulation_dict[f['formulation']]
         price_fields['country'] = f['country_id']
         price_fields['fob_price'] = normalisePrice(f['fob_price'])
@@ -283,10 +393,33 @@ def scrape(data_dir):
         price_fields['fob_currency'] = f['fob_currency']
         price_fields['landed_currency'] = f['landed_currency']
         price_fields['issue_unit'] = f['unit']
-        price_fields['period'] = f['period']
+        price_fields['period'] = f['period']        
+        price_fields['incoterm'] = incoterm_id
+        price_fields['volume'] = f['volume']
+        
+        supplier_name = f['supplier'] or None
+        supplier_id = None
+        
+        if supplier_name in supplier_dict:
+            supplier_id = supplier_dict[supplier_name]
+        elif supplier_name is not None:
+            print "Unknown formulation supplier: %s" % supplier_name 
+
+        price_fields['supplier'] = supplier_id
+
+        supplier_country = f['supplier_country'] or None
+        country_id = None
+        
+        if supplier_country is not None:
+            if supplier_country not in supplier_country_translations:
+                print "Unknown country: %s" % supplier_country
+            else:
+                country_id = supplier_country_translations[supplier_country]
+        
         price_table.append(price_record)
-    outputJson(data_dir,'formulations', formulation_table)
-    outputJson(data_dir,'prices', price_table)
+    outputJson(data_dir,'00_formulations', formulation_table)
+    outputJson(data_dir,'10_prices', price_table)
+    outputJson(data_dir,'00_incoterms', incoterm_table)
 
     # Product
     product_table = []
@@ -341,18 +474,22 @@ def scrape(data_dir):
         if supplier_name in supplier_dict:
             supplier_id = supplier_dict[supplier_name]
             registration_fields['supplier'] = supplier_id
+        elif supplier_name is not None:
+            print "Unknown product supplier: %s" % supplier_name
                         
-        manufacturer_name = registration['manufacturer']
+        manufacturer_name = registration['manufacturer'] or None
         if manufacturer_name in manufacturer_dict:
             manufacturer_id = manufacturer_dict[manufacturer_name]
             registration_fields['manufacturer'] = manufacturer_id
+        elif manufacturer_name is not None:
+            print "Unknown product manufacturer: %s" % manufacturer_name
 
         registration_fields['country'] = registration['country_id']
 
         registration_table.append(registration_record)
 
-    outputJson(data_dir, 'products', product_table)
-    outputJson(data_dir, 'product_registrations', registration_table) 
+    outputJson(data_dir, '10_products', product_table)
+    outputJson(data_dir, '20_product_registrations', registration_table) 
 
     output = open('unknownFormulationsInProducts.json', 'w')
     json.dump(list(unknown_formulations), output, indent=2)

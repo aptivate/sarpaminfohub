@@ -1,7 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 
 from sarpaminfohub.infohub.backend import Backend
-from sarpaminfohub.infohub.models import Formulation, Product, Supplier, Price,\
+from sarpaminfohub.infohub.models import Formulation, Supplier, Price, \
     ProductRegistration
 
 class DjangoBackend(Backend):
