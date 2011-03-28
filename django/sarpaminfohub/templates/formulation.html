@@ -27,25 +27,44 @@
 
 $(document).ready(function(){
 
+		{% for bar_row in formulation_pack %}
+				$('#bar_{{forloop.counter}}_landed').CreateBubblePopup({
+
+											position : 'top',
+											align	 : 'center',
+
+											innerHtml: "{{bar_row|linebreaks}}",
+
+											innerHtmlStyle: {
+																color:'#000000', 
+																'text-align':'center'
+															},
+
+											themeName: 	'azure',
+											themePath: 	'/site_media/jquerybubblepopup-theme'
+
+										});
+				$('#bar_{{forloop.counter}}_fob').CreateBubblePopup({
+
+											position : 'top',
+											align	 : 'center',
+
+											innerHtml: "{{bar_row|linebreaks}}",
+
+											innerHtmlStyle: {
+																color:'#000000', 
+																'text-align':'center'
+															},
+
+											themeName: 	'azure',
+											themePath: 	'/site_media/jquerybubblepopup-theme'
+
+										});
+		
+		
+		{% endfor %}
+	});
 		//create a bubble popup for each DOM element with class attribute as "text", "button" or "link" and LI, P, IMG elements.
-		$('span.bar').CreateBubblePopup({
-
-									position : 'top',
-									align	 : 'center',
-									
-									innerHtml: 'Take a look to the HTML source of this page <br /> \
-												to learn how the plugin works!',
-
-									innerHtmlStyle: {
-														color:'#000000', 
-														'text-align':'center'
-													},
-																		
-									themeName: 	'azure',
-									themePath: 	'/site_media/jquerybubblepopup-theme'
-								 
-								});
-});
 
 </script>
 {% endblock main %}

@@ -71,7 +71,10 @@ def formulation(request, formulation_id, backend_name="django"):
     products_tab = get_products_tab(products_href)
     menu = Menu([formulation_tab, products_tab])
     #temporary input
-    formulation_pack = drug_searcher.get_prices_for_formulation_with_id(formulation_id)
+    formulation_pack = []
+    for pack in drug_searcher.get_prices_for_formulation_with_id(formulation_id):
+        temp_pack = [str(pack_val) for pack_val in pack.values()]
+        formulation_pack.append("\n".join(temp_pack))
     return render_to_response('formulation.html',
                               {'formulation_table': formulation_table,
                                'formulation_graph': formulation_graph,
