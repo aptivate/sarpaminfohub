@@ -53,4 +53,14 @@ class FormulationGraphTest(TableTestCase):
     def test_graph_scale_includes_msh_price(self):
         test_graph = FormulationGraph(self.raw_data, 6.075127)
         self.assertAlmostEquals(6.075, test_graph.max_price)
+    
+    def test_graph_scale_missing_values(self):
+        test_data = [
+            dict(fob_price = 3.12345678, landed_price = None,
+                country = "South Africa"),
+            dict(fob_price = None, landed_price = 5.98765432,
+                country = "Namibia")
+            ]
+        test_graph = FormulationGraph(test_data, None)
+        self.assertAlmostEquals(5.988, test_graph.max_price)
         

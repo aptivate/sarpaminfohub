@@ -14,12 +14,12 @@ class FormulationGraph(SarpamTable):
             self.max_price = msh_price 
             
         for row in rows:
-            self.round_to_three_decimal_places(row, 'fob_price')
-            self.round_to_three_decimal_places(row, 'landed_price')
             self.max_price = max(self.max_price, row['fob_price'], 
                 row['landed_price'])
+            self.round_to_three_decimal_places(row, 'fob_price')
+            self.round_to_three_decimal_places(row, 'landed_price')
 
-        self.max_price = round(self.max_price, 3)
+        self.max_price = round(float(self.max_price), 3)
         
         self.scale = []
         for k in range(1, 11):
