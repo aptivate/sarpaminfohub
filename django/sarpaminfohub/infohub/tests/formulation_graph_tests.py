@@ -9,7 +9,7 @@ class FormulationGraphTest(TableTestCase):
     LANDED_PRICE_COLUMN = 2
 
     def setUp(self):
-        raw_data = [{
+        self.raw_data = [{
                  "fob_price":"3.12345678",
                  "landed_price":"4.98765432",
                  "country":"South Africa"},{
@@ -17,7 +17,7 @@ class FormulationGraphTest(TableTestCase):
                  "landed_price":"5.98765432",
                  "country":"Namibia"}]
 
-        self.formulation_graph = FormulationGraph(raw_data)
+        self.formulation_graph = FormulationGraph(self.raw_data)
         rows = self.formulation_graph.rows
         self.first_row = rows[self.FIRST_ROW]
 
@@ -49,3 +49,8 @@ class FormulationGraphTest(TableTestCase):
         html = self.formulation_graph.as_html()
         self.assertTrue(self.contains(html, "<table class=\"graph\">"))
         self.assertTrue(self.contains(html, "</table>"))
+
+    def test_graph_scale_includes_msh_price(self):
+        test_graph = FormulationGraph(self.raw_data, 6.075127)
+        self.assertAlmostEquals(6.075, test_graph.max_price)
+        

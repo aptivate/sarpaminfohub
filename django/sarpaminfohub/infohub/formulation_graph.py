@@ -10,16 +10,17 @@ class FormulationGraph(SarpamTable):
     NO_DATA = ""
 
     def __init__(self, rows, msh_price=None):
+        if msh_price is not None:
+            self.max_price = msh_price 
+            
         for row in rows:
             self.round_to_three_decimal_places(row, 'fob_price')
             self.round_to_three_decimal_places(row, 'landed_price')
+            self.max_price = max(self.max_price, row['fob_price'], 
+                row['landed_price'])
 
-            if isinstance(row['fob_price'], float) and row['fob_price'] > self.max_price:
-                self.max_price = row['fob_price']
-
-            if isinstance(row['landed_price'], float) and row['landed_price'] > self.max_price:
-                self.max_price = row['landed_price']
-
+        self.max_price = round(self.max_price, 3)
+        
         self.scale = []
         for k in range(1, 11):
             self.scale.append(k * (self.max_price / 10))
