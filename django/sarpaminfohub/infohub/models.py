@@ -6,7 +6,7 @@ class Formulation(models.Model):
     name = models.CharField(max_length=200)
 
     def get_url(self):
-        return reverse('formulation', args=[str(self.id), ""])
+        return reverse('formulation-by-id', args=[str(self.id), ""])
 
     def get_msh_price(self):
         try:

@@ -141,5 +141,8 @@ class DrugSearcher(object):
     def get_products_from_supplier_with_id(self, supplier_id):
         return self.backend.get_products_from_supplier_with_id(supplier_id)
 
+    def get_registrations_from_supplier_with_id(self, supplier_id):
+        return self.backend.get_registrations_from_supplier_with_id(supplier_id)
+
     def get_name_of_supplier_with_id(self, supplier_id):
         return self.backend.get_name_of_supplier_with_id(supplier_id)

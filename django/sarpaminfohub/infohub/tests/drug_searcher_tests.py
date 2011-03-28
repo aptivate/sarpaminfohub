@@ -149,14 +149,16 @@ class DrugSearcherTest(SarpamTestCase):
 
     def test_amitrilon_25_returned_as_product_based_on_amitryptyline(self):
         registrations = self.get_amitrilon_25_registrations()
-        self.assertEquals("AMITRILON-25", registrations[0]['product'])
-        self.assertEquals("AMITRILON-25", registrations[1]['product'])
+        self.assertEquals("AMITRILON-25", registrations[0]['product']['name'])
+        self.assertEquals("AMITRILON-25", registrations[1]['product']['name'])
 
     def test_afrifarmacia_and_aspen_returned_as_suppliers_of_amitryptyline(self):
         registrations = self.get_amitrilon_25_registrations()
         
-        afrifarmacia = {'name':u"Afrifármacia, Lda", 'url':"/suppliers/1/test"}
-        aspen_pharmacare = {'name':"Aspen Pharmacare Ltd, S.A", 'url':"/suppliers/2/test"}
+        afrifarmacia = {'id': 1, 'name':u"Afrifármacia, Lda",
+            'url':"/suppliers/1/test"}
+        aspen_pharmacare = {'id': 2, 'name':"Aspen Pharmacare Ltd, S.A",
+            'url':"/suppliers/2/test"}
         
         self.assertEquals(afrifarmacia, registrations[0]['supplier'])
         self.assertEquals(aspen_pharmacare, registrations[1]['supplier'])

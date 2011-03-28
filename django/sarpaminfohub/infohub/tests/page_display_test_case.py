@@ -10,10 +10,10 @@ class PageDisplayTestCase(SarpamTestCase):
         self.check_link_visible_on_page(response, href="/?search=amitrip",
                                         text="Search Results")
 
-    def check_link_visible_on_page(self, response, href, text):
+    def check_link_visible_on_page(self, response, href, text, count=1):
         self.assertContains(response, text)
         expected_link = "<a href=\"" + href + "\">" + text + "</a>"
-        self.assertContains(response, expected_link)
+        self.assertContains(response, expected_link, count=count)
 
     def check_tab_is_selected(self, response, text):
         self.assertContains(response, text, count=1)

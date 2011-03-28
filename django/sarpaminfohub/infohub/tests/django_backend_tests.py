@@ -3,6 +3,7 @@ from decimal import Decimal
 from sarpaminfohub.infohub.tests.sarpam_test_case import SarpamTestCase
 from sarpaminfohub.infohub.models import Country, Supplier, Manufacturer,\
     ProductRegistration
+from django.core.urlresolvers import reverse
 
 class DjangoBackendTest(SarpamTestCase):
     
@@ -12,17 +13,18 @@ class DjangoBackendTest(SarpamTestCase):
         self.expected_ciprofloxacin_results = \
             {"formulation":"ciprofloxacin 500mg tablet",
              "country": "Democratic Republic of Congo",
-             "msh_price": Decimal("0.033"),
+             "msh_price": Decimal("0.033000"),
              "fob_price": Decimal("0.000003"),
              "landed_price": Decimal("0.000004"),
              "fob_currency": 'EUR',
              "period": 2009,
              "issue_unit":100,
-             "landed_currency": 'EUR',
-             'url': '/formulation/1/'}
+             "landed_currency": 'EUR'}
 
         self.ciprofloxacin = self.set_up_and_return_drc_ciprofloxacin(fob_price=Decimal("0.000003"),
                                      landed_price=Decimal("0.000004"))
+        self.expected_ciprofloxacin_results['url'] = reverse('formulation-by-id',
+            args=[self.ciprofloxacin.id, ""])
         
         self.biofloxx = self.set_up_and_return_biofloxx(self.ciprofloxacin)
     
@@ -131,8 +133,8 @@ class DjangoBackendTest(SarpamTestCase):
         self.assertEquals(samgala, registrations[1]['country'])
 
     def test_supplier_name_can_be_retrieved_by_id(self):
-        self.set_up_and_return_biotech_labs()
-        supplier_name = self.backend.get_name_of_supplier_with_id(1)
+        biotech = self.set_up_and_return_biotech_labs()
+        supplier_name = self.backend.get_name_of_supplier_with_id(biotech.id)
         self.assertEquals("Biotech Laboratories", supplier_name)
 
     def test_msh_price_none_for_formulation_with_no_msh(self):
@@ -146,7 +148,7 @@ class DjangoBackendTest(SarpamTestCase):
     
     def test_biofloxx_returned_as_a_product_supplied_by_biotech_labs(self):
         self.set_up_biofloxx_registrations_with_suppliers_and_manufacturers()
-        products = self.backend.get_products_from_supplier_with_id(1)
+        products = self.backend.get_products_from_supplier_with_id(self.biotech_labs.id)
         
         biofloxx = {'product' : "BIOFLOXX 500 MG",
                     'formulation_name' : "ciprofloxacin 500mg tablet",
@@ -164,13 +166,13 @@ class DjangoBackendTest(SarpamTestCase):
         nibia = self.set_up_and_return_nibia()
         samgala = self.set_up_and_return_samgala()
         unique_pharma = self.set_up_and_return_unique_pharma()
-        biotech_labs = self.set_up_and_return_biotech_labs()
-        camox = self.set_up_and_return_camox()
+        self.biotech_labs = self.set_up_and_return_biotech_labs()
+        self.camox = self.set_up_and_return_camox()
         
         self.set_up_biofloxx_registration(manufacturer=unique_pharma, 
-                                          supplier=biotech_labs, country=nibia)
+                                          supplier=self.biotech_labs, country=nibia)
         self.set_up_biofloxx_registration(manufacturer=unique_pharma, 
-                                          supplier=camox, country=samgala)
+                                          supplier=self.camox, country=samgala)
         
     def set_up_minimal_biofloxx_registrations(self):
         nibia = self.set_up_and_return_nibia()
