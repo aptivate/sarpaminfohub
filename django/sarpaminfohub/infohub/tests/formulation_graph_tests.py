@@ -1,6 +1,8 @@
+from django.utils import formats
 from sarpaminfohub.infohub.formulation_graph import FormulationGraph
 from sarpaminfohub.infohub.tests.table_test_case import TableTestCase
 from decimal import *
+import re
 
 class FormulationGraphTest(TableTestCase):
     FIRST_ROW = 0
@@ -23,17 +25,14 @@ class FormulationGraphTest(TableTestCase):
 
     def test_country_stored_in_first_column(self):
         country = self.get_nth_value(self.first_row, self.COUNTRY_COLUMN)
-
         self.assertEquals("South Africa", country)
 
     def test_fob_price_stored_in_second_column(self):
         fob_price = float(self.get_nth_value(self.first_row, self.FOB_PRICE_COLUMN))
-
         self.assertAlmostEquals(3.123, fob_price)
 
     def test_landed_price_stored_in_third_column(self):
         landed_price = float(self.get_nth_value(self.first_row, self.LANDED_PRICE_COLUMN))
-
         self.assertAlmostEquals(4.988, landed_price)
 
     def test_max_price(self):
@@ -96,5 +95,67 @@ class FormulationGraphTest(TableTestCase):
         self.assertAlmostEquals(100.0, FormulationGraph([], 50.01).max_price)
         self.assertAlmostEquals(100.0, FormulationGraph([], 99.99).max_price)
         self.assertAlmostEquals(100.0, FormulationGraph([], 100.0).max_price)
+
+    def assertBar(self, html, name, value, scale, count):
+        pattern = r'(<div class="%s[^/]*</div>)' % name
+        match = re.search(pattern, html)
+        self.assertTrue(match is not None)
+        line = match.group(1)
+        self.assertEquals(line, '<div class="%s marker" style="left:%dpx;"></div>' %
+            (name,  round(value / scale * 696)))
         
-                
+        pattern = r'(<span class="%s[^/]*</span>)' % name
+        match = re.search(pattern, html)
+        self.assertTrue(match is not None)
+        line = match.group(1)
+
+        pattern = r'<span class="%s[^>]*>([^<]*): [^<]*</span>' % name
+        match = re.search(pattern, html)
+        self.assertTrue(match is not None)
+        label = match.group(1)
+        
+        self.assertEquals(line, '<span class="%s label">%s: %.3f</span>' %
+            (name, label, value))
+
+    def test_graph_medians(self):
+        graph = FormulationGraph([], 2.5643865)
+        scale = graph.max_price
+        html = graph.as_html()
+
+        data = self.raw_data[:]
+        graph = FormulationGraph(data, 2.5643865)
+        scale = graph.max_price
+        
+        # even number of data points, should average the middle two
+        html = graph.as_html()
+        self.assertBar(html, "msh_price", 2.564, scale, 2)
+        self.assertBar(html, "median_fob_price",
+            (3.12345678 + 4.12345678) / 2.0, scale, 2)
+        self.assertBar(html, "median_landed_price",
+            (4.98765432 + 5.98765432) / 2.0, scale, 2)
+        
+        # odd number of data points, should use the middle one
+        data.append(dict(fob_price = 5.36789549, landed_price = 5.5367875,
+                country = "Upper Eureka"))
+        graph = FormulationGraph(data, 2.5643865)
+        self.assertAlmostEquals(10.0, graph.max_price)
+        html = graph.as_html()
+        self.assertBar(html, "msh_price", 2.564, scale, 2)
+        self.assertBar(html, "median_fob_price", 4.12345678, scale, 2)
+        self.assertBar(html, "median_landed_price", 5.5367875, scale, 2)
+
+        # some values missing
+        data.append(dict(fob_price = 3.7854638, landed_price = None,
+                country = "Lower Eureka"))
+        data.append(dict(fob_price = None, landed_price = 6.3476238,
+                country = "Ambata"))
+        # fobs = 3.12345678, 3.7854638, 4.12345678, 5.36789549
+        # landed = 4.98765432, 5.5367875, 5.98765432, 6.3476238
+        graph = FormulationGraph(data, 2.5643865)
+        self.assertAlmostEquals(10.0, graph.max_price)
+        html = graph.as_html()
+        self.assertBar(html, "msh_price", 2.564, scale, 2)
+        self.assertBar(html, "median_fob_price",
+            (3.7854638 + 4.12345678) / 2.0, scale, 2)
+        self.assertBar(html, "median_landed_price",
+            (5.5367875 + 5.98765432) / 2.0, scale, 2)
