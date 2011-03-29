@@ -71,7 +71,7 @@ def linked_in(request):
             except ObjectDoesNotExist:
                 contact = Contact.objects.create(**contact_data)
             contact.save()
-            return redirect(contact.get_absolute_url())
+            return render_to_response('contactlist/closeme.html')
             
     cache.set(api.request_token,api.request_token_secret,30*60)
     extra_context = {
