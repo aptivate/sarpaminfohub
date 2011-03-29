@@ -1,6 +1,5 @@
 # -*- coding: iso-8859-15 -*-
 from sarpaminfohub.infohub.tests.sarpam_test_case import SarpamTestCase
-from sarpaminfohub.infohub.test_backend import TestBackend
 import sarpaminfohub.infohub.utils as utils
 
 class UtilsTest(SarpamTestCase):

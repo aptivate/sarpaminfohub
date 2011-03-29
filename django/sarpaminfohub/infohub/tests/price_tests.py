@@ -1,5 +1,5 @@
 from sarpaminfohub.infohub.tests.sarpam_test_case import SarpamTestCase
-from sarpaminfohub.infohub.models import Formulation, Country, Price
+from sarpaminfohub.infohub.models import Formulation, Price
 
 class PriceTest(SarpamTestCase):
     def test_fob_price_may_be_null(self):
@@ -42,14 +42,24 @@ class PriceTest(SarpamTestCase):
         price = self.set_up_and_return_price()
         self.assertEquals(None, price.volume)
 
+    def test_country_may_be_null(self):
+        price = self.set_up_and_return_price()
+        self.assertEquals(None, price.country)
+
+    def test_period_may_be_null(self):
+        price = self.set_up_and_return_price()
+        self.assertEquals(None, price.period)
+
+    def test_incoterm_may_be_null_in_record(self):
+        price = self.set_up_and_return_price()
+        record = price.get_record()
+        self.assertEquals(None, record['incoterm'])
+
     def set_up_and_return_price(self):
         ciprofloxacin = Formulation(name="ciprofloxacin 500mg tablet") 
         ciprofloxacin.save()
         
-        drc = Country(code='CD', name='Democratic Republic of Congo')
-        drc.save()
-        
-        price = Price(formulation=ciprofloxacin, country=drc, period=2009)
+        price = Price(formulation=ciprofloxacin)
         price.save()
         
         return price

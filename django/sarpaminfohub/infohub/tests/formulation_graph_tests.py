@@ -1,7 +1,6 @@
-from django.utils import formats
 from sarpaminfohub.infohub.formulation_graph import FormulationGraph
 from sarpaminfohub.infohub.tests.table_test_case import TableTestCase
-from decimal import *
+from decimal import Decimal
 import re
 
 class FormulationGraphTest(TableTestCase):
@@ -118,10 +117,6 @@ class FormulationGraphTest(TableTestCase):
             (name, label, value))
 
     def test_graph_medians(self):
-        graph = FormulationGraph([], 2.5643865)
-        scale = graph.max_price
-        html = graph.as_html()
-
         data = self.raw_data[:]
         graph = FormulationGraph(data, 2.5643865)
         scale = graph.max_price

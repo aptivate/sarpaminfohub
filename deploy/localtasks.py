@@ -55,7 +55,7 @@ def checkout_or_update_fixtures(svnuser=None, svnpass=None):
         cmd = ['svn', 'checkout', '--username', svnuser, '--password', svnpass, fixtures_repo]
         subprocess.call(cmd, cwd=tasklib.env['django_dir'])
 
-def move_to_end(list, item):
+def _move_to_end(list, item):
     if item in list:
         list.remove(item)
         list.append(item)
@@ -67,5 +67,5 @@ def load_fixtures():
     fixture_list = map(lambda fn: os.path.join('fixtures', 'initial_data', fn), 
                         fixture_list)
     fixture_list.sort()
-    move_to_end(fixture_list, "fixtures/initial_data/product_registrations.json")
+    _move_to_end(fixture_list, "fixtures/initial_data/product_registrations.json")
     tasklib._manage_py(['loaddata'] + fixture_list)

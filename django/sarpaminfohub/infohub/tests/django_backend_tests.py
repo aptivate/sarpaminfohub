@@ -2,7 +2,7 @@ from sarpaminfohub.infohub.django_backend import DjangoBackend
 from decimal import Decimal
 from sarpaminfohub.infohub.tests.sarpam_test_case import SarpamTestCase
 from sarpaminfohub.infohub.models import Country, Supplier, Manufacturer,\
-    ProductRegistration, Formulation
+    ProductRegistration, Price, Formulation
 from django.core.urlresolvers import reverse
 
 class DjangoBackendTest(SarpamTestCase):
@@ -19,7 +19,8 @@ class DjangoBackendTest(SarpamTestCase):
              "fob_currency": 'EUR',
              "period": 2009,
              "issue_unit":100,
-             "landed_currency": 'EUR'}
+             "landed_currency": 'EUR',
+             'incoterm':"CIF"}
 
         self.ciprofloxacin = self.set_up_and_return_drc_ciprofloxacin(fob_price=Decimal("0.000003"),
                                      landed_price=Decimal("0.000004"))
@@ -29,18 +30,23 @@ class DjangoBackendTest(SarpamTestCase):
         self.biofloxx = self.set_up_and_return_biofloxx(self.ciprofloxacin)
     
     def test_search_for_ciprofloxacin_returns_ciprofloxacin_500mg(self):
-        self.set_up_msh_for_ciprofloxacin()
-        results = self.backend.get_formulations_that_match('ciprofloxacin')
-        self.assertEquals(self.expected_ciprofloxacin_results, results[0])
+        first_row = self.get_first_row_of_formulations_that_match("ciprofloxacin")
+        self.assertEquals("ciprofloxacin 500mg tablet", first_row['formulation'])
 
     def test_search_is_case_insensitive(self):
-        results = self.backend.get_formulations_that_match('CIPROFLOXACIN')
-        first_row = results[0]
-        self.assertEquals(self.expected_ciprofloxacin_results['formulation'],
+        first_row = self.get_first_row_of_formulations_that_match("CIPROFLOXACIN")
+        self.assertEquals("ciprofloxacin 500mg tablet",
                           first_row['formulation'])
 
+    def get_first_row_of_formulations_that_match(self, search_string):
+        results = self.backend.get_formulations_that_match(search_string)
+        return results[0]
+
     def get_first_row_of_prices_for_ciprofloxacin(self):
-        rows = self.backend.get_prices_for_formulation_with_id(self.ciprofloxacin.id)
+        return self.get_first_row_of_prices_for_formulation(self.ciprofloxacin)
+
+    def get_first_row_of_prices_for_formulation(self, formulation):
+        rows = self.backend.get_prices_for_formulation_with_id(formulation.id)
         return rows[0]
 
     def check_column_matches_expected_field_with_name(self, name):
@@ -69,6 +75,48 @@ class DjangoBackendTest(SarpamTestCase):
     def test_ciprofloxacin_issue_landed_currency_can_be_retrieved_by_id(self):
         self.check_column_matches_expected_field_with_name('landed_currency')
 
+    def test_ciprofloxacin_incoterm_can_be_retrieved_by_id(self):
+        self.check_column_matches_expected_field_with_name('incoterm')
+
+    def test_ciprofloxacin_supplier_can_be_retrieved_by_id(self):
+        ciprofloxacin = Formulation()
+        ciprofloxacin.save()
+        camox = self.set_up_and_return_camox()
+        price = Price(formulation=ciprofloxacin, supplier=camox)
+        price.save()
+        
+        row = self.get_first_row_of_prices_for_formulation(ciprofloxacin)
+        self.assertEquals("Camox Pharmaceuticals (Pty) Ltd", row['supplier'])
+
+    def test_ciprofloxacin_supplier_country_can_be_retrieved_by_id(self):
+        ciprofloxacin = Formulation()
+        ciprofloxacin.save()
+        nibia = self.set_up_and_return_nibia()
+        price = Price(formulation=ciprofloxacin, supplier_country=nibia)
+        price.save()
+        
+        row = self.get_first_row_of_prices_for_formulation(ciprofloxacin)
+        self.assertEquals("Nibia", row['supplier_country'])
+        
+    def test_ciprofloxacin_manufacture_country_can_be_retrieved_by_id(self):
+        ciprofloxacin = Formulation()
+        ciprofloxacin.save()
+        samgala = self.set_up_and_return_samgala()
+        price = Price(formulation=ciprofloxacin, manufacture_country=samgala)
+        price.save()
+
+        row = self.get_first_row_of_prices_for_formulation(ciprofloxacin)
+        self.assertEquals("Samgala", row['manufacture_country'])
+
+    def test_ciprofloxacin_volume_can_be_retrieved_by_id(self):
+        ciprofloxacin = Formulation()
+        ciprofloxacin.save()
+        price = Price(formulation=ciprofloxacin, volume=10000)
+        price.save()
+
+        row = self.get_first_row_of_prices_for_formulation(ciprofloxacin)
+        self.assertEquals(10000, row['volume'])        
+
     def test_formulation_name_can_be_retrieved_by_id(self):
         name = self.backend.get_formulation_name_with_id(self.ciprofloxacin.id)
         self.assertEquals("ciprofloxacin 500mg tablet", name)
@@ -83,7 +131,9 @@ class DjangoBackendTest(SarpamTestCase):
         self.set_up_minimal_biofloxx_registrations()
         registrations = self.get_product_registrations_based_on_ciprofloxacin()
         
-        self.assertEquals("BIOFLOXX 500 MG", registrations[0]['product'])
+        biofloxx = {'name' : "BIOFLOXX 500 MG"}
+        
+        self.assertEquals(biofloxx, registrations[0]['product'])
 
     def test_ciprofloxacin_suppliers_can_be_retrieved_by_id(self):
         self.set_up_biofloxx_registrations_with_suppliers_and_manufacturers()

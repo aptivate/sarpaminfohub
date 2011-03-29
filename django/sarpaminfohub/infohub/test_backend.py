@@ -10,7 +10,12 @@ class TestBackend(Backend):
                                                 period=2009, 
                                                 issue_unit=500, 
                                                 landed_price=67.44, 
-                                                formulation_id=8)
+                                                formulation_id=8,
+                                                incoterm="CIF",
+                                                supplier="Aspen Pharmacare Ltd, S.A",
+                                                supplier_country="South Africa",
+                                                manufacture_country="Netherlands",
+                                                volume=10000)
     
     def get_ciprofloxacin(self):
         return self.get_formulation_for_country("ciprofloxacin 500mg tablet", 
@@ -31,8 +36,12 @@ class TestBackend(Backend):
     def get_formulation_for_country(self, name, country, fob_price=None, 
                                     currency=None, period=None, 
                                     issue_unit=None, landed_price=None,
-                                    msh_price=None,
-                                    formulation_id=None):
+                                    msh_price=None, incoterm=None,
+                                    supplier=None,
+                                    formulation_id=None,
+                                    supplier_country=None,
+                                    manufacture_country=None,
+                                    volume=None):
         
         url = "/formulation/%d/" % formulation_id
         
@@ -41,7 +50,12 @@ class TestBackend(Backend):
                 'issue_unit':issue_unit, 'landed_price':landed_price, 
                 'msh_price':msh_price,
                 'landed_currency':currency,
-                'url':url}
+                'url':url,
+                'incoterm':incoterm,
+                'supplier':supplier,
+                'supplier_country':supplier_country,
+                'manufacture_country':manufacture_country,
+                'volume':volume}
     
     def get_amoxycillin125_for_country(self, country, 
                                        fob_price=None, 

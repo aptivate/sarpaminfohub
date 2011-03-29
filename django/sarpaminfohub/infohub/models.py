@@ -50,11 +50,11 @@ class Supplier(models.Model):
 
 class Price(models.Model):
     formulation = models.ForeignKey(Formulation)
-    country = models.ForeignKey(Country)
+    country = models.ForeignKey(Country, null=True)
     fob_price = models.DecimalField(max_digits=20, decimal_places=6, null=True)
     landed_price = models.DecimalField(max_digits=20, decimal_places=6, null=True)
     fob_currency = models.CharField(max_length=3, null=True)
-    period = models.IntegerField()
+    period = models.IntegerField(null=True)
     issue_unit = models.FloatField(null=True)
     landed_currency = models.CharField(max_length=3, null=True)
     volume = models.IntegerField(null=True)
@@ -70,7 +70,13 @@ class Price(models.Model):
     def get_record(self):
         record = {}
         record['formulation'] = self.formulation.name
-        record['country'] = self.country.name
+        
+        if self.country is not None:
+            country = self.country.name
+        else:
+            country = None
+        record['country'] = country
+        
         record['fob_price'] = self.fob_price
         record['landed_price'] = self.landed_price
         record['msh_price'] = self.formulation.get_msh_price()
@@ -79,6 +85,33 @@ class Price(models.Model):
         record['issue_unit'] = self.issue_unit
         record['landed_currency'] = self.landed_currency
         record['url'] = self.formulation.get_url()
+        
+        if self.incoterm is not None:
+            incoterm = self.incoterm.name
+        else:
+            incoterm = None    
+        record['incoterm'] = incoterm
+        
+        if self.supplier is not None:
+            supplier = self.supplier.name
+        else:
+            supplier = None
+        record['supplier'] = supplier
+        
+        if self.supplier_country is not None:
+            supplier_country = self.supplier_country.name
+        else:
+            supplier_country = None
+        record['supplier_country'] = supplier_country
+        
+        if self.manufacture_country is not None:
+            manufacture_country = self.manufacture_country.name
+        else:
+            manufacture_country = None
+        record['manufacture_country'] = manufacture_country
+
+        record['volume'] = self.volume
+        
         return record
 
 class ExchangeRate(models.Model):
@@ -94,6 +127,11 @@ class MSHPrice(models.Model):
 class Product(models.Model):
     formulation = models.ForeignKey(Formulation)
     name = models.CharField(max_length=200)
+
+    def get_record(self):
+        record = {}
+        record['name'] = self.name
+        return record
 
     def get_formulation_record(self):
         record = {}

@@ -1,6 +1,6 @@
 from django.test.testcases import TestCase
 from sarpaminfohub.infohub.models import Formulation, Price, Country, \
-    ExchangeRate, Product, MSHPrice
+    ExchangeRate, Product, MSHPrice, Incoterm
 from decimal import Decimal
 
 class SarpamTestCase(TestCase):
@@ -17,18 +17,21 @@ class SarpamTestCase(TestCase):
     def set_up_and_return_drc_ciprofloxacin(self, fob_price="1.8", landed_price="2.085",
                                 fob_currency='EUR', issue_unit=100,
                                 landed_currency='EUR',
-                                volume=None, incoterm=None):
+                                volume=None):
         self.ciprofloxacin = Formulation(name="ciprofloxacin 500mg tablet") 
         self.ciprofloxacin.save()
 
         drc = Country(code='CD', name='Democratic Republic of Congo')
         drc.save()
 
+        incoterm = Incoterm(name="CIF")
+        incoterm.save()
+
         price = Price(formulation=self.ciprofloxacin, country=drc, 
                       fob_price=fob_price, fob_currency=fob_currency,
                       landed_price=landed_price, period=2009, 
                       issue_unit=issue_unit,
-                      landed_currency=landed_currency)
+                      landed_currency=landed_currency, incoterm=incoterm)
         price.save()
         
         return self.ciprofloxacin
