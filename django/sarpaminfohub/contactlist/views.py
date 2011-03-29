@@ -77,5 +77,5 @@ def linked_in(request):
     extra_context = {
         'auth_url':api.getAuthorizeURL()
     }
-    return render_to_response('search/linked_in.html', extra_context)
+    return render_to_response('contactlist/linked_in.html', extra_context)
     
