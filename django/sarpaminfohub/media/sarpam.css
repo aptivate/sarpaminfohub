@@ -409,3 +409,12 @@ dl {
     margin-bottom:0px;
 }
 
+#linkedinaddbox {
+    margin-top:5px;
+    padding:2px;
+    border:2px solid #BCC7DD;
+    display:inline-block;
+}
+#linkedinaddbox span{
+    margin-left:0px;
+}
