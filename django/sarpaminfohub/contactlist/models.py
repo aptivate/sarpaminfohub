@@ -29,6 +29,8 @@ class Contact(models.Model):
     country = custom_fields.CountryField()
     note = models.TextField(null=True, blank=True)
     tags = TagField()
+    linked_in_url = models.URLField(unique=True)
+    linked_in_approval = models.NullBooleanField(default=None)
         
     def _get_tag_list(self):
             return parse_tag_input(self.tags)
