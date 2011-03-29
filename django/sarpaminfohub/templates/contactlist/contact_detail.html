@@ -3,12 +3,13 @@
 {% block main %}
 <h1>{{object}}</h1>
 
+{% if not object.linked_in_url %}
 <h2>Phone Number</h2>
 <p>{{object.phone}}</p>
 
 <h2>E-mail</h2>
 <p><a href="mailto:{{email}}">{{email}}</a></p>
-
+{% endif %}
 <h2>Role</h2>
 <p>{{object.role}}</p>
 
@@ -16,7 +17,7 @@
 <p>{{object.organization}}</p>
 
 <h2>Notes</h2>
-<p>{{object.notes}}</p>
+<p>{{object.note}}</p>
 
 <h2>Address</h2>
 <p>{{address_line_1}}</p>
@@ -30,5 +31,9 @@
 {%endfor%}
 </ul>
 
+{% if object.linked_in_url %}
+<h2>Linked-In Profile</h2>
+<p>Go to <a href="{{linked_in_url}}">Linked-In</a> for more details and contact information</p>
+{% endif %}
 <p>Back to <a href="/contacts/">Search</a></p>
 {% endblock main %}
