@@ -4,6 +4,7 @@
     <h2>Linked In Connection</h2>
     
 {% if auth_url %}
+<script src="/site_media/jquery-1.5.1.min.js"></script>
 <script type="text/javascript">
 	// function linked_in_callback() {
 	// 	alert('Hello!'+new_contact_id);
@@ -16,11 +17,17 @@
 	// 	// linked_in_window.addEventListener('close',linked_in_callback());
 	// 	return false;
 	// }
-
+	// auth_url = '{{auth_url}}';
+	// function useIFrame(){
+	// 	// $('linkedinframe')
+	// }
+	
 </script>
 		<p>If you want to add your Linked In profile to the Sarpam Experts search</p>
-		<p><a target="_blank" href="{{auth_url}}&amp;resize=no">click here</a></p>
-
+		<p><a onClick="window.open('{{auth_url}}','','width=400,height=400');return false;" href="#">click here</a></p>
+<iframe style="display:none;" id="linkedinframe">
+	
+</iframe>
 {% else %}
 		<table>
 			<tr><th>Given Name</th><td>{{given_name}}</td></tr>
