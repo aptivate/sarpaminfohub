@@ -51,7 +51,7 @@ class DjangoBackend(Backend):
         
         for registration in registrations:
             record = {}
-            record['product'] = registration.product.name
+            record['product'] = registration.product.get_record()
             if registration.supplier != None:
                 supplier_record = registration.supplier.get_record()
             else:

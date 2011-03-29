@@ -131,7 +131,9 @@ class DjangoBackendTest(SarpamTestCase):
         self.set_up_minimal_biofloxx_registrations()
         registrations = self.get_product_registrations_based_on_ciprofloxacin()
         
-        self.assertEquals("BIOFLOXX 500 MG", registrations[0]['product'])
+        biofloxx = {'name' : "BIOFLOXX 500 MG"}
+        
+        self.assertEquals(biofloxx, registrations[0]['product'])
 
     def test_ciprofloxacin_suppliers_can_be_retrieved_by_id(self):
         self.set_up_biofloxx_registrations_with_suppliers_and_manufacturers()

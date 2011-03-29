@@ -128,6 +128,11 @@ class Product(models.Model):
     formulation = models.ForeignKey(Formulation)
     name = models.CharField(max_length=200)
 
+    def get_record(self):
+        record = {}
+        record['name'] = self.name
+        return record
+
     def get_formulation_record(self):
         record = {}
         record['product'] = self.name
