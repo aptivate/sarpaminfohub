@@ -15,5 +15,4 @@ urlpatterns = patterns('',
     (r'^$', tag_search),
     (r'^(?P<object_id>\d+)/$', list_detail.object_detail, contacts_info),
     (r'^tags/(?P<tag>[-\w]+)/$', tagged_object_list, tags_info),
-    (r'^linkedin/$',linked_in)
 )
