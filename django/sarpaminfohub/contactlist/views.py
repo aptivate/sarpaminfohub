@@ -57,3 +57,4 @@ def linked_in(request):
         'auth_url':api.getAuthorizeURL()
     }
     return render_to_response('search/linked_in.html', extra_context)
+    
