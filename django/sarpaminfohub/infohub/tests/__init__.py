@@ -17,3 +17,4 @@ from search_form_tests import *
 from search_tests import *
 from supplier_catalogue_page_tests import *
 from template_tests import *
+from utils_tests import *

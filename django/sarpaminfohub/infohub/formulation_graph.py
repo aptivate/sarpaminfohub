@@ -1,7 +1,8 @@
+from copy import deepcopy
 import django_tables as tables
 from sarpaminfohub.infohub.sarpam_table import SarpamTable
 from django.template.loader import render_to_string
-import logging
+from sarpaminfohub.infohub import utils
 
 class FormulationGraph(SarpamTable):
     country = tables.Column()
@@ -9,14 +10,24 @@ class FormulationGraph(SarpamTable):
     landed_price = tables.Column(verbose_name="Landed Price")
     max_price = 0.001
     NO_DATA = ""
+    median_fob_price = 0.0
+    median_landed_price = 0.0
 
     def __init__(self, rows, msh_price=None):
+        # Don't like this, but rows is being modified below, causing side effects
+        rows = deepcopy(rows)
+        
         if msh_price is not None:
             # msh_price might be a Decimal, which max() thinks is larger than
             # any float, so in order to compare properly with floats we need
             # to convert msh_price to float as well
             self.max_price = max(self.max_price, float(msh_price)) 
-            
+
+        # print "input data = %s" % rows        
+        (self.median_fob_price, self.median_landed_price) = \
+            utils.get_median_prices(rows)
+        # print "median prices = %s, %s" % (self.median_fob_price, self.median_landed_price)
+        
         for row in rows:
             new_max_price = max(self.max_price, row['fob_price'], 
                 row['landed_price'])
@@ -24,6 +35,7 @@ class FormulationGraph(SarpamTable):
             #    (self.max_price, row['fob_price'], row['landed_price'],
             #        new_max_price))
             self.max_price = new_max_price
+            
             self.round_to_three_decimal_places(row, 'fob_price')
             self.round_to_three_decimal_places(row, 'landed_price')
 
@@ -61,6 +73,8 @@ class FormulationGraph(SarpamTable):
         SarpamTable.__init__(self, rows)
 
     def as_html(self):
-        return render_to_string('formulation/graph.html',
-                                {'table': self, 'msh_price': self.msh_price})
+        return render_to_string('formulation/graph.html', dict(
+            table = self, msh_price = self.msh_price,
+            median_fob_price = self.median_fob_price,
+            median_landed_price = self.median_landed_price))
 

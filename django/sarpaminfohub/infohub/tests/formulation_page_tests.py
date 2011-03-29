@@ -74,6 +74,42 @@ class FormulationPageTest(PageDisplayTestCase):
         response = self.load_page_for_formulation_amitriptyline_prices()
         self.check_tab_is_selected(response, "Procurement Prices")
         
+    def test_popup_contains_issue_unit(self):
+        response = self.load_page_for_formulation_amitriptyline_prices()
+        self.check_popup_field_visible_on_page(response, "Issue Unit", "1")
+        
+    def test_popup_contains_incoterm(self):
+        response = self.load_page_for_formulation_amitriptyline_prices()
+        self.check_popup_field_visible_on_page(response, "Incoterm", "CIF")
+    
+    def test_popup_contains_supplier(self):
+        response = self.load_page_for_formulation_amitriptyline_prices()
+        self.check_popup_field_visible_on_page(response, "Supplier", 
+                                               "Aspen Pharmacare Ltd, S.A")    
+    
+    def test_popup_contains_supplier_country(self):
+        response = self.load_page_for_formulation_amitriptyline_prices()
+        self.check_popup_field_visible_on_page(response, "Supplier Country", 
+                                               "South Africa")    
+    
+    def test_popup_contains_manufacture_country(self):
+        response = self.load_page_for_formulation_amitriptyline_prices()
+        self.check_popup_field_visible_on_page(response, 
+                                               "Country of Manufacture", 
+                                               "Netherlands")
+
+    def test_popup_contains_volume(self):
+        response = self.load_page_for_formulation_amitriptyline_prices()
+        self.check_popup_field_visible_on_page(response, 
+                                               "Volume", 
+                                               "10000")
+
+    def check_popup_field_visible_on_page(self, response, expected_name,
+                                          expected_value):
+        expected_field = "<dt>%s</dt><dd>%s</dd>" % \
+            (expected_name, expected_value)
+        self.assertContains(response, expected_field)
+        
     def load_page_for_formulation_amitriptyline_prices(self):
         response = self.client.get('/formulation/1/test/')
         return response
