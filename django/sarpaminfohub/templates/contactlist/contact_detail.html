@@ -34,7 +34,7 @@
 
 {% if object.linked_in_url %}
 <h2>Linked-In Profile</h2>
-<p>Go to <a href="{{linked_in_url}}">Linked-In</a> for more details and contact information</p>
+<p>Go to <a target="_blank" href="{{object.linked_in_url}}">Linked-In</a> for more details and contact information</p>
 {% endif %}
 <p>Back to <a href="/contacts/">Search</a></p>
 {% endblock main %}
