@@ -22,8 +22,8 @@
 					{% if msh_price %}<div class="msh_price marker" style="left:{% widthratio msh_price table.max_price 696 %}px;"></div>{% endif %}
 					{% if median_fob_price %}<div class="median_fob_price marker" style="left:{% widthratio median_fob_price table.max_price 696 %}px;"></div>{% endif %}
 					{% if median_landed_price %}<div class="median_landed_price marker" style="left:{% widthratio median_landed_price table.max_price 696 %}px;"></div>{% endif %}
-					<span class="bar fob_price" style="width:{% if row.fob_price != '' %}{% widthratio row.fob_price table.max_price 696 %}{% else %}0{% endif %}px">{{ row.fob_price }}</span>
-					<span class="bar landed_price" style="width:{% if row.landed_price != '' %}{% widthratio row.landed_price table.max_price 696 %}{% else %}0{% endif %}px">{{ row.landed_price }}</span>
+					<span id="bar_{{forloop.counter}}_fob" class="bar fob_price" style="width:{% if row.fob_price != '' %}{% widthratio row.fob_price table.max_price 696 %}{% else %}0{% endif %}px">{{ row.fob_price }}</span>
+					<span id="bar_{{forloop.counter}}_landed" class="bar landed_price" style="width:{% if row.landed_price != '' %}{% widthratio row.landed_price table.max_price 696 %}{% else %}0{% endif %}px">{{ row.landed_price }}</span>
 				</div>
 			</td>
 			<td width="10%"></td>

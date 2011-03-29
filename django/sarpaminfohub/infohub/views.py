@@ -11,6 +11,7 @@ from sarpaminfohub.infohub.menu import Menu
 from sarpaminfohub.infohub.forms import SearchForm
 
 from copy import deepcopy
+from sarpaminfohub.infohub.price_popup import PricePopup
 
 def get_backend(name):
     if name == "test":
@@ -70,10 +71,15 @@ def formulation(request, formulation_id, backend_name="django"):
     products_tab = get_products_tab(products_href)
     menu = Menu([formulation_tab, products_tab])
 
+    price_popups = []
+    for price_fields in rows:
+        price_popups.append(PricePopup(price_fields))
+                
     return render_to_response('formulation.html',
                               {'formulation_table': formulation_table,
                                'formulation_graph': formulation_graph,
                                'formulation_msh': formulation_msh,
+                               'price_popups': price_popups,
                                'menu' : menu,
                                'search_form' : search_form,
                                'sub_title' : formulation_name})

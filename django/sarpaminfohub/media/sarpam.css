@@ -384,9 +384,18 @@ span {
 }
 
 #pricegraph .graph .median_fob_price {
-	border-color: #fc8;
+	border-color: #fc0;
 }
 
 #pricegraph .graph .median_landed_price {
-	border-color: #caf;
+	border-color: #f0c;
 }
+
+dl {
+    margin:0;
+}
+
+.jquerybubblepopup {
+    text-align:left;
+}
+

@@ -2,8 +2,7 @@ from copy import deepcopy
 import django_tables as tables
 from sarpaminfohub.infohub.sarpam_table import SarpamTable
 from django.template.loader import render_to_string
-import logging
-import utils
+from sarpaminfohub.infohub import utils
 
 class FormulationGraph(SarpamTable):
     country = tables.Column()

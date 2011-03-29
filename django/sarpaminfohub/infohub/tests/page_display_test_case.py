@@ -24,5 +24,5 @@ class PageDisplayTestCase(SarpamTestCase):
         self.assertContains(response, "<h2>", count=1)
         self.assertContains(response, "</h2>", count=1)
                 
-        self.assertContains(response, expected_title, count=1)
+        self.assertContains(response, expected_title)
         self.assertContains(response, "<h2>" + expected_title + "</h2>", count=1)
