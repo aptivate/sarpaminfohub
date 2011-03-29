@@ -204,9 +204,9 @@ table.data th
 #pricegraph .graph .grid .bar{position:absolute;top:0;left:0;height:15px;display:block;white-space:nowrap;margin:2px 0;font-size:70%;height:15px;}
 #pricegraph .graph .grid .fob_price{top:0;background-color:#7381D1;}
 #pricegraph .graph .grid .landed_price{top:16px;background-color:#93A1f1;}
-#pricegraph .graph .grid .msh_price{position:absolute;width:1px;top:0;height:36px;z-index:10;}
-#pricegraph .graph .grid .median_fob_price{position:absolute;width:1px;top:0;height:36px;z-index:10;}
-#pricegraph .graph .grid .median_landed_price{position:absolute;width:1px;top:0;height:36px;z-index:10;}
+#pricegraph .graph .grid .msh_price{position:absolute;width:1px;top:0;height:36px;}
+#pricegraph .graph .grid .median_fob_price{position:absolute;width:1px;top:0;height:36px;}
+#pricegraph .graph .grid .median_landed_price{position:absolute;width:1px;top:0;height:36px;}
 #pricegraph .graph tr.foot{border-top:1px solid #5b66a6;}
 #pricegraph .graph tr.foot td{text-align:right;}
 /*#pricegraph .graph tr.foot td span{border-left:2px solid red;padding-left:6px;}*/
@@ -395,14 +395,7 @@ dl {
     margin:0;
 }
 
-.jquerybubblepop dl dt {
-    float:left;
-}
-
-.jquerybubblepop dl dd {
-    float:left;
-}
-
 .jquerybubblepopup {
     text-align:left;
 }
+

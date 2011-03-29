@@ -8,13 +8,13 @@
 
 $(document).ready(function(){
         {% autoescape off %}
-        {% for popup_record in popup_records %}
+        {% for price_popup in price_popups %}
                 $('#bar_{{forloop.counter}}_landed').CreateBubblePopup({
 
                                             position : 'top',
                                             align    : 'center',
 
-                                            innerHtml: "{{popup_record}}",
+                                            innerHtml: "{{price_popup.as_html}}",
 
                                             themeName:  'azure',
                                             themePath:  '/site_media/jquerybubblepopup-theme'
@@ -25,7 +25,7 @@ $(document).ready(function(){
                                             position : 'top',
                                             align    : 'center',
 
-                                            innerHtml: "{{popup_record}}",
+                                            innerHtml: "{{price_popup.as_html}}",
 
                                             themeName:  'azure',
                                             themePath:  '/site_media/jquerybubblepopup-theme'

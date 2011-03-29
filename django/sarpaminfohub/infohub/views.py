@@ -11,6 +11,7 @@ from sarpaminfohub.infohub.menu import Menu
 from sarpaminfohub.infohub.forms import SearchForm
 
 from copy import deepcopy
+from sarpaminfohub.infohub.price_popup import PricePopup
 
 def get_backend(name):
     if name == "test":
@@ -70,32 +71,18 @@ def formulation(request, formulation_id, backend_name="django"):
     products_tab = get_products_tab(products_href)
     menu = Menu([formulation_tab, products_tab])
 
-    popup_records = []
-    for formulation in drug_searcher.get_prices_for_formulation_with_id(formulation_id):
-        fields = "<dl>"
-        fields += get_popup_field("Issue Unit", formulation['issue_unit'])
-        fields += get_popup_field("Incoterm", formulation['incoterm'])
-        fields += get_popup_field("Supplier", formulation['supplier'])
-        fields += get_popup_field("Supplier Country", 
-                                  formulation['supplier_country'])
-        fields += get_popup_field("Country of Manufacture", 
-                                  formulation['manufacture_country'])
-        fields += get_popup_field("Volume", formulation['volume'])
-        fields += "</dl>"
-
-        popup_records.append(fields)
+    price_popups = []
+    for price_fields in rows:
+        price_popups.append(PricePopup(price_fields))
                 
     return render_to_response('formulation.html',
                               {'formulation_table': formulation_table,
                                'formulation_graph': formulation_graph,
                                'formulation_msh': formulation_msh,
-                               'popup_records': popup_records,
+                               'price_popups': price_popups,
                                'menu' : menu,
                                'search_form' : search_form,
                                'sub_title' : formulation_name})
-
-def get_popup_field(name, value):
-    return "<dt>%s</dt><dd>%s</dd>" % (name, value)
 
 def formulation_products(request, formulation_id, backend_name="django"):
     backend = get_backend(backend_name)
