@@ -399,3 +399,13 @@ dl {
     text-align:left;
 }
 
+#flashmessagebox {
+    border:2px solid #3B5998;
+    background:#BCC7DD;
+    padding:0.5em;
+}
+
+#flashmessagebox p{
+    margin-bottom:0px;
+}
+
