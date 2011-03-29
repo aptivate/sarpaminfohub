@@ -1,4 +1,4 @@
-{% extends "page.html" %}
+{% extends "embedded.html" %}
 
 {% block main %}
     <h2>Linked In Connection</h2>
@@ -18,7 +18,8 @@
 	// }
 
 </script>
-		<p>If you want to add your Linked In profile to the Sarpam Experts search <a target="_new" href="{{auth_url}}">click here</a></p>
+		<p>If you want to add your Linked In profile to the Sarpam Experts search</p>
+		<p><a target="_new" href="{{auth_url}}">click here</a></p>
 
 {% else %}
 		<table>
