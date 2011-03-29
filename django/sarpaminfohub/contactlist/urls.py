@@ -2,7 +2,7 @@ from django.views.generic import list_detail
 from tagging.views import tagged_object_list
 from sarpaminfohub.contactlist.models import Contact
 from django.conf.urls.defaults import patterns
-from sarpaminfohub.contactlist.views import tag_search, linked_in
+from sarpaminfohub.contactlist.views import tag_search
 
 contacts_info = {
     'queryset': Contact.objects.all()
