@@ -384,11 +384,11 @@ span {
 }
 
 #pricegraph .graph .median_fob_price {
-	border-color: #fc0;
+	border-color: #fc8;
 }
 
 #pricegraph .graph .median_landed_price {
-	border-color: #f0c;
+	border-color: #caf;
 }
 
 dl {
