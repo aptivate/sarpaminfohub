@@ -11,8 +11,8 @@ class SupplierCataloguePageTest(PageDisplayTestCase):
         
     def test_products_supplied_by_afrifarmacia_includes_amitriptyline25mgtablet(self):
         response = self.load_page_with_products_supplied_by_afrifarmacia()
-        self.check_link_visible_on_page(response, href="/formulation/1/test", 
-                                        text="amitriptyline 25mg tablet")
+        self.check_link_visible_on_page(response, href="/formulation/10/test", 
+            text="amitriptyline 25mg tablet", count=2)
             
     def test_products_tab_is_selected(self):
         response = self.load_page_with_products_supplied_by_afrifarmacia()
@@ -24,6 +24,12 @@ class SupplierCataloguePageTest(PageDisplayTestCase):
     def test_supplier_name_appears_above_table(self):
         response = self.load_page_with_products_supplied_by_afrifarmacia()
         self.check_sub_title_is(response, u"Afrifármacia, Lda")
+        
+    def test_registration_country_appears_in_table(self):
+        response = self.load_page_with_products_supplied_by_afrifarmacia()
+        self.assertContains(response, "<th>Country</th>")
+        self.assertContains(response, "<td class=\"second\">Nibia</td>", count=1)
+        self.assertContains(response, "<td class=\"second\">Samgola</td>", count=1)
         
     def load_page_with_products_supplied_by_afrifarmacia(self):
         response = self.client.get('/suppliers/1/test')

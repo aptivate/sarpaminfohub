@@ -1,6 +1,10 @@
 body
 {
   font-family:Verdana,sans-serif;
+}
+
+body.standalone
+{
   background-color:#ddd;
 }
 
@@ -200,7 +204,9 @@ table.data th
 #pricegraph .graph .grid .bar{position:absolute;top:0;left:0;height:15px;display:block;white-space:nowrap;margin:2px 0;font-size:70%;height:15px;}
 #pricegraph .graph .grid .fob_price{top:0;background-color:#7381D1;}
 #pricegraph .graph .grid .landed_price{top:16px;background-color:#93A1f1;}
-#pricegraph .graph .grid .msh_price{position:absolute;width:1px;border-right:2px solid red;top:0;height:36px;z-index:10;}
+#pricegraph .graph .grid .msh_price{position:absolute;width:1px;top:0;height:36px;z-index:10;}
+#pricegraph .graph .grid .median_fob_price{position:absolute;width:1px;top:0;height:36px;z-index:10;}
+#pricegraph .graph .grid .median_landed_price{position:absolute;width:1px;top:0;height:36px;z-index:10;}
 #pricegraph .graph tr.foot{border-top:1px solid #5b66a6;}
 #pricegraph .graph tr.foot td{text-align:right;}
 /*#pricegraph .graph tr.foot td span{border-left:2px solid red;padding-left:6px;}*/
@@ -363,6 +369,24 @@ span {
     border-left:0px;
 }
 
-.mshborder {
-    border-left:2px solid red;padding-left:6px;
+#pricegraph .graph .foot .label {
+    padding-left:6px;
+}
+
+#pricegraph .graph .grid .marker,
+#pricegraph .graph .foot .label {
+	border-left-width: 2px;
+	border-left-style: solid;
+}
+
+#pricegraph .graph .msh_price {
+	border-color: red;
+}
+
+#pricegraph .graph .median_fob_price {
+	border-color: #fc0;
+}
+
+#pricegraph .graph .median_landed_price {
+	border-color: #f0c;
 }

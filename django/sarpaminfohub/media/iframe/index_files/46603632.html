@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0244)https://upload.box.net/dropbox/40u1p3gnj4ysi40drx3xynoncnxo6xya/46603632?i=Please%20add%20comments%20your%20uploads%2C%20letting%20us%20know%20a%20bit%20more%20about%20the%20source%20of%20the%20document.&d=1&w=460&h=385&t=STG%20EML%20DropBox&r= -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Dropbox</title>
+		<link rel="stylesheet" href="./index_files/dropbox_view.css" type="text/css">	
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
+		<script type="text/javascript" src="./index_files/jquery(1).js"></script>
+		<script type="text/javascript" src="./index_files/jquery.form.js"></script>
+		<script type="text/javascript">
+		
+		// @TODO without $j
+		$j = jQuery.noConflict();
+
+		var uploading = false;
+		var require_email = 0;
+
+		function is_email(str)
+		{
+			var email_regex = new RegExp("^[a-zA-Z0-9'._%+-]+@([a-zA-Z0-9-]+\\.)+([a-zA-Z]{2}|aero|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel)$", 'i');
+			return email_regex.exec(str) ? true : false;
+		}
+
+		function ajax_submit()
+		{
+			if (uploading) return;
+
+			var j_form = $j('form');
+			var j_file = j_form.find('input[type="file"]');
+			var j_head = $j('div.head');
+			var j_submit = j_form.find('input[type="submit"]');
+			var j_email = j_form.find('#email_input');
+
+			if (!j_file.val())
+			{
+				alert('Please select a file to upload');
+				return;
+			}
+
+			var email = $j.trim(j_email.val());
+
+			// warn if e-mail is required, or if an invalid e-mail was entered
+			if (require_email && !is_email(email))
+			{
+				alert('Please enter a valid e-mail address');
+				return;
+			}
+
+			j_form.ajaxSubmit({
+				timeout: 7200000 // 2hrs
+				,dataType: 'xml'
+				,success: function(xml)
+				{
+					j_xml = $j(xml);
+					j_files = j_xml.find('files');
+					var message;
+					if (j_files.children().length == 1)
+					{
+						// @TODO fix line wrapping
+						message = '<span id="after_upload_message">Success. Your file has been uploaded, and the<br/>folder owner has been notified.<br /></span>';
+					}
+					else
+					{
+						// @TODO deal with file size etc
+						// @TODO deal with files with same name
+						message = '<span id="after_upload_message">Sorry an error occured during the upload.<br /></span>';
+					}
+					j_form.hide();
+					j_head.after(message);
+					
+					var j_reset_link = $j('<a href="#"></a>')
+					.text('Upload another file')
+					.click(function()
+						{							
+							j_form.get(0).reset();
+							j_form.show();
+							j_submit.val('Upload');
+							
+							$j(this).remove();
+							$j('#after_upload_message').remove();	
+							uploading = false;					
+						}
+					)
+					
+					$j('#after_upload_message').append(j_reset_link);
+				}
+			});
+			uploading = true;
+			j_submit.val('Uploading...');
+		}
+		
+		</script>
+	</head>
+<body>
+	<div class="main" style="height: 353px;width: 428px;">
+					<div class="head">
+				<h2>
+											STG EML DropBox
+									</h2>				
+									<span>Please add comments your uploads, letting us know a bit more about the source of the document.</span>
+							</div>
+			<form action="https://upload.box.net/api/1.0/upload/40u1p3gnj4ysi40drx3xynoncnxo6xya/46603632" enctype="multipart/form-data" method="post">
+				<input type="hidden" name="check_name_conflict_folder_option" value="1">
+				<table>
+				<tbody><tr>
+					<td class="field">File Upload:</td>
+					<td class="input"><input type="file" name="new_file_1"></td>
+				</tr>
+								<tr>
+					<td class="field field_top"><br> Description:</td>
+					<td class="input"><br><textarea name="description"></textarea></td>
+				</tr>
+												<tr>
+					<td colspan="2" class="submit"><br><input type="submit" name="upload" value="Upload" onclick="ajax_submit(); return false;"></td>
+				</tr>
+				</tbody></table>			
+			</form>
+				<a href="https://www.box.net/" target="_top"><img src="./index_files/powered_by_box.png" alt="Box.net" title="Box.net"></a>
+	</div>
+
+</body></html>

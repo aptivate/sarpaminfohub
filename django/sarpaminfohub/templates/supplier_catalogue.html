@@ -3,7 +3,20 @@
 
 <div id="content">
     <div id="products">
-        {{ supplier_catalogue_table.as_html }}
+    	<table class="data">
+    		<tr>
+    			<th>Product</th>
+    			<th>Country</th>
+    			<th>Formulation</th>
+    		</tr>
+    		{% for reg in registrations %}
+			<tr>
+				<td class="first">{{ reg.product.name }}</td>
+				<td class="second">{{ reg.country.name }}</td>
+				<td class="third"><a href="{% url formulation-by-id formulation_id=reg.product.formulation.id backend_name=backend %}">{{ reg.product.formulation.name }}</a></td>
+			</tr>
+			{% endfor %}
+		</table>
     </div>
 </div>
 

@@ -19,9 +19,11 @@
 		<table><tr>
 			<td width="10%">
 				<div>
-					{% if msh_price %}<div class="msh_price" style="left:{% widthratio msh_price table.max_price 696 %}px;"></div>{% endif %}
+					{% if msh_price %}<div class="msh_price marker" style="left:{% widthratio msh_price table.max_price 696 %}px;"></div>{% endif %}
+					{% if median_fob_price %}<div class="median_fob_price marker" style="left:{% widthratio median_fob_price table.max_price 696 %}px;"></div>{% endif %}
+					{% if median_landed_price %}<div class="median_landed_price marker" style="left:{% widthratio median_landed_price table.max_price 696 %}px;"></div>{% endif %}
 					<span id="bar_{{forloop.counter}}_fob" class="bar fob_price" style="width:{% if row.fob_price != '' %}{% widthratio row.fob_price table.max_price 696 %}{% else %}0{% endif %}px">{{ row.fob_price }}</span>
-					<span id="bar_{{forloop.counter}}_landed" class="bar landed_price" style="width:{% if row.landed_price != '' %}{% widthratio row.landed_price table.max_price 696 %}{% else %}0{% endif %}px">{{ row.landed_price }}</span>
+					<span "bar_{{forloop.counter}}_landed" class="bar landed_price" style="width:{% if row.landed_price != '' %}{% widthratio row.landed_price table.max_price 696 %}{% else %}0{% endif %}px">{{ row.landed_price }}</span>
 				</div>
 			</td>
 			<td width="10%"></td>
@@ -44,7 +46,9 @@
 		<span class="noborder">FOB Price (USD)</span>
 		<span class="noborder" id="landedkey">&nbsp;&nbsp;&nbsp;</span>
 		<span class="noborder">Landed Price (USD)</span>
-		<span class="mshborder">MSH Price: {{ msh_price|stringformat:".03f"}}</span>
+		<span class="msh_price label">MSH Price: {{ msh_price|floatformat:3 }}</span>
+		<span class="median_fob_price label">Median FOB Price: {{ median_fob_price|floatformat:3 }}</span>
+		<span class="median_landed_price label">Median Landed Price: {{ median_landed_price|floatformat:3 }}</span>
 	</td>
 </tr>
 

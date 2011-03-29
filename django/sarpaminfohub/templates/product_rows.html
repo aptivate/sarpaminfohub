@@ -1,6 +1,6 @@
 {% for row in table.rows %}
   <tr>
-    <td class="first">{{ row.product }}</td>
+    <td class="first">{{ row.product.name }}</td>
     <td class="second">
         <a href="{{row.supplier.url}}">{{ row.supplier.name }}</a>
     </td>

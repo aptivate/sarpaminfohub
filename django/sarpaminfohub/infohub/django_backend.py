@@ -1,7 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 
 from sarpaminfohub.infohub.backend import Backend
-from sarpaminfohub.infohub.models import Formulation, Product, Supplier, Price,\
+from sarpaminfohub.infohub.models import Formulation, Supplier, Price, \
     ProductRegistration
 
 class DjangoBackend(Backend):
@@ -70,13 +70,17 @@ class DjangoBackend(Backend):
             
         return results
 
+    def get_registrations_from_supplier_with_id(self, supplier_id):
+        return [registration for registration
+            in ProductRegistration.objects.filter(supplier=supplier_id)]
+
     def get_products_from_supplier_with_id(self, supplier_id):
-        registrations = ProductRegistration.objects.filter(supplier=supplier_id)
+        registrations = self.get_registrations_from_supplier_with_id(supplier_id)
 
         results = []
 
-        for registration in registrations:
-            results.append(registration.product.get_formulation_record())
+        for reg in registrations:
+            results.append(reg.product.get_formulation_record())
 
         return results
 

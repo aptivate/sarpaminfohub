@@ -1,4 +1,4 @@
-{%  extends 'page.html' %}
+{%  extends 'embedded.html' %}
 
 {% block main %}
 
@@ -37,7 +37,7 @@
     {% empty %}
         <tr><td colspan=6>No Contacts found.</td></tr>
     {% endfor %}
-		</table>
+	</table>
 		
-		<p>Back to <a href="/contacts/">Search</a></p>
+	<p>Back to <a href="/contacts/">Search</a></p>
 {% endblock main %}

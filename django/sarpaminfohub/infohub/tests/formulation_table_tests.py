@@ -20,17 +20,14 @@ class FormulationTableTest(TableTestCase):
     
     def test_country_stored_in_first_column(self):
         country = self.get_nth_value(self.first_row, self.COUNTRY_COLUMN)
-        
         self.assertEquals("South Africa", country)
 
     def test_fob_price_stored_in_second_column(self):
         fob_price = float(self.get_nth_value(self.first_row, self.FOB_PRICE_COLUMN))
-        
         self.assertAlmostEquals(3.123, fob_price)
 
     def test_landed_price_stored_in_third_column(self):
         landed_price = float(self.get_nth_value(self.first_row, self.LANDED_PRICE_COLUMN))
-        
         self.assertAlmostEquals(4.988, landed_price)
 
     def test_html_includes_table(self):

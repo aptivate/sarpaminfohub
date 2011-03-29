@@ -221,8 +221,8 @@ def setup_db_dumps(dump_dir):
         # write something like:
         # 30 1 * * * mysqldump --user=osiaccounting --password=aptivate --host=127.0.0.1 osiaccounting >  /var/osiaccounting/dumps/daily-dump-`/bin/date +\%d`.sql
         with open(cron_file, 'w') as f:
-            f.write('15 1 * * * ')
-            f.write('mysqldump --user=%s --password=%s --host=127.0.0.1 %s > %s' %
+            f.write('#!/bin/sh\n')
+            f.write('/usr/bin/mysqldump --user=%s --password=%s --host=127.0.0.1 %s > %s' %
                     (db_user, db_pw, db_name, dump_file_stub))
             f.write(r'`/bin/date +\%d`.sql')
             f.write('\n')

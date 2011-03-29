@@ -1,6 +1,4 @@
 DATABASE_ENGINE = 'mysql'
 DATABASE_NAME = 'sarpaminfohub'
-DATABASE_OPTIONS = {} # remove mysql-specific database options
 DATABASE_USER = 'sarpaminfohub'
 DATABASE_PASSWORD = 'sarpaminfohub'
-
