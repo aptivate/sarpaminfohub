@@ -1,0 +1,21 @@
+{% extends "embedded.html" %}
+
+{% block main %}
+    <h2>Linked In Connection</h2>
+    
+{% if auth_url %}
+		<p>If you want to add your Linked In profile to the Sarpam Experts search</p>
+		<p><a onClick="window.open('{{auth_url}}','','width=400,height=400');return false;" href="#">click here</a></p>
+{% else %}
+		<table>
+			<tr><th>Given Name</th><td>{{given_name}}</td></tr>
+			<tr><th>Family Name</th><td>{{family_name}}</td></tr>
+			<tr><th>URL</th><td>{{public_url}}</td></tr>
+			<tr><th>Notes</th><td>{{notes}}</td></tr>
+			<tr><th>Tags</th><td>{{tags}}</td></tr>
+			<tr><th>Position</th><td>{{position}}</td></tr>
+			<tr><th>Organization</th><td>{{organization}}</td></tr>
+			<tr><th>Address</th><td>{{address}}</td></tr>
+		</table>
+{% endif %}
+{% endblock main %}

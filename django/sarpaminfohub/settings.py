@@ -102,4 +102,20 @@ TEMPLATE_CONTEXT_PROCESSORS = ('django.contrib.auth.context_processors.auth',
                                'django.core.context_processors.request',
                                )
 
+LINKED_IN_API_KEY = "jFIwE5opBJM3bKpQbAYtCkYUZrEq4djATVmqXhr3Qph81qz8rLkN0M-fFY0vcys7"
+LINKED_IN_SECRET_KEY = "sFVDxOJq9k75YYgvzad2bjaqpMsdKQTrW_-PsZljQS-hux1ecdC57OhWTgi4intB"
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'sarpam'
+    }
+}
+
 from local_settings import * #@UnusedWildImport
+
+LI_LIST = [
+    LINKED_IN_API_KEY,
+    LINKED_IN_SECRET_KEY,
+    "%s/contacts/linkedin/"%LINKED_IN_RETURN_SERVER
+]
