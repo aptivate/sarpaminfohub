@@ -4,7 +4,22 @@
     <h2>Linked In Connection</h2>
     
 {% if auth_url %}
+<script type="text/javascript">
+	// function linked_in_callback() {
+	// 	alert('Hello!'+new_contact_id);
+	// 	window.location = '/contacts/'+new_contact_id;
+	// }
+	// 
+	// function load_linked_in() {
+	// 	linked_in_window=window.open('{{auth_url}}');
+	// 	linked_in_window.window.owner=this.window;
+	// 	// linked_in_window.addEventListener('close',linked_in_callback());
+	// 	return false;
+	// }
+
+</script>
 		<p>If you want to add your Linked In profile to the Sarpam Experts search <a target="_new" href="{{auth_url}}">click here</a></p>
+
 {% else %}
 		<table>
 			<tr><th>Given Name</th><td>{{given_name}}</td></tr>
