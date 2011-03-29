@@ -58,6 +58,16 @@ def linked_in(request):
             }
             try:
                 contact = Contact.objects.get(linked_in_url=profile.public_url)
+                contact.given_name = contact_data['given_name']
+                contact.family_name = contact_data['family_name']
+                contact.linked_in_url = contact_data['linked_in_url']
+                contact.note = contact_data['note']
+                contact.tags = contact_data['tags']
+                contact.role = contact_data['role']
+                contact.organization = contact_data['organization']
+                contact.address_line_1 = contact_data['address_line_1']
+                contact.country = contact_data['country']
+                contact.linked_in_approval = contact_data['linked_in_approval']
             except ObjectDoesNotExist:
                 contact = Contact.objects.create(**contact_data)
             contact.save()
