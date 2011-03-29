@@ -117,5 +117,5 @@ from local_settings import * #@UnusedWildImport
 LI_LIST = [
     LINKED_IN_API_KEY,
     LINKED_IN_SECRET_KEY,
-    "%s/contacts/linkedin/"%LINKED_IN_RETURN_SERVER
+    "%s/contacts/"%LINKED_IN_RETURN_SERVER
 ]
