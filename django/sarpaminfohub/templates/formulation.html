@@ -23,8 +23,6 @@
 <script src="/site_media/jquery.bubblepopup.v2.3.1.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 
-// $formulation_pack = {{formulation_pack}};
-
 $(document).ready(function(){
 
 		{% for bar_row in formulation_pack %}
@@ -37,7 +35,7 @@ $(document).ready(function(){
 
 											innerHtmlStyle: {
 																color:'#000000', 
-																'text-align':'center'
+																'text-align':'left'
 															},
 
 											themeName: 	'azure',
@@ -53,7 +51,7 @@ $(document).ready(function(){
 
 											innerHtmlStyle: {
 																color:'#000000', 
-																'text-align':'center'
+																'text-align':'left'
 															},
 
 											themeName: 	'azure',
@@ -64,7 +62,7 @@ $(document).ready(function(){
 		
 		{% endfor %}
 	});
-		//create a bubble popup for each DOM element with class attribute as "text", "button" or "link" and LI, P, IMG elements.
+
 
 </script>
 {% endblock main %}
