@@ -14,4 +14,4 @@ ipython==0.10.1
 paramiko==1.7.6
 pycrypto==2.3
 wsgiref==0.1.2
-
+python-linkedin==1.6
