@@ -5,7 +5,7 @@ class SarpamTableTest(SarpamTestCase):
         table = SarpamTable(None)
         test_data = [0.12346]
         first_column = 0
-        table.round_to_three_decimal_places(test_data, first_column)
+        table.round_to_set_decimal_places(test_data, first_column)
         
         self.assertAlmostEquals(0.123, float(test_data[first_column])) 
         
@@ -13,7 +13,7 @@ class SarpamTableTest(SarpamTestCase):
         table = SarpamTable(None)
         test_data = [None]
         first_column = 0
-        table.round_to_three_decimal_places(test_data, first_column)
+        table.round_to_set_decimal_places(test_data, first_column)
         
         self.assertEquals("--", test_data[first_column])
  

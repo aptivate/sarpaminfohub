@@ -1,5 +1,6 @@
 import django_tables as tables
 from django.template.loader import render_to_string
+from django.conf import settings
 import inspect
 class SarpamTable(tables.MemoryTable):
     def abstract(self):
@@ -8,13 +9,13 @@ class SarpamTable(tables.MemoryTable):
     
     NO_DATA = "--"
     
-    def round_to_three_decimal_places(self, row, column):
+    def round_to_set_decimal_places(self, row, column):
         value = row[column]
                     
         if value is None:
             value = self.NO_DATA
         else:
-            value = round(float(value), 3)
+            value = round(float(value), settings.SARPAM_NUMBER_ROUNDING)
          
         row[column] = value
 

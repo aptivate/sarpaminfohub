@@ -36,8 +36,8 @@ class FormulationGraph(SarpamTable):
             #        new_max_price))
             self.max_price = new_max_price
             
-            self.round_to_three_decimal_places(row, 'fob_price')
-            self.round_to_three_decimal_places(row, 'landed_price')
+            self.round_to_set_decimal_places(row, 'fob_price')
+            self.round_to_set_decimal_places(row, 'landed_price')
 
         # scale up the value to between 1 and 10, then round up the first
         # digit to 1, 2 or 5 to make nicer graph scales
