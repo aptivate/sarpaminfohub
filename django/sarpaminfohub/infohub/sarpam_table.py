@@ -20,7 +20,13 @@ class SarpamTable(tables.MemoryTable):
         row[column] = value
 
     def as_html(self):
-        return render_to_string('table.html', {'table':self})
+        extra_context = {
+            'sarpam_number_format':settings.SARPAM_NUMBER_FORMAT,
+            'sarpam_number_rounding':settings.SARPAM_NUMBER_ROUNDING,
+            'sarpam_currency_code':settings.SARPAM_CURRENCY_CODE,
+            'table':self
+        }
+        return render_to_string('table.html', extra_context)
 
     def get_rows_template(self):
         self.abstract()

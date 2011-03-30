@@ -114,6 +114,7 @@ CACHES = {
 }
 
 SARPAM_NUMBER_ROUNDING = 3 
+SARPAM_NUMBER_FORMAT = ".0%df"%SARPAM_NUMBER_ROUNDING
 SARPAM_CURRENCY_CODE = "USD"
 
 from local_settings import * #@UnusedWildImport

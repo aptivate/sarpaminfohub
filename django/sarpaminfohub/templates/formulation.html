@@ -50,7 +50,7 @@ $(document).ready(function(){
 
 	{% if formulation_msh %}
 	<div id="formulation_msh">
-		MSH International Median Price: {{ formulation_msh|stringformat:".03f" }} (USD)
+		MSH International Median Price: {{ formulation_msh|stringformat:sarpam_number_format }} ({{sarpam_currency_code}})
 	</div>
 	{% endif %}
 
