@@ -68,8 +68,8 @@ def formulation(request, formulation_id, backend_name="django"):
     products_href = reverse('formulation_products', args=[str(formulation_id),
                                                            backend_name])
     formulation_tab = get_formulation_tab(None)
-    products_tab = get_products_tab(products_href)
-    menu = Menu([formulation_tab, products_tab])
+    similar_products_tab = get_similar_products_tab(products_href)
+    menu = Menu([formulation_tab, similar_products_tab])
 
     price_popups = []
     for price_fields in rows:
@@ -99,8 +99,8 @@ def formulation_products(request, formulation_id, backend_name="django"):
                                                     backend_name])
 
     formulation_tab = get_formulation_tab(formulation_href)
-    products_tab = get_products_tab()
-    menu = Menu([formulation_tab, products_tab])
+    similar_products_tab = get_similar_products_tab()
+    menu = Menu([formulation_tab, similar_products_tab])
 
     return render_to_response('formulation_products.html',
                               {'supplier_table' : supplier_table,
@@ -128,8 +128,8 @@ def supplier_catalogue(request, supplier_id, backend_name="django"):
 def get_formulation_tab(formulation_href=None):
     return get_tab(formulation_href, "Procurement Prices")
 
-def get_products_tab(products_href=None):
-    return get_tab(products_href, "Products")
+def get_similar_products_tab(products_href=None):
+    return get_tab(products_href, "Similar Products")
 
 def get_catalogue_tab():
     return get_tab(None, "Product Catalogue")
