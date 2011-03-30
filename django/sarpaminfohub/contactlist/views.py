@@ -39,10 +39,13 @@ def tag_search(request):
                 profile = api.GetProfile(fields=["first-name","last-name","honors","specialties","positions","public-profile-url","summary","location","phone-numbers"])
                 tags_list = profile.specialties.replace("(","").replace(")","").split(",")
                 trimmed_tag_list = []
-                for tag in tags_list:
-                    if not len(tag) > 50:
-                        trimmed_tag_list.append(tag.strip().capitalize())
-                trimmed_tags = ",".join(set(trimmed_tag_list))[0:511]
+                try:
+                    for tag in tags_list:
+                        if not len(tag) > 50:
+                            trimmed_tag_list.append(tag.strip().capitalize())
+                    trimmed_tags = ",".join(set(trimmed_tag_list))[0:511]
+                except:
+                    trimmed_tags = ""
                 #assert False, trimmed_tags
                 note = "<h4>Summary</h4><p>%s</p><h4>Specialities</h4><p>%s</p>"%(profile.summary,profile.specialties)
                 contact_data = {
