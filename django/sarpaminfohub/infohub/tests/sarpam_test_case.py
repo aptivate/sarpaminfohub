@@ -57,3 +57,6 @@ class SarpamTestCase(TestCase):
 
     def set_up_exchange_rate_for_zar(self):
         self.set_up_exchange_rate(symbol='ZAR', rate='0.11873', year='2009')
+
+    def contains(self, string_to_search, sub_string):
+        return string_to_search.find(sub_string) > -1

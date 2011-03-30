@@ -16,7 +16,7 @@ class PricePopup(object):
         
         for field_name in fields:
             field_title = fields[field_name]
-            field_value = self.price_fields[field_name]
+            field_value = self.price_fields[field_name] or "N/A"
             output.write("<dt>%s</dt><dd>%s</dd>" % (field_title, field_value))
         
         output.write("</dl>")
