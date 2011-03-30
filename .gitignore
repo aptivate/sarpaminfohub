@@ -5,6 +5,7 @@ bin
 django/search_index/*
 django/sarpaminfohub/search_index/*
 django/sarpaminfohub/local_settings.py
+django/sarpaminfohub/build/*
 django/sarpaminfohub/fixtures
 django/sarpaminfohub/fixtures/*.json
 django/sarpaminfohub/fixtures/initial_data

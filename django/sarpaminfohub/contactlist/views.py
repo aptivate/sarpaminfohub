@@ -1,16 +1,24 @@
 from haystack.query import SearchQuerySet
-from django.shortcuts import render_to_response,redirect
+from django.shortcuts import render_to_response, redirect
 from sarpaminfohub.contactlist.forms import SearchForm
-from linkedin import linkedin
 from django.conf import settings
 from django.core.cache import cache
 from sarpaminfohub.contactlist.custom_fields import COUNTRY_DICT
-from sarpaminfohub.contactlist.models import *
 from django.core.exceptions import ObjectDoesNotExist
+from linkedin import linkedin
+from sarpaminfohub.contactlist.models import Contact
+from django.core.urlresolvers import reverse
+
 def tag_search(request):
     query = None
     search = False
-    api = linkedin.LinkedIn(*settings.LI_LIST)
+    
+    url = request.build_absolute_uri(reverse('home'))
+    
+    api_key = settings.LINKED_IN_API_KEY
+    secret_key = settings.LINKED_IN_SECRET_KEY
+    
+    api = linkedin.LinkedIn(api_key, secret_key, url)
     api.requestToken()
     if request.method == 'POST':
         form = SearchForm(request.POST)
