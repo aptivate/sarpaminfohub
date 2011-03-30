@@ -100,6 +100,7 @@ TEMPLATE_CONTEXT_PROCESSORS = ('django.contrib.auth.context_processors.auth',
                                'django.core.context_processors.media',
                                'django.contrib.messages.context_processors.messages',
                                'django.core.context_processors.request',
+                               'sarpaminfohub.infohub.context.extra_number_settings_context'
                                )
 
 LINKED_IN_API_KEY = "jFIwE5opBJM3bKpQbAYtCkYUZrEq4djATVmqXhr3Qph81qz8rLkN0M-fFY0vcys7"
