@@ -367,18 +367,18 @@ def scrape(data_dir):
             
         incoterm = f['incoterm']
         if incoterm == "":
-            incoterm_id = None
-        else:
-            if not incoterm in incoterm_dict:
-                incoterm_counter+=1
-                incoterm_fields = {}
-                incoterm_table.append({'pk' : incoterm_counter,
-                                       'model' : "infohub.incoterm",
-                                       'fields' : incoterm_fields})
-                incoterm_fields['name'] = incoterm
-                incoterm_dict[incoterm] = incoterm_counter
+            incoterm = "FOB"
+
+        if not incoterm in incoterm_dict:
+            incoterm_counter+=1
+            incoterm_fields = {}
+            incoterm_table.append({'pk' : incoterm_counter,
+                                   'model' : "infohub.incoterm",
+                                   'fields' : incoterm_fields})
+            incoterm_fields['name'] = incoterm
+            incoterm_dict[incoterm] = incoterm_counter
                    
-            incoterm_id = incoterm_dict[incoterm]
+        incoterm_id = incoterm_dict[incoterm]
             
         price_record = {}
         price_fields = {}
