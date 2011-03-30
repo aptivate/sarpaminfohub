@@ -7,6 +7,7 @@ from django.core.cache import cache
 from sarpaminfohub.contactlist.custom_fields import COUNTRY_DICT
 from sarpaminfohub.contactlist.models import *
 from django.core.exceptions import ObjectDoesNotExist
+from tagging.views import tagged_object_list
 def tag_search(request):
     query = None
     search = False
@@ -93,3 +94,11 @@ def tag_search(request):
     }
 
     return render_to_response('search/search_embedded.html', extra_context)
+
+def dehex_tagged_object_list(request, queryset_or_model=None, tag=None,
+        related_tags=False, related_tag_counts=True):
+        dehexed = tag.decode('hex')
+        return tagged_object_list(request=request, 
+            queryset_or_model=queryset_or_model, 
+            tag=dehexed, related_tags=related_tags, 
+            related_tag_counts=related_tag_counts)

@@ -36,8 +36,8 @@
 
 <h2>Tags</h2>
 <ul>
-{%for tag in object.tag_list%}
-<li><a href="/contacts/tags/{{tag}}/">{{tag}}</a></li>
+{%for tag in object.tag_hex_list%}
+<li><a href="/contacts/tags/{{tag.1}}/">{{tag.0}}</a></li>
 {%endfor%}
 </ul>
 
