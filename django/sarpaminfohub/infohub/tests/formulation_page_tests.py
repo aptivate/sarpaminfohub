@@ -68,7 +68,7 @@ class FormulationPageTest(PageDisplayTestCase):
         response = self.load_page_for_formulation_amitriptyline_prices()
         self.check_link_visible_on_page(response, 
                                         href="/formulation_products/1/test", 
-                                        text="Products")
+                                        text="Similar Products")
 
     def test_procurement_prices_tab_is_selected(self):
         response = self.load_page_for_formulation_amitriptyline_prices()

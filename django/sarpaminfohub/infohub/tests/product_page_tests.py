@@ -31,9 +31,9 @@ class ProductPageTest(PageDisplayTestCase):
                                         href="/formulation/1/test",
                                         text="Procurement Prices")
 
-    def test_products_tab_is_selected(self):
+    def test_similar_products_tab_is_selected(self):
         response = self.load_page_with_suppliers_of_amitriptyline()
-        self.check_tab_is_selected(response, "Products")
+        self.check_tab_is_selected(response, "Similar Products")
 
     def test_suppliers_list_to_supplier_catalogue(self):
         response = self.load_page_with_suppliers_of_amitriptyline()
