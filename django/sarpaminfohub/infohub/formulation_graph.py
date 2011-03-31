@@ -3,6 +3,7 @@ import django_tables as tables
 from sarpaminfohub.infohub.sarpam_table import SarpamTable
 from django.template.loader import render_to_string
 from sarpaminfohub.infohub import utils
+from django.conf import settings
 
 class FormulationGraph(SarpamTable):
     country = tables.Column()
@@ -36,8 +37,8 @@ class FormulationGraph(SarpamTable):
             #        new_max_price))
             self.max_price = new_max_price
             
-            self.round_to_three_decimal_places(row, 'fob_price')
-            self.round_to_three_decimal_places(row, 'landed_price')
+            self.round_to_set_decimal_places(row, 'fob_price')
+            self.round_to_set_decimal_places(row, 'landed_price')
 
         # scale up the value to between 1 and 10, then round up the first
         # digit to 1, 2 or 5 to make nicer graph scales
@@ -73,8 +74,15 @@ class FormulationGraph(SarpamTable):
         SarpamTable.__init__(self, rows)
 
     def as_html(self):
-        return render_to_string('formulation/graph.html', dict(
-            table = self, msh_price = self.msh_price,
-            median_fob_price = self.median_fob_price,
-            median_landed_price = self.median_landed_price))
+        extra_context = {
+            'sarpam_number_format':settings.SARPAM_NUMBER_FORMAT,
+            'sarpam_number_rounding':settings.SARPAM_NUMBER_ROUNDING,
+            'sarpam_currency_code':settings.SARPAM_CURRENCY_CODE,
+            'table':self,
+            'msh_price':self.msh_price,
+            'median_fob_price':self.median_fob_price,
+            'median_landed_price':self.median_landed_price
+        }
+        return render_to_string('formulation/graph.html', 
+            extra_context)
 

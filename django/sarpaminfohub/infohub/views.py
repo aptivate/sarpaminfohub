@@ -9,6 +9,7 @@ from django.core.urlresolvers import reverse
 from sarpaminfohub.infohub.product_table import ProductTable
 from sarpaminfohub.infohub.menu import Menu
 from sarpaminfohub.infohub.forms import SearchForm
+from django.template import RequestContext
 
 from copy import deepcopy
 from sarpaminfohub.infohub.price_popup import PricePopup
@@ -46,7 +47,7 @@ def search(request):
     return render_to_response('search.html', 
                               {'search_form': search_form,
                                'results_table': results_table,
-                               'menu' : menu})
+                               'menu' : menu},RequestContext(request))
     
 def formulation(request, formulation_id, backend_name="django"):
     backend = get_backend(backend_name)
@@ -82,7 +83,7 @@ def formulation(request, formulation_id, backend_name="django"):
                                'price_popups': price_popups,
                                'menu' : menu,
                                'search_form' : search_form,
-                               'sub_title' : formulation_name})
+                               'sub_title' : formulation_name},RequestContext(request))
 
 def formulation_products(request, formulation_id, backend_name="django"):
     backend = get_backend(backend_name)
@@ -106,7 +107,7 @@ def formulation_products(request, formulation_id, backend_name="django"):
                               {'supplier_table' : supplier_table,
                                'search_form' : search_form,
                                'menu' : menu,
-                               'sub_title' : formulation_name})
+                               'sub_title' : formulation_name},RequestContext(request))
 
 def supplier_catalogue(request, supplier_id, backend_name="django"):
     backend = get_backend(backend_name)
@@ -123,7 +124,7 @@ def supplier_catalogue(request, supplier_id, backend_name="django"):
                                'menu': menu,
                                'search_form': search_form,
                                'sub_title': supplier_name,
-                               'backend': backend_name})
+                               'backend': backend_name},RequestContext(request))
 
 def get_formulation_tab(formulation_href=None):
     return get_tab(formulation_href, "Procurement Prices")

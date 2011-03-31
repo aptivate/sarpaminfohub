@@ -17,7 +17,9 @@ $(document).ready(function(){
                                             innerHtml: "{{price_popup.as_html}}",
 
                                             themeName:  'azure',
-                                            themePath:  '/site_media/jquerybubblepopup-theme'
+                                            themePath:  '/site_media/jquerybubblepopup-theme',
+																						openingSpeed: 0,
+																						closingSpeed: 0,
 
                                         });
                 $('#bar_{{forloop.counter}}_fob').CreateBubblePopup({
@@ -28,8 +30,9 @@ $(document).ready(function(){
                                             innerHtml: "{{price_popup.as_html}}",
 
                                             themeName:  'azure',
-                                            themePath:  '/site_media/jquerybubblepopup-theme'
-
+                                            themePath:  '/site_media/jquerybubblepopup-theme',
+																						openingSpeed: 0,
+																						closingSpeed: 0,
                                         });
         
         
@@ -50,7 +53,7 @@ $(document).ready(function(){
 
 	{% if formulation_msh %}
 	<div id="formulation_msh">
-		MSH International Median Price: {{ formulation_msh|stringformat:".03f" }} (USD)
+		MSH International Median Price: {{ formulation_msh|stringformat:sarpam_number_format }} ({{sarpam_currency_code}})
 	</div>
 	{% endif %}
 
