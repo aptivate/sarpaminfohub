@@ -56,6 +56,10 @@ def _manage_py(args, cwd=None):
     else:
         manage_cmd.extend(args)
 
+    # Allow manual specification of settings file
+    if env.has_key('manage_py_settings'):
+        manage_cmd.append('--settings=%s' % env['manage_py_settings'])
+
     if cwd == None:
         cwd = env['django_dir']
 
