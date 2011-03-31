@@ -33,8 +33,12 @@ class Contact(models.Model):
     linked_in_approval = models.NullBooleanField(default=None)
         
     def _get_tag_list(self):
-            return parse_tag_input(self.tags)
+        return parse_tag_input(self.tags)
     tag_list = property(_get_tag_list)
+    
+    def _get_tag_hex_list(self):
+        return [[tag,tag.encode('hex')] for tag in self.tag_list]
+    tag_hex_list = property(_get_tag_hex_list)
     
     def get_absolute_url(self):
         return "/contacts/%d/"%self.id
