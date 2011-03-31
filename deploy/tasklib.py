@@ -47,12 +47,10 @@ def _setup_paths():
 
 
 def _manage_py(args, cwd=None):
-    # if ve is not yet created then python_bin won't exist
-    # so check before using manage.py
-    if os.path.exists(env['python_bin']):
-        manage_cmd = [env['python_bin'], env['manage_py']]
-    else:
-        manage_cmd = ['/usr/bin/python2.6', env['manage_py']]
+    # for manage.py, always use the system python 2.6
+    # otherwise the update_ve will fail badly, as it deletes
+    # the virtualenv part way through the process ...
+    manage_cmd = ['/usr/bin/python2.6', env['manage_py']]
     if isinstance(args, str):
         manage_cmd.append(args)
     else:
