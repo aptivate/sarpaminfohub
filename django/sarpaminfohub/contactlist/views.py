@@ -46,9 +46,6 @@ def tag_search(request):
                 return redirect('/contacts/')
             if api.accessToken(request_token=request_token,request_token_secret=request_token_secret,verifier=verifier):
                 profile = api.GetProfile(fields=["first-name","last-name","honors","specialties","positions","public-profile-url","summary","location","phone-numbers"])
-                print "Location"
-                print profile.location
-                print profile.location.split(',')
                 tags_list = profile.specialties.replace("(","").replace(")","").split(",")
                 trimmed_tag_list = []
                 try:
