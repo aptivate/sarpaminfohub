@@ -28,7 +28,7 @@ class Contact(models.Model):
     address_line_3 = models.CharField(max_length=512, blank=True)
     country = custom_fields.CountryField()
     note = models.TextField(null=True, blank=True)
-    tags = TagField()
+    tags = TagField(max_length=512)
     linked_in_url = models.URLField(unique=True,blank=True,null=True)
     linked_in_approval = models.NullBooleanField(default=None)
         
