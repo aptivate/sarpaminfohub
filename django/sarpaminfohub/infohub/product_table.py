@@ -5,7 +5,7 @@ class ProductTable(SarpamTable):
     product = tables.Column()
     supplier = tables.Column()
     manufacturer = tables.Column()
-    country = tables.Column()
+    country = tables.Column(verbose_name="Registered In")
 
     def __init__(self, rows):
         tables.MemoryTable.__init__(self, rows, order_by='product')

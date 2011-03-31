@@ -8,7 +8,7 @@ class ProductTableTest(TableTestCase):
     PRODUCT_COLUMN = 0
     SUPPLIER_COLUMN = 1
     MANUFACTURER_COLUMN = 2
-    COUNTRIES_COLUMN = 3
+    COUNTRY_COLUMN = 3
     
     def setUp(self):
         first_record = self.create_and_return_record(product="AMITRILON-25",
@@ -21,8 +21,8 @@ class ProductTableTest(TableTestCase):
                                                       country="Samgola")
         supplier_records = [first_record, second_record]                                              
 
-        self.supplier_table = ProductTable(supplier_records)
-        rows = self.supplier_table.rows
+        self.product_table = ProductTable(supplier_records)
+        rows = self.product_table.rows
         self.first_row = rows[self.FIRST_ROW]
         self.second_row = rows[self.SECOND_ROW]
     
@@ -60,19 +60,24 @@ class ProductTableTest(TableTestCase):
         self.assertEquals("STALLION LABORATORIES LTD-INDIA", manufacturers)
 
     def test_country_stored_in_fourth_column_of_first_row(self):
-        countries = self.get_nth_value(self.first_row, self.COUNTRIES_COLUMN)
+        countries = self.get_nth_value(self.first_row, self.COUNTRY_COLUMN)
         self.assertEquals("Nibia", countries)
 
     def test_country_stored_in_fourth_column_of_second_row(self):
-        countries = self.get_nth_value(self.second_row, self.COUNTRIES_COLUMN)
+        countries = self.get_nth_value(self.second_row, self.COUNTRY_COLUMN)
         self.assertEquals("Samgola", countries)
 
     def test_html_includes_table(self):
-        self.check_html_includes_table(self.supplier_table)
+        self.check_html_includes_table(self.product_table)
 
     def test_sorted_by_product_name(self):
-        self.check_ordered_by(self.supplier_table, 'product')
+        self.check_ordered_by(self.product_table, 'product')
 
     def test_table_has_correct_number_of_columns(self):
-        num_columns = len(self.supplier_table.columns)
+        num_columns = len(self.product_table.columns)
         self.assertEquals(4, num_columns)
+
+    def test_verbose_name_for_country_is_registered_in(self):
+        country_column = self.get_nth_value(self.product_table.columns,
+                                            self.COUNTRY_COLUMN)
+        self.assertEquals("Registered In", unicode(country_column))

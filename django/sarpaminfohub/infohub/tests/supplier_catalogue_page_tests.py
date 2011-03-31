@@ -27,7 +27,7 @@ class SupplierCataloguePageTest(PageDisplayTestCase):
         
     def test_registration_country_appears_in_table(self):
         response = self.load_page_with_products_supplied_by_afrifarmacia()
-        self.assertContains(response, "<th>Country</th>")
+        self.assertContains(response, "<th>Registered In</th>")
         self.assertContains(response, "<td class=\"second\">Nibia</td>", count=1)
         self.assertContains(response, "<td class=\"second\">Samgola</td>", count=1)
         
