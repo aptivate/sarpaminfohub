@@ -152,16 +152,23 @@ class SimpleTest(TestCase):
         self.assertNotContains(response,"Medicine</a></li>")
     
     def test_tag_view_presence(self):
-        client = self.client
-        self.login(client)
-        response = client.post('/contacts/tags/Medicine/')
+        response = self.post_tag_page_and_return_response("Medicine")
         self.assertContains(response, "My Name")
     
     def test_tag_view_absence(self):
+        response = self.post_tag_page_and_return_response("Medicine")
+        self.assertNotContains(response, "Aptivate")
+    
+    def post_tag_page_and_return_response(self, tag):
         client = self.client
         self.login(client)
-        response = client.post('/contacts/tags/Medicine/')
-        self.assertNotContains(response, "Aptivate")
+        url = self.get_tags_url(tag)
+        response = client.post(url)
+
+        return response
+    
+    def get_tags_url(self, tag):
+        return "/contacts/tags/" + tag.encode('hex') + "/"
     
     def test_multiple_tag_select(self):
         client = self.client

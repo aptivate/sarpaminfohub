@@ -46,6 +46,9 @@ def tag_search(request):
                 return redirect('/contacts/')
             if api.accessToken(request_token=request_token,request_token_secret=request_token_secret,verifier=verifier):
                 profile = api.GetProfile(fields=["first-name","last-name","honors","specialties","positions","public-profile-url","summary","location","phone-numbers"])
+                print "Location"
+                print profile.location
+                print profile.location.split(',')
                 tags_list = profile.specialties.replace("(","").replace(")","").split(",")
                 trimmed_tag_list = []
                 try:
@@ -55,8 +58,12 @@ def tag_search(request):
                     trimmed_tags = ",".join(set(trimmed_tag_list))[0:511]
                 except:
                     trimmed_tags = ""
-                #assert False, trimmed_tags
+
                 note = "<h4>Summary</h4><p>%s</p><h4>Specialities</h4><p>%s</p>"%(profile.summary,profile.specialties)
+                location_parts = profile.location.split(',')
+                address_line_1 = location_parts[0]
+                country = location_parts[1].strip()
+                country_code = COUNTRY_DICT.get(country, "")
                 contact_data = {
                     'given_name':profile.first_name,
                     'family_name':profile.last_name,
@@ -65,8 +72,8 @@ def tag_search(request):
                     'tags':trimmed_tags,
                     'role':profile.positions[0].title,
                     'organization':profile.positions[0].company,
-                    'address_line_1':profile.location.split(',')[0],
-                    'country':COUNTRY_DICT.get(profile.location.split(',')[1],""),
+                    'address_line_1':address_line_1,
+                    'country':country_code,
                     'linked_in_approval':True,
                 }
                 try:
