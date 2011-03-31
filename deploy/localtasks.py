@@ -50,9 +50,13 @@ def checkout_or_update_fixtures(svnuser=None, svnpass=None):
     # a checkout
     if os.path.exists(os.path.join(fixtures_dir, ".svn")):
         cmd = ['svn', 'update', '--username', svnuser, '--password', svnpass]
+        if env['verbose']:
+            print "Executing command: %s" % ' '.join(cmd)
         subprocess.call(cmd, cwd=fixtures_dir)
     else:
         cmd = ['svn', 'checkout', '--username', svnuser, '--password', svnpass, fixtures_repo]
+        if env['verbose']:
+            print "Executing command: %s" % ' '.join(cmd)
         subprocess.call(cmd, cwd=tasklib.env['django_dir'])
 
 def _move_to_end(list, item):

@@ -18,6 +18,11 @@
 * jenkins - setting up the environment and running tests
 * fabric - it will call a copy on the remote server when deploying
 
+General arguments are:
+
+    -h, --help      Print this help text
+    -v, --verbose   Print extra output while executing
+
 You can pass arguments to the tasks listed below, by adding the argument after a
 colon. So to call deploy and set the environment to staging you could do:
 
@@ -99,6 +104,7 @@ def print_help_text():
 
 def main():
     # parse command line options
+    verbose = False
     try:
         opts, args = getopt.getopt(sys.argv[1:], "h", ["help"])
     except getopt.error, msg:
@@ -109,8 +115,13 @@ def main():
     for o, a in opts:
         if o in ("-h", "--help"):
             print_help_text()
+        if o in ("-v", "--verbose"):
+            verbose = True
     # process arguments - just call the function with that name
     tasklib._setup_paths()
+    if (hasattr(localtasks, '_setup_paths')):
+        localtasks._setup_paths()
+    env['verbose'] = verbose
     if len(args) == 0:
         print_help_text()
     for arg in args:

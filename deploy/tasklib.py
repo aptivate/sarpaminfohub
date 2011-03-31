@@ -59,6 +59,8 @@ def _manage_py(args, cwd=None):
     if cwd == None:
         cwd = env['django_dir']
 
+    if env['verbose']:
+        print 'Executing manage command: %s' % ' '.join(manage_cmd)
     popen = subprocess.Popen(manage_cmd, cwd=cwd, stdout=subprocess.PIPE,
                                 stderr=subprocess.STDOUT)
     for line in iter(popen.stdout.readline, ""):
@@ -112,6 +114,8 @@ def _mysql_exec(mysql_cmd):
     if env['db_port'] != None:
         mysql_call += ['--host=127.0.0.1', '--port=%s' % env['db_port']]
     mysql_call += ['-e']
+    if env['verbose']:
+        print 'Executing MySQL command: %s' % ' '.join(mysql_call + [mysql_cmd])
     subprocess.call(mysql_call + [mysql_cmd])
 
 
@@ -161,10 +165,12 @@ def create_ve():
     
     
 def update_ve():
+    """ Update the virtualenv """
     create_ve()
 
 
 def link_local_settings(environment):
+    """ link local_settings.py.environment as local_settings.py """
     # die if the correct local settings does not exist
     local_settings_env_path = os.path.join(env['django_dir'], 
                                     'local_settings.py.'+environment)
