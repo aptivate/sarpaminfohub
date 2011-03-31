@@ -106,7 +106,7 @@ def main():
     # parse command line options
     verbose = False
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "h", ["help"])
+        opts, args = getopt.getopt(sys.argv[1:], "hv", ["help", "verbose"])
     except getopt.error, msg:
         print msg
         print "for help use --help"
@@ -121,7 +121,7 @@ def main():
     tasklib._setup_paths()
     if (hasattr(localtasks, '_setup_paths')):
         localtasks._setup_paths()
-    env['verbose'] = verbose
+    tasklib.env['verbose'] = verbose
     if len(args) == 0:
         print_help_text()
     for arg in args:

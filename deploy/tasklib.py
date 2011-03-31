@@ -177,7 +177,8 @@ def link_local_settings(environment):
     if not os.path.exists(local_settings_env_path):
         print "Could not find file to link to: %s" % local_settings_env_path
         sys.exit(1)
-    subprocess.call(['rm', 'local_settings.py'], cwd=env['django_dir'])
+    # remove the pyc aswell
+    subprocess.call(['rm', 'local_settings.py', 'local_settings.pyc'], cwd=env['django_dir'])
     subprocess.call(['ln', '-s', 'local_settings.py.'+environment, 'local_settings.py'], 
             cwd=env['django_dir'])
 
