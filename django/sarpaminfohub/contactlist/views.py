@@ -114,3 +114,6 @@ def dehex_tagged_object_list(request, queryset_or_model=None, tag=None,
             queryset_or_model=queryset_or_model, 
             tag=dehexed, related_tags=related_tags, 
             related_tag_counts=related_tag_counts)
+        
+def contacts_iframe(request):
+    return render_to_response('iframe/index.html')

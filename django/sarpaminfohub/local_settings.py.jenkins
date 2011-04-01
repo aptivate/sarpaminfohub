@@ -18,3 +18,5 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 INSTALLED_APPS = (
       'django_jenkins',
     )  + INSTALLED_APPS
+
+HAYSTACK_WHOOSH_STORAGE = 'ram'

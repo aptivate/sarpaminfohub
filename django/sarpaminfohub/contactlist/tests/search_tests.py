@@ -1,29 +1,31 @@
-"""
-This file demonstrates two different styles of tests (one doctest and one
-unittest). These will both pass when you run "manage.py test".
-
-Replace these with more appropriate tests for your application.
-"""
-
-from django.test import TestCase
 from django.contrib.auth.models import User
 from sarpaminfohub.contactlist.models import Contact
 from tagging.models import Tag
+from django.test.testcases import TestCase
+from haystack.management.commands import rebuild_index
 
-class SimpleTest(TestCase):
+class SearchTest(TestCase):
     login_user = None
     def login(self, client):
         if self.login_user is None:
             self.login_user = User.objects.create_user(
                             'admin',
-                            'rimawebsites-team@aptivate.org',
+                            'sarpaminfohub-team@aptivate.org',
                             password='aptivate'
                         )
             self.assertTrue(client.login(
                             username='admin',
                             password='aptivate'))
     def setUp(self):
+        self.rebuildSearchIndex()
+        self.deleteContacts()
         self.createContacts()
+
+    def rebuildSearchIndex(self):
+        rebuild_index.Command().handle(verbosity=0, interactive=False)
+
+    def deleteContacts(self):
+        Contact.objects.all().delete()
     
     def createContacts(self):
         self.contact1 = Contact(given_name="My", family_name="Name", phone="(12345) 678910",

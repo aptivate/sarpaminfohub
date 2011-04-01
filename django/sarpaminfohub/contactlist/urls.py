@@ -1,7 +1,8 @@
 from django.views.generic import list_detail
 from sarpaminfohub.contactlist.models import Contact
 from django.conf.urls.defaults import patterns, url
-from sarpaminfohub.contactlist.views import tag_search, dehex_tagged_object_list
+from sarpaminfohub.contactlist.views import tag_search, dehex_tagged_object_list,\
+    contacts_iframe
 
 contacts_info = {
     'queryset': Contact.objects.all()
@@ -14,4 +15,5 @@ urlpatterns = patterns('',
     url(r'^$', tag_search, name='home'),
     (r'^(?P<object_id>\d+)/$', list_detail.object_detail, contacts_info),
     (r'^tags/(?P<tag>[\w]+)/$', dehex_tagged_object_list, tags_info),
+    url(r'^iframe/', contacts_iframe),
 )
