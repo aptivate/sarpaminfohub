@@ -8,7 +8,7 @@ class ProductTable(SarpamTable):
     country = tables.Column(verbose_name="Registered In")
 
     def __init__(self, rows):
-        tables.MemoryTable.__init__(self, rows, order_by='product')
+        SarpamTable.__init__(self, rows, order_by='product')
     
     def get_rows_template(self):
         return "product_rows.html"

@@ -1,3 +1,4 @@
+# pylint:disable-msg=W0613
 def extra_number_settings_context(request):
     from django.conf import settings
     return {

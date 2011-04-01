@@ -5,6 +5,7 @@ from sarpaminfohub.contactlist.views import tag_search, dehex_tagged_object_list
     contacts_iframe
 
 contacts_info = {
+    # pylint: disable-msg = E1101
     'queryset': Contact.objects.all()
 }
 

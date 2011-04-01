@@ -1,6 +1,8 @@
 from django.conf.urls.defaults import patterns, include
-from django.conf.urls.defaults import handler500, handler404 #@UnusedImport
 from django.conf import settings
+
+#pylint: disable-msg=W0611
+from django.conf.urls.defaults import handler500, handler404 #@UnusedImport
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin

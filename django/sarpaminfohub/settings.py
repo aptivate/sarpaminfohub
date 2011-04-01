@@ -117,4 +117,6 @@ SARPAM_NUMBER_ROUNDING = 3
 SARPAM_NUMBER_FORMAT = ".0%df"%SARPAM_NUMBER_ROUNDING
 SARPAM_CURRENCY_CODE = "USD"
 
+# pylint: disable-msg=W0401
+# pylint: disable-msg=W0614
 from local_settings import * #@UnusedWildImport

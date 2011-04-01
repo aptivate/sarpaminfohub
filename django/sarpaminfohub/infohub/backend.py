@@ -5,6 +5,7 @@ class Backend(object):
         caller = inspect.getouterframes(inspect.currentframe())[1][3]
         raise NotImplementedError(caller + ' must be implemented in subclass')
 
+    # pylint: disable-msg=W0613
     def get_formulations_that_match(self, search_term):
         self.abstract()
 

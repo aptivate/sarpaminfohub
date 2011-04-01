@@ -14,6 +14,7 @@ class DjangoBackend(Backend):
         return msh_price
     
     def get_formulations_that_match(self, search_term):
+        # pylint:disable-msg=E1101
         prices = Price.objects.filter(formulation__name__icontains=search_term)
 
         results = []
@@ -24,6 +25,7 @@ class DjangoBackend(Backend):
         return results
 
     def get_prices_for_formulation_with_id(self, formulation_id):
+        # pylint:disable-msg=E1101
         prices = Price.objects.filter(formulation=formulation_id)
 
         results = []
@@ -34,17 +36,19 @@ class DjangoBackend(Backend):
         return results
 
     def get_formulation_name_with_id(self, formulation_id):
+        # pylint:disable-msg=E1101
         formulation = Formulation.objects.get(pk=formulation_id)
 
         return formulation.name
 
     def get_formulation_msh_with_id(self, formulation_id):
+        # pylint:disable-msg=E1101
         formulation = Formulation.objects.get(pk=formulation_id)
         return self.get_msh_price_from_formulation(formulation)
 
     def get_product_registrations_based_on_formulation_with_id(self,
                                                                formulation_id):
-        
+        # pylint:disable-msg=E1101
         registrations = ProductRegistration.objects.filter(product__formulation=formulation_id)
         
         results = []
@@ -71,6 +75,7 @@ class DjangoBackend(Backend):
         return results
 
     def get_registrations_from_supplier_with_id(self, supplier_id):
+        # pylint:disable-msg=E1101
         return [registration for registration
             in ProductRegistration.objects.filter(supplier=supplier_id)]
 
@@ -85,5 +90,6 @@ class DjangoBackend(Backend):
         return results
 
     def get_name_of_supplier_with_id(self, supplier_id):
+        # pylint:disable-msg=E1101
         supplier = Supplier.objects.get(pk=supplier_id)
         return supplier.name

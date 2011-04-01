@@ -1,6 +1,6 @@
 from sarpaminfohub.infohub.models import ExchangeRate
 
-class CurrencyExchange:
+class CurrencyExchange(object):
     def exchange(self, local_price, currency, year):
         if local_price is None: 
             return None
@@ -9,6 +9,7 @@ class CurrencyExchange:
             return None
         
         try:
+            # pylint: disable-msg=E1101
             exchange = ExchangeRate.objects.get(symbol=currency, year=year)
         except ExchangeRate.DoesNotExist:
             print "Currency = %s, Year = %s" % (currency, year)

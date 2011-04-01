@@ -6,6 +6,10 @@ from haystack.management.commands import rebuild_index
 
 class SearchTest(TestCase):
     login_user = None
+    contact1 = None
+    contact2 = None
+    contact3 = None
+    
     def login(self, client):
         if self.login_user is None:
             self.login_user = User.objects.create_user(
@@ -25,6 +29,7 @@ class SearchTest(TestCase):
         rebuild_index.Command().handle(verbosity=0, interactive=False)
 
     def deleteContacts(self):
+        # pylint: disable-msg=E1101
         Contact.objects.all().delete()
     
     def createContacts(self):
@@ -124,6 +129,7 @@ class SearchTest(TestCase):
         
         unused_tag = Tag(name="Unused")
         unused_tag.save()
+        # pylint:disable-msg=E1101
         response = client.post('/contacts/', {'search_term':"My",
                                               "tags":[unused_tag.id]})
         
@@ -182,7 +188,7 @@ class SearchTest(TestCase):
         
         tag_ids = [hospital_tag_id, medicine_tag_id, surgeon_tag_id]
         
-        response = client.post('/contacts/',{"tags":tag_ids})
+        response = client.post('/contacts/', {"tags":tag_ids})
         self.assertContains(response, 'My Name')
         self.assertNotContains(response, "Aptivate")
         
