@@ -156,7 +156,7 @@ class SearchTest(TestCase):
     def test_contact_view_tag_absence(self):
         client = self.client
         self.login(client)
-        response = client.post('/contacts/3/')
+        response = client.post(self.get_contacts_url(self.contact3),{})
         self.assertNotContains(response,"Medicine</a></li>")
     
     def test_tag_view_presence(self):
