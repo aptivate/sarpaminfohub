@@ -5,6 +5,8 @@ import subprocess
 
 import tasklib
 
+from MySQLdb import OperationalError
+
 # this is the svn repository that holds private fixtures
 fixtures_repo = "https://svn.aptivate.org/svn/reactionsarpam/data/fixtures/"
 
