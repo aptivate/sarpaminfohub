@@ -73,3 +73,6 @@ def load_fixtures():
     fixture_list.sort()
     _move_to_end(fixture_list, "fixtures/initial_data/product_registrations.json")
     tasklib._manage_py(['loaddata'] + fixture_list)
+
+def create_cache_table():
+    tasklib._manage_py('createcachetable sarpam_cache_table')

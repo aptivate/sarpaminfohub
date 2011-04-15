@@ -106,12 +106,7 @@ TEMPLATE_CONTEXT_PROCESSORS = ('django.contrib.auth.context_processors.auth',
 LINKED_IN_API_KEY = "jFIwE5opBJM3bKpQbAYtCkYUZrEq4djATVmqXhr3Qph81qz8rLkN0M-fFY0vcys7"
 LINKED_IN_SECRET_KEY = "sFVDxOJq9k75YYgvzad2bjaqpMsdKQTrW_-PsZljQS-hux1ecdC57OhWTgi4intB"
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'sarpam'
-    }
-}
+CACHE_BACKEND = 'db://sarpam_cache_table'
 
 SARPAM_NUMBER_ROUNDING = 3 
 SARPAM_NUMBER_FORMAT = ".0%df"%SARPAM_NUMBER_ROUNDING

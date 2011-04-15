@@ -110,6 +110,7 @@ def deploy(revision=None):
     link_local_settings()
     create_search_dir()
     update_db()
+    create_cache_table()
     if env.environment == 'production':
         setup_db_dumps()
     sudo(env.tasks_bin + ' load_fixtures')
@@ -123,3 +124,6 @@ def create_search_dir():
     sudo("mkdir -p %s" % search_dir)
     sudo("chown -R apache:apache %s" % search_dir)
     # sudo("chown apache:apache %s/*" % search_dir)
+
+def create_cache_table():
+    sudo(env.tasks_bin + ' create_cache_table')
