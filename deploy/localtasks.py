@@ -75,7 +75,7 @@ def load_fixtures():
     tasklib._manage_py(['loaddata'] + fixture_list)
 
 def create_cache_table():
-    tasklib._get_django_db_settings()
+    (db_engine, db_name, db_user, db_pw, db_port) = tasklib._get_django_db_settings()
     cache_table_name = 'sarpam_cache_table'
-    tasklib._mysql_exec('DROP TABLE IF EXISTS %s' % cache_table_name)
+    tasklib._mysql_exec('DROP TABLE IF EXISTS %s.%s' % (db_name, cache_table_name))
     tasklib._manage_py(['createcachetable', cache_table_name])
