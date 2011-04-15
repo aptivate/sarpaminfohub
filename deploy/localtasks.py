@@ -5,8 +5,6 @@ import subprocess
 
 import tasklib
 
-from MySQLdb import OperationalError
-
 # this is the svn repository that holds private fixtures
 fixtures_repo = "https://svn.aptivate.org/svn/reactionsarpam/data/fixtures/"
 
@@ -77,8 +75,6 @@ def load_fixtures():
     tasklib._manage_py(['loaddata'] + fixture_list)
 
 def create_cache_table():
-    try:
-        tasklib._manage_py(['createcachetable', 'sarpam_cache_table'])
-    except OperationalError:
-        # it already exists, we hope
-        pass
+    cache_table_name = 'sarpam_cache_table'
+    tasklib._mysql_exec('DROP TABLE IF EXISTS %s' % cache_table_name)
+    tasklib._manage_py(['createcachetable', cache_table_name])
