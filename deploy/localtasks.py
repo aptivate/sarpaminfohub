@@ -75,4 +75,8 @@ def load_fixtures():
     tasklib._manage_py(['loaddata'] + fixture_list)
 
 def create_cache_table():
-    tasklib._manage_py(['createcachetable', 'sarpam_cache_table'])
+    try:
+        tasklib._manage_py(['createcachetable', 'sarpam_cache_table'])
+    except OperationalError:
+        # it already exists, we hope
+        pass
