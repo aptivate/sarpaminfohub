@@ -1,7 +1,10 @@
 from django.db import models
 from tagging.fields import TagField
 from tagging.utils import parse_tag_input
-import custom_fields
+from sarpaminfohub.contactlist.search_indexes import ContactIndex
+from haystack import site
+from sarpaminfohub.contactlist import custom_fields
+
 DESIGNATION = (
 ('1', 'Dr'),
 ('2', 'Honorable'),
@@ -45,3 +48,5 @@ class Contact(models.Model):
     
     def __unicode__(self):
         return self.given_name + " " + self.family_name
+    
+site.register(Contact, ContactIndex)
