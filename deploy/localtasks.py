@@ -18,6 +18,17 @@ def deploy(environment=None, svnuser=None, svnpass=None):
     checkout_or_update_fixtures(svnuser, svnpass)
     load_fixtures()
 
+def quick_test():
+    environment = 'dev_fasttests'
+
+    tasklib.create_ve()
+    tasklib.link_local_settings(environment)
+    tasklib.update_db()
+    # checkout_or_update_fixtures(svnuser, svnpass)
+    # load_fixtures()
+    tasklib.run_tests()
+    tasklib.link_local_settings('dev')
+
 def run_jenkins(svnuser, svnpass):
     """ make sure the local settings is correct and the database exists """
     tasklib.update_ve()
