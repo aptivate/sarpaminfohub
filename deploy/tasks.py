@@ -36,8 +36,14 @@ Multiple arguments are separated by commas:
 
 $ ./tasks.py deploy:environment=staging,arg2=somevalue
 
-See the functions in tasklib.py (or localtasks.py) to see what arguments
-the functions accept.
+You can get a description of a function (the docstring, and a basic 
+description of the arguments it takes) by using -d thus:
+
+    -d <function_name>
+
+If you need to know more, then you'll have to look at the code of the 
+function in tasklib.py (or localtasks.py) to see what arguments the 
+function accepts.
 """
 
 import os, sys
@@ -113,11 +119,18 @@ def print_description(task_name, task_function):
     print
     argspec = inspect.getargspec(task_function)
     if len(argspec.args) == 0:
-        print "%s takes no arguments." % task_name
+        if argspec.varargs == None:
+            print "%s takes no arguments." % task_name
+        else:
+            print "%s takes no named arguments, but instead takes a variable " % task_name
+            print "number of arguments."
     else:
         print "Arguments taken by %s:" % task_name
         for arg in argspec.args:
             print "* %s" % arg
+        if argspec.varargs != None:
+            print
+            print "You can also add a variable number of arguments."
     print
 
 

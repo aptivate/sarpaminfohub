@@ -18,17 +18,6 @@ def deploy(environment=None, svnuser=None, svnpass=None):
     checkout_or_update_fixtures(svnuser, svnpass)
     load_fixtures()
 
-def quick_test(*extra_args):
-    environment = 'dev_fasttests'
-
-    tasklib.create_ve()
-    tasklib.link_local_settings(environment)
-    tasklib.update_db()
-    # checkout_or_update_fixtures(svnuser, svnpass)
-    # load_fixtures()
-    tasklib.run_tests(*extra_args)
-    tasklib.link_local_settings('dev')
-
 def run_jenkins(svnuser, svnpass):
     """ make sure the local settings is correct and the database exists """
     tasklib.update_ve()
@@ -70,11 +59,6 @@ def checkout_or_update_fixtures(svnuser=None, svnpass=None):
             print "Executing command: %s" % ' '.join(cmd)
         subprocess.call(cmd, cwd=tasklib.env['django_dir'])
 
-def _move_to_end(list, item):
-    if item in list:
-        list.remove(item)
-        list.append(item)
-
 def load_fixtures():
     # can't pass *.json to subprocess, so these 3 lines do *.json
     fixture_list = filter(lambda fn: fn.endswith('.json'), 
@@ -82,7 +66,6 @@ def load_fixtures():
     fixture_list = map(lambda fn: os.path.join('fixtures', 'initial_data', fn), 
                         fixture_list)
     fixture_list.sort()
-    _move_to_end(fixture_list, "fixtures/initial_data/product_registrations.json")
     tasklib._manage_py(['loaddata'] + fixture_list)
 
 def create_cache_table():

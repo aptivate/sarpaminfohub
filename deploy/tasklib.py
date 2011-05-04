@@ -254,6 +254,15 @@ def setup_db_dumps(dump_dir):
 
 
 def run_tests(*extra_args):
+    """Run the django tests.
+
+    With no arguments it will run all the tests for you apps (as listed in 
+    project_settings.py), but you can also pass in multiple arguments to run
+    the tests for just one app, or just a subset of tests. Examples include:
+
+    ./tasks.py run_tests:myapp
+    ./tasks.py run_tests:myapp.ModelTests,myapp.ViewTests.my_view_test
+    """
     args = ['test', '-v0']
 
     if extra_args:
@@ -263,6 +272,29 @@ def run_tests(*extra_args):
         args += project_settings.django_apps
 
     _manage_py(args)
+
+
+def quick_test(*extra_args):
+    """Run the django tests with local_settings.py.dev_fasttests
+
+    local_settings.py.dev_fasttests (should) use port 3307 so it will work
+    with a mysqld running with a ramdisk, which should be a lot faster. The
+    original environment will be reset afterwards.
+
+    With no arguments it will run all the tests for you apps (as listed in 
+    project_settings.py), but you can also pass in multiple arguments to run
+    the tests for just one app, or just a subset of tests. Examples include:
+
+    ./tasks.py quick_test:myapp
+    ./tasks.py quick_test:myapp.ModelTests,myapp.ViewTests.my_view_test
+    """
+    original_environment = _infer_environment()
+
+    link_local_settings('dev_fasttests')
+    create_ve()
+    update_db()
+    run_tests(*extra_args)
+    link_local_settings(original_environment)
 
 
 def _install_django_jenkins():
