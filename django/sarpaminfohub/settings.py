@@ -81,6 +81,11 @@ TEMPLATE_DIRS = (
     os.path.join(settings_dir, 'templates')
 )
 
+# The list of directories to search for fixtures - overrides Django's global_settings.py
+FIXTURE_DIRS = (
+    os.path.join(settings_dir, 'fixtures', 'initial_data'),
+)
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
