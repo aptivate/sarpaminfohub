@@ -141,7 +141,8 @@ class Product(models.Model):
         return record
 
 class ProductRegistration(models.Model):
-    product = models.ForeignKey(Product)
+    product = models.ForeignKey(Product, related_name="registrations")
     supplier = models.ForeignKey(Supplier, null=True)
     country = models.ForeignKey(Country)
     manufacturer = models.ForeignKey(Manufacturer, null=True)
+    
