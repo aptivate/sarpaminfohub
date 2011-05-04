@@ -1,0 +1,53 @@
+{%  extends 'page.html' %}
+
+{% block main %}
+<div id="content">
+    <div id="product_info">
+    	<table class="data">
+			<tr>
+				<th>Formulation</th>
+				<td><a href="{% url formulation-by-id formulation_id=product.formulation.id backend_name="" %}">{{ product.formulation.name }}</a></td>
+			</tr>
+			<tr>
+				<th>INN (molecule name)</th>
+				<td>XXX</td>
+			</tr>
+			<tr>
+				<th>Dosage</th>
+				<td>XXX</td>
+			</tr>
+			<tr>
+				<th>Packaging</th>
+				<td>XXX</td>
+			</tr>
+			<tr>
+				<th>Unit of issue</th>
+				<td>XXX</td>
+			</tr>
+		</table>
+		
+		<table class="data">
+			<tr>
+				<th>Country</th>
+				<th>Supplier</th>
+				<th>Manufacturer</th>
+				<th>Price</th>
+			</tr>
+			{% for reg in product.registrations.all %}
+			<tr>
+				<td>{{ reg.country.name }}</td>
+				<td>
+					{% if reg.supplier %}
+						<a href="{% url suppliers supplier_id=reg.supplier.id backend_name="" %}">{{ reg.supplier.name }}</a>
+					{% else %}
+						Unknown
+					{% endif %}
+				</td>
+				<td>{{ reg.manufacturer.name }}</td>
+				<td>XXX</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+</div>
+{% endblock main %}

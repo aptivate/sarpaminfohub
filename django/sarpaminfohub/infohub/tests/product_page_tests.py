@@ -1,7 +1,14 @@
 # -*- coding: iso-8859-15 -*-
 from sarpaminfohub.infohub.tests.page_display_test_case import PageDisplayTestCase
+from sarpaminfohub.infohub.models import Product
+import sarpaminfohub.infohub.views
+import django.core.urlresolvers  
 
 class ProductPageTest(PageDisplayTestCase):
+    fixtures = ['00_formulations', '00_fictitious_countries',
+        '00_manufacturers', '00_suppliers', '10_products',
+        '20_product_registrations']
+    
     def test_suppliers_list_uses_correct_template(self):
         response = self.load_page_with_suppliers_of_amitriptyline()
         self.assertTemplateUsed(response, 'formulation_products.html')
@@ -60,4 +67,23 @@ class ProductPageTest(PageDisplayTestCase):
 
     def load_page_with_suppliers_of_amitriptyline(self):
         return self.client.get('/formulation_products/1/test')
+
+    def get(self, view_function, **view_args):
+        return self.client.get(django.core.urlresolvers.reverse(view_function,
+            kwargs=view_args))
     
+    def test_product_landing_page_zovirax(self):
+        zovirax = Product.objects.get(name="ZOVIRAX 200MG DISPERSABLE TABLET")
+        response = self.get(sarpaminfohub.infohub.views.product_page,
+            product_name=zovirax.name)
+        self.assertEqual(response.context['product'], zovirax)
+        self.assertTrue(len(zovirax.registrations.all()) > 0)
+        
+    # this one has a supplier, which should be linked to
+    def test_product_landing_page_lovire(self):
+        lovire = Product.objects.get(name="Lovire 200 Tablets")
+        response = self.get(sarpaminfohub.infohub.views.product_page,
+            product_name=lovire.name)
+        self.assertEqual(response.context['product'], lovire)
+        self.assertTrue(len(lovire.registrations.all()) > 0)
+        self.assertNotEqual(None, lovire.registrations.all()[0])

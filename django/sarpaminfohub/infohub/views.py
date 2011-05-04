@@ -1,18 +1,20 @@
-from django.shortcuts import render_to_response
-from sarpaminfohub.infohub.results_table import ResultsTable
-from sarpaminfohub.infohub.drug_searcher import DrugSearcher
-from sarpaminfohub.infohub.django_backend import DjangoBackend
-from sarpaminfohub.infohub.test_backend import TestBackend
-from sarpaminfohub.infohub.formulation_table import FormulationTable
-from sarpaminfohub.infohub.formulation_graph import FormulationGraph
-from django.core.urlresolvers import reverse
-from sarpaminfohub.infohub.product_table import ProductTable
-from sarpaminfohub.infohub.menu import Menu
-from sarpaminfohub.infohub.forms import SearchForm
 from django.template import RequestContext
+from django.shortcuts import render_to_response
+from django.core.urlresolvers import reverse
 
 from copy import deepcopy
+
+from sarpaminfohub.infohub.django_backend import DjangoBackend
+from sarpaminfohub.infohub.drug_searcher import DrugSearcher
+from sarpaminfohub.infohub.forms import SearchForm
+from sarpaminfohub.infohub.formulation_graph import FormulationGraph
+from sarpaminfohub.infohub.formulation_table import FormulationTable
+from sarpaminfohub.infohub.menu import Menu
+from sarpaminfohub.infohub.models import Product
 from sarpaminfohub.infohub.price_popup import PricePopup
+from sarpaminfohub.infohub.product_table import ProductTable
+from sarpaminfohub.infohub.results_table import ResultsTable
+from sarpaminfohub.infohub.test_backend import TestBackend
 
 def get_backend(name):
     if name == "test":
@@ -140,3 +142,9 @@ def get_search_results_tab():
 
 def get_tab(href, text):
     return {'href' : href, 'text' : text}
+
+def product_page(request, product_name):
+    product = Product.objects.get(name=product_name)
+    return render_to_response('product_page.html',
+        RequestContext(request, dict(sub_title=product.name, product=product,
+            search_form = SearchForm())))

@@ -1,6 +1,10 @@
 {% for row in table.rows %}
   <tr>
-    <td class="first">{{ row.product.name }}</td>
+    <td class="first">
+    	{% if row.product.name %}
+    		<a href="{% url product-page product_name=row.product.name %}">{{ row.product.name }}</a>
+    	{% endif %}
+    </td>
     <td class="second">
         <a href="{{row.supplier.url}}">{{ row.supplier.name }}</a>
     </td>
