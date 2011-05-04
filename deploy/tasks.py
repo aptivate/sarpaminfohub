@@ -44,6 +44,7 @@ import os, sys
 import getopt
 import getpass
 import subprocess 
+import inspect
 
 import tasklib
 
@@ -102,11 +103,45 @@ def print_help_text():
     sys.exit(0)
 
 
+def print_description(task_name, task_function):
+    print "%s:" % task_name
+    print
+    if task_function.func_doc != None:
+        print task_function.func_doc
+    else:
+        print "No description found for %s" % task_name
+    print
+    argspec = inspect.getargspec(task_function)
+    if len(argspec.args) == 0:
+        print "%s takes no arguments." % task_name
+    else:
+        print "Arguments taken by %s:" % task_name
+        for arg in argspec.args:
+            print "* %s" % arg
+    print
+
+
+def describe_task(args):
+    for arg in args:
+        task = arg.split(':', 1)[0]
+        if hasattr(localtasks, task):
+            taskf = getattr(localtasks, task)
+            print_description(task, taskf)
+        elif hasattr(tasklib, task):
+            taskf = getattr(tasklib, task)
+            print_description(task, taskf)
+        else:
+            print "%s: no such task found" % task
+            print
+        sys.exit(0)
+
+
 def main():
     # parse command line options
     verbose = False
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hv", ["help", "verbose"])
+        opts, args = getopt.getopt(sys.argv[1:], "dhv", 
+                ["description", "help", "verbose"])
     except getopt.error, msg:
         print msg
         print "for help use --help"
@@ -117,6 +152,8 @@ def main():
             print_help_text()
         if o in ("-v", "--verbose"):
             verbose = True
+        if o in ("-d", "--description"):
+            describe_task(args)
     # process arguments - just call the function with that name
     tasklib._setup_paths()
     if (hasattr(localtasks, '_setup_paths')):

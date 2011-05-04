@@ -53,8 +53,8 @@ def deploy_clean(revision=None):
     # TODO: also clean the database?? After dump??
     with settings(warn_only=True):
         apache_cmd('stop')
-    sudo('rm -rf %s' % env.project_root)
     clean_db()
+    sudo('rm -rf %s' % env.project_root)
     deploy(revision)
 
 
@@ -70,6 +70,7 @@ def deploy(revision=None):
         update_requirements()
     if env.project_type == "django":
         link_local_settings()
+        rm_pyc_files()
         update_db()
         if env.environment == 'production':
             setup_db_dumps()
@@ -92,7 +93,11 @@ def remote_test():
 
 
 def checkout_or_update(revision=None):
-    """ checkout the project from subversion """
+    """ checkout or update the project from version control.
+    
+    This command works with both svn and git repositories.
+    
+    You can also specify a revision to checkout, as an argument."""
     require('project_root', 'repo_type', 'vcs_root', 'repository',
         provided_by=env.valid_envs)
     if env.repo_type == "svn":
@@ -101,14 +106,14 @@ def checkout_or_update(revision=None):
         # if the .svn directory exists, do an update, otherwise do
         # a checkout
         if files.exists(os.path.join(env.vcs_root, ".svn")):
-            cmd = 'svn update --username %s --password %s' % (env.svnuser, env.svnpass)
+            cmd = 'svn update --non-interactive --username %s --password %s' % (env.svnuser, env.svnpass)
             if revision:
                 cmd += " --revision " + revision
             with cd(env.vcs_root):
                 with hide('running'):
                     sudo(cmd)
         else:
-            cmd = 'svn checkout --username %s --password %s %s' % (env.svnuser, env.svnpass, env.repository)
+            cmd = 'svn checkout --non-interactive --username %s --password %s %s' % (env.svnuser, env.svnpass, env.repository)
             if revision:
                 cmd += "@" + revision
             with cd(env.project_root):
@@ -159,7 +164,7 @@ def touch():
 
 
 def link_local_settings():
-    """link the apache.conf file"""
+    """link the local_settings.py file for this environment"""
     require('tasks_bin', provided_by=env.valid_envs)
     sudo(env.tasks_bin + ' link_local_settings:' + env.environment)
 
@@ -172,6 +177,12 @@ def link_local_settings():
     # touch the wsgi file to reload apache
     touch()
 
+
+def rm_pyc_files():
+    """Remove all the old pyc files to prevent stale files being used"""
+    require('django_dir', provided_by=env.valid_envs)
+    with cd(env.django_dir):
+        sudo('find . -name *.pyc | xargs rm')
 
 def link_apache_conf():
     """link the apache.conf file"""
