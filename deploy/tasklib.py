@@ -253,9 +253,15 @@ def setup_db_dumps(dump_dir):
         os.chmod(cron_file, 0755)
 
 
-def run_tests():
+def run_tests(*extra_args):
     args = ['test', '-v0']
-    args.extend(project_settings.django_apps)
+
+    if extra_args:
+        args += extra_args
+    else:
+        # default to running all tests
+        args += project_settings.django_apps
+
     _manage_py(args)
 
 
