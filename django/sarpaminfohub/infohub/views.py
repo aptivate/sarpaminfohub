@@ -143,8 +143,18 @@ def get_search_results_tab():
 def get_tab(href, text):
     return {'href' : href, 'text' : text}
 
+def product_page_tab(product, selected):
+    if selected:
+        href = None
+    else:
+        href = reverse(product_page, args=[product.name])
+    
+    return get_tab(href, "Details")
+
 def product_page(request, product_name):
     product = Product.objects.get(name=product_name)
     return render_to_response('product_page.html',
-        RequestContext(request, dict(sub_title=product.name, product=product,
+        RequestContext(request, dict(sub_title=product.name,
+            menu = Menu([product_page_tab(product, True)]),
+            product=product,
             search_form = SearchForm())))

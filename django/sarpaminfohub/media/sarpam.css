@@ -144,14 +144,14 @@ td, th
   background-color: white ; 
 }
 
-table.data, #pricegraph table
+table.data, table.form, #pricegraph table 
 {
     margin:1em auto;
     width:95%;
 	background-color: #C9D1FF;
 }
 
-table.data td
+table.data td, table.form td, table.form th
 {
    	border-color: #5b66a6 ; 
 	border-width: 1px 0 ;
@@ -165,6 +165,16 @@ table.data th
 	border-bottom: 1px solid #C9D1FF;
 	text-align:left;
 }
+
+table.form th
+{
+	text-align:left;
+}
+
+table.form td
+{
+	width: 70%;
+} 
 
 #pricegraph .graph {
     -moz-border-radius: 10px 10px 10px 10px;
