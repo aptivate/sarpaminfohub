@@ -9,20 +9,24 @@
 				<td><a href="{% url formulation-by-id formulation_id=product.formulation.id backend_name="" %}">{{ product.formulation.name }}</a></td>
 			</tr>
 			<tr>
-				<th>INN (molecule name)</th>
-				<td>XXX</td>
+				<th>INN (generic molecule name)</th>
+				<td>{{ product.formulation.generic_name }}</td>
 			</tr>
 			<tr>
-				<th>Dosage</th>
-				<td>XXX</td>
+				<th>WHO Prequalified</th>
+				<td>{{ product.formulation.who_prequalified|yesno }}</td>
+			</tr>
+			<tr>
+				<th>Strength</th>
+				<td>{{ product.formulation.strength }}</td>
 			</tr>
 			<tr>
 				<th>Packaging</th>
-				<td>XXX</td>
+				<td>{{ product.packaging }}</td>
 			</tr>
 			<tr>
 				<th>Unit of issue</th>
-				<td>XXX</td>
+				<td>{{ product.unit_of_issue }}</td>
 			</tr>
 		</table>
 		
@@ -31,7 +35,6 @@
 				<th>Country</th>
 				<th>Supplier</th>
 				<th>Manufacturer</th>
-				<th>Price</th>
 			</tr>
 			{% for reg in product.registrations.all %}
 			<tr>
@@ -44,7 +47,6 @@
 					{% endif %}
 				</td>
 				<td>{{ reg.manufacturer.name }}</td>
-				<td>XXX</td>
 			</tr>
 			{% endfor %}
 		</table>
