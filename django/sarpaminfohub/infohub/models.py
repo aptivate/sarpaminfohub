@@ -4,6 +4,9 @@ from django.core.exceptions import ObjectDoesNotExist
 
 class Formulation(models.Model):
     name = models.CharField(max_length=200)
+    generic_name = models.CharField(max_length=50)
+    who_prequalified = models.BooleanField()
+    strength = models.CharField(max_length=50)
 
     def get_url(self):
         return reverse('formulation-by-id', args=[str(self.id), ""])
@@ -125,8 +128,10 @@ class MSHPrice(models.Model):
     price = models.DecimalField(max_digits=20, decimal_places=6, null=True)
 
 class Product(models.Model):
-    formulation = models.ForeignKey(Formulation)
     name = models.CharField(max_length=200)
+    formulation = models.ForeignKey(Formulation)
+    packaging = models.CharField(max_length=100)
+    unit_of_issue = models.CharField(max_length=100)
 
     def get_record(self):
         record = {}
@@ -145,4 +150,3 @@ class ProductRegistration(models.Model):
     supplier = models.ForeignKey(Supplier, null=True)
     country = models.ForeignKey(Country)
     manufacturer = models.ForeignKey(Manufacturer, null=True)
-    
