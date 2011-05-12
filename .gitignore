@@ -15,6 +15,7 @@ django/sarpaminfohub/reports
 django/sarpaminfohub/.ve
 django/sarpaminfohub/distribute-*.tar.gz
 scripts/*.json
+scripts/.nfs*
 reports/*
 .settings/*
 .pydevproject
