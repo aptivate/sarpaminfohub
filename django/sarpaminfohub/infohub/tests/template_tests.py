@@ -15,7 +15,7 @@ class TemplateTest(TestCase):
 
     def test_iframe_page_contains_title(self):
         response = self.load_iframe_and_return_response()
-        self.assertContains(response, "Drug Price Database", count=2)
+        self.assertContains(response, "Drug Price Database")
 
     def test_iframe_pricing_template_used(self):
         response = self.load_iframe_and_return_response()

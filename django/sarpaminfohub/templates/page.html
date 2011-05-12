@@ -13,28 +13,42 @@
         <link href="/site_media/sarpam.css" media="screen" rel="stylesheet" type="text/css" />
     </head>
     <body class="standalone">
-			<div id="page">
-        <div id="header">
-            <img src="/site_media/SARPAM-Logo.gif" width="201" height="68" alt="SARPAM" />
-        </div>
-		{% if search_form %}
-        <form id="search" action="/">
-            {{ search_form.as_p }}
-            <input type="submit" value="Search" />
-        </form>
-        {% endif %}
-        
-        <h2>{{ sub_title }}</h2>
-        
-        <div class='main'>
-        {% if menu %}
-        {{ menu.as_html }}
-        {% endif %}
-        
-        {% block main %}
-        <p>Nothing here yet...</p>
-        {% endblock %}
-        </div>
-			</div>
+		<div id="page">
+            <div id="header">
+                <h1>Drug Price Database</h1>
+                
+                <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing
+                elit. In viverra ornare vulputate. Morbi porta
+                tincidunt pellentesque. Ut eu lacus non ipsum suscipit
+                tempor quis a eros. Donec nec purus
+                libero. Suspendisse accumsan volutpat
+                </p>    
+            </div>
+    		{% if search_form %}
+    		<div id="search_container">
+        		<p id="search_text">
+        		Search drugs by molecule, for example search for
+        		<a href="/?search=aciclovir">aciclovir</a> or <a href="/?search=">list all</a>
+        		</p>
+                <form id="search" action="/">
+                    {{ search_form.as_p }}
+                    <input type="submit" value="Search" />
+                </form>
+            </div>
+            {% endif %}
+            
+            <h2>{{ sub_title }}</h2>
+            
+            <div class='main'>
+            {% if menu %}
+            {{ menu.as_html }}
+            {% endif %}
+            
+            {% block main %}
+            <p>Nothing here yet...</p>
+            {% endblock %}
+            </div>
+		</div>
     </body>
 </html>

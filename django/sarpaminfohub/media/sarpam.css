@@ -11,6 +11,29 @@ body
     background-color:#ffffff;
 }
 
+#search_container
+{
+    width:100%;
+    float:left;
+    clear:both;
+}
+
+#search_text, #search
+{
+    float:left;
+}
+
+#search
+{
+    width:65%;
+}
+
+#search_text
+{
+    width:35%;
+}
+
+
 #map
 { 
   float:left;
@@ -75,6 +98,7 @@ ul.menu li
 h1
 { 
   font-size:x-large;
+  color:#333;
 }
 
 h2
@@ -241,13 +265,7 @@ table.form td
 
 #header p
 { 
-  float:right;
-  font-size:x-small;
-}
-
-form
-{ 
-  clear:both;
+    width:75%;
 }
 
 form p
