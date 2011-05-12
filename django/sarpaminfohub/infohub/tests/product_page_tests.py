@@ -1,89 +1,82 @@
 # -*- coding: iso-8859-15 -*-
 from sarpaminfohub.infohub.tests.page_display_test_case import PageDisplayTestCase
-from sarpaminfohub.infohub.models import Product
+from sarpaminfohub.infohub.models import Product, Formulation,\
+    ProductRegistration, Manufacturer, Country, Supplier
 import sarpaminfohub.infohub.views
 import django.core.urlresolvers  
 
 class ProductPageTest(PageDisplayTestCase):
-    fixtures = ['00_formulations', '00_fictitious_countries',
-        '00_manufacturers', '00_suppliers', '10_products',
-        '20_product_registrations']
-    
-    def test_suppliers_list_uses_correct_template(self):
-        response = self.load_page_with_suppliers_of_amitriptyline()
-        self.assertTemplateUsed(response, 'formulation_products.html')
-
-    def test_suppliers_template_based_on_page_template(self):
-        response = self.load_page_with_suppliers_of_amitriptyline()
-        self.assertTemplateUsed(response, 'page.html')
-
-    def test_suppliers_list_for_amitriptyline_includes_amitrilon_25(self):
-        response = self.load_page_with_suppliers_of_amitriptyline()
-        self.assertContains(response, "AMITRILON-25")
-
-    def test_suppliers_list_for_amitriptyline_includes_afrifarmacia(self):
-        response = self.load_page_with_suppliers_of_amitriptyline()
-        self.assertContains(response, u"Afrifármacia, Lda")
+    def test_product_landing_page_contains_zovirax(self):
+        self.create_zovirax()
         
-    def test_suppliers_list_for_amitriptyline_includes_aspen_pharmacare(self):
-        response = self.load_page_with_suppliers_of_amitriptyline()
-        self.assertContains(response, "Aspen Pharmacare Ltd, S.A")
-
-    def test_search_field_visible_on_page(self):
-        self.check_search_field_visible_on_page('/formulation_products/1/test')
-
-    def test_page_has_link_to_prices(self):
-        response = self.load_page_with_suppliers_of_amitriptyline()
-        self.check_link_visible_on_page(response,
-                                        href="/formulation/1/test",
-                                        text="Procurement Prices")
-
-    def test_similar_products_tab_is_selected(self):
-        response = self.load_page_with_suppliers_of_amitriptyline()
-        self.check_tab_is_selected(response, "Similar Products")
-
-    def test_suppliers_list_to_supplier_catalogue(self):
-        response = self.load_page_with_suppliers_of_amitriptyline()
-        self.check_link_visible_on_page(response,
-            href="/suppliers/1/test", text=u"Afrifármacia, Lda", count=2)
-        self.check_link_visible_on_page(response,
-            href="/suppliers/2/test", text="Aspen Pharmacare Ltd, S.A", count=1)
-
-    def test_title_appears_above_table(self):
-        response = self.load_page_with_suppliers_of_amitriptyline()
-        self.check_sub_title_is(response, "amitriptyline 25mg tablet")
-        
-    def test_manufacturers_for_amitriptyline_includes_stallion_laboratories(self):
-        response = self.load_page_with_suppliers_of_amitriptyline()
-        self.assertContains(response, "STALLION LABORATORIES LTD-INDIA")
-        
-    def test_countries_supplying_amitriptyline_includes_nibia(self):
-        response = self.load_page_with_suppliers_of_amitriptyline()
-        self.assertContains(response, "Nibia", 1)
-        
-    def test_countries_supplying_amitriptyline_includes_samgola(self):
-        response = self.load_page_with_suppliers_of_amitriptyline()
-        self.assertContains(response, "Samgola", count=2)
-
-    def load_page_with_suppliers_of_amitriptyline(self):
-        return self.client.get('/formulation_products/1/test')
-
-    def get(self, view_function, **view_args):
-        return self.client.get(django.core.urlresolvers.reverse(view_function,
-            kwargs=view_args))
-    
-    def test_product_landing_page_zovirax(self):
         zovirax = Product.objects.get(name="ZOVIRAX 200MG DISPERSABLE TABLET")
         response = self.get(sarpaminfohub.infohub.views.product_page,
             product_name=zovirax.name)
         self.assertEqual(response.context['product'], zovirax)
         self.assertTrue(len(zovirax.registrations.all()) > 0)
         
-    # this one has a supplier, which should be linked to
-    def test_product_landing_page_lovire(self):
+    def test_product_landing_page_for_product_with_supplier(self):
+        self.create_lovire()
+        
         lovire = Product.objects.get(name="Lovire 200 Tablets")
         response = self.get(sarpaminfohub.infohub.views.product_page,
             product_name=lovire.name)
         self.assertEqual(response.context['product'], lovire)
         self.assertTrue(len(lovire.registrations.all()) > 0)
         self.assertNotEqual(None, lovire.registrations.all()[0])
+
+    def get(self, view_function, **view_args):
+        return self.client.get(django.core.urlresolvers.reverse(view_function,
+            kwargs=view_args))
+
+    def create_zovirax(self):
+        aciclovir = self.create_and_return_aciclovir()
+        zovirax = Product(name="ZOVIRAX 200MG DISPERSABLE TABLET",
+                          formulation=aciclovir)
+        zovirax.save()
+        
+        self.create_zovirax_registration(zovirax)
+        
+    def create_and_return_aciclovir(self):
+        aciclovir = Formulation(name="aciclovir 200mg tablet")
+        aciclovir.save()
+
+        return aciclovir
+
+    def create_zovirax_registration(self, zovirax):
+        glaxo = Manufacturer(name="GLAXO SMITHKLINE (PTY) LTD, SA")
+        glaxo.save()
+        
+        sangala = self.create_and_return_sangala()
+        
+        registration = ProductRegistration(product=zovirax, country=sangala,
+                                           manufacturer=glaxo)
+        registration.save()
+
+    def create_lovire(self):
+        aciclovir = self.create_and_return_aciclovir()
+        
+        lovire = Product(name="Lovire 200 Tablets", formulation=aciclovir)
+        lovire.save()
+        
+        self.create_lovire_registration(lovire)
+        
+    def create_lovire_registration(self, lovire):
+        ranbaxy = Manufacturer(name="Ranbaxy Laboratories Ltd, India")
+        ranbaxy.save()
+        
+        sangala = self.create_and_return_sangala()
+        
+        supplier = Supplier(name="CIPLA MEDPRO, RSA (company name)")
+        supplier.save()
+        
+        registration = ProductRegistration(product=lovire, country=sangala,
+                                           manufacturer=ranbaxy, 
+                                           supplier=supplier)
+        registration.save()
+
+    def create_and_return_sangala(self):
+        sangala = Country(pk="XL", name="Sangala")
+        sangala.save()
+
+        return sangala

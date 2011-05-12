@@ -21,9 +21,9 @@ class SearchTest(TestCase):
                             username='admin',
                             password='aptivate'))
     def setUp(self):
-        self.rebuildSearchIndex()
         self.deleteContacts()
         self.createContacts()
+        self.rebuildSearchIndex()
 
     def rebuildSearchIndex(self):
         rebuild_index.Command().handle(verbosity=0, interactive=False)

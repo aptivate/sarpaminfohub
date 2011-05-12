@@ -4,6 +4,7 @@ from exchange_tests import *
 from formulation_page_tests import *
 from formulation_table_tests import *
 from formulation_graph_tests import *
+from formulation_product_page_tests import *
 from incoterm_tests import *
 from media_tests import *
 from menu_tests import *

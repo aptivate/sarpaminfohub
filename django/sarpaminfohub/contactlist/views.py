@@ -37,4 +37,5 @@ def dehex_tagged_object_list(request, queryset_or_model=None, tag=None,
             related_tag_counts=related_tag_counts)
         
 def contacts_iframe(request):
-    return render_to_response('iframe/index.html')
+    extra_context = {'iframe_url':'/contacts/', 'iframe_title':"Expert Search"}
+    return render_to_response('iframe/contacts.html', extra_context)

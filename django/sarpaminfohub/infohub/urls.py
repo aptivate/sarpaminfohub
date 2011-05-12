@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import patterns, url, include
 from django.contrib import admin
 import sarpaminfohub.infohub.views
+from sarpaminfohub.infohub.views import pricing_iframe
 
 admin.autodiscover()
 
@@ -21,4 +22,5 @@ urlpatterns += patterns('sarpaminfohub.infohub.views',
     url(r'product/(?P<product_name>.+)$',
         view=sarpaminfohub.infohub.views.product_page,
         name='product-page'),
+    url(r'iframe/', view=pricing_iframe),
 )

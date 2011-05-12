@@ -158,3 +158,7 @@ def product_page(request, product_name):
             menu = Menu([product_page_tab(product, True)]),
             product=product,
             search_form = SearchForm())))
+    
+def pricing_iframe(request):
+    extra_context = {'iframe_url':'/', 'iframe_title':"Drug Price Database"}
+    return render_to_response('iframe/pricing.html', extra_context)
