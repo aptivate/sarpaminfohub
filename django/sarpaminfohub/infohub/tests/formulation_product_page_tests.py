@@ -1,6 +1,5 @@
 # -*- coding: iso-8859-15 -*-
 from sarpaminfohub.infohub.tests.page_display_test_case import PageDisplayTestCase
-import django.core.urlresolvers  
 
 class FormulationProductPageTest(PageDisplayTestCase):
     def test_suppliers_list_uses_correct_template(self):
@@ -32,6 +31,12 @@ class FormulationProductPageTest(PageDisplayTestCase):
                                         href="/formulation/1/test",
                                         text="Procurement Prices")
 
+    def test_page_has_link_to_product(self):
+        response = self.load_page_with_suppliers_of_amitriptyline()
+        self.check_link_visible_on_page(response,
+                                        href="/product/1",
+                                        text="AMITRILON-25", count=2)
+
     def test_similar_products_tab_is_selected(self):
         response = self.load_page_with_suppliers_of_amitriptyline()
         self.check_tab_is_selected(response, "Similar Products")
@@ -45,7 +50,7 @@ class FormulationProductPageTest(PageDisplayTestCase):
 
     def test_title_appears_above_table(self):
         response = self.load_page_with_suppliers_of_amitriptyline()
-        self.check_sub_title_is(response, "amitriptyline 25mg tablet")
+        self.check_sub_sub_title_is(response, "amitriptyline 25mg tablet")
         
     def test_manufacturers_for_amitriptyline_includes_stallion_laboratories(self):
         response = self.load_page_with_suppliers_of_amitriptyline()
@@ -59,9 +64,9 @@ class FormulationProductPageTest(PageDisplayTestCase):
         response = self.load_page_with_suppliers_of_amitriptyline()
         self.assertContains(response, "Samgola", count=2)
 
+    def test_formulation_sub_title_appears_on_page(self):
+        response = self.load_page_with_suppliers_of_amitriptyline()
+        self.check_sub_title_is(response, "Formulation")
+
     def load_page_with_suppliers_of_amitriptyline(self):
         return self.client.get('/formulation_products/1/test')
-
-    def get(self, view_function, **view_args):
-        return self.client.get(django.core.urlresolvers.reverse(view_function,
-            kwargs=view_args))

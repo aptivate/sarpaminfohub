@@ -50,7 +50,7 @@ class FormulationPageTest(PageDisplayTestCase):
 
     def test_formulation_name_appears_above_formulation_table(self):
         response = self.load_page_for_formulation_amitriptyline_prices()
-        self.check_sub_title_is(response, "amitriptyline 25mg tablet")
+        self.check_sub_sub_title_is(response, "amitriptyline 25mg tablet")
 
     def test_form_visible_on_page(self):
         response = self.load_page_for_formulation_amitriptyline_prices()
@@ -110,6 +110,10 @@ class FormulationPageTest(PageDisplayTestCase):
             (expected_name, expected_value)
         self.assertContains(response, expected_field)
         
+    def test_formulation_sub_title_appears_on_page(self):
+        response = self.load_page_for_formulation_amitriptyline_prices()
+        self.check_sub_title_is(response, "Formulation")
+
     def load_page_for_formulation_amitriptyline_prices(self):
         response = self.client.get('/formulation/1/test/')
         return response

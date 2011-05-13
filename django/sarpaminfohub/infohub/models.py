@@ -135,6 +135,7 @@ class Product(models.Model):
 
     def get_record(self):
         record = {}
+        record['id'] = self.id
         record['name'] = self.name
         return record
 

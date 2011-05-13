@@ -7,7 +7,7 @@ body
 
 #page 
 {
-    width:850px;
+    width:940px;
     background-color:#ffffff;
 }
 
@@ -98,12 +98,12 @@ ul.menu li
 h1
 { 
   font-size:x-large;
-  color:#333;
 }
 
 h2
 { 
   font-size:large;
+  color:#abbb81;
 }
 
 h3
@@ -114,6 +114,11 @@ h3
 h4
 { 
   font-size:small;
+}
+
+h1, h3
+{
+  color:#16223A;
 }
 
 table

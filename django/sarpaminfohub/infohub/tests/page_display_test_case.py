@@ -16,13 +16,28 @@ class PageDisplayTestCase(SarpamTestCase):
         self.assertContains(response, expected_link, count=count)
 
     def check_tab_is_selected(self, response, text):
-        self.assertContains(response, text, count=1)
+        self.assertContains(response, text)
         expected_li = "<li class=\"selected\">" + text + "</li>"
         self.assertContains(response, expected_li, count=1)
 
     def check_sub_title_is(self, response, expected_title):
-        self.assertContains(response, "<h2>", count=1)
-        self.assertContains(response, "</h2>", count=1)
+        self.check_heading(response, "h2", 'sub_title', expected_title)
+
+    def check_sub_sub_title_is(self, response, expected_title):
+        self.check_heading(response, tag_name="h3",
+                           context_variable='sub_sub_title', 
+                           expected_title=expected_title)
+
+    def check_heading(self, response, tag_name, context_variable,
+                      expected_title):
+        
+        open_tag = "<%s>" % tag_name
+        close_tag = "</%s>" % tag_name
+        self.assertEquals(expected_title, response.context[context_variable])
+        self.assertContains(response, open_tag, count=1)
+        self.assertContains(response, close_tag, count=1)
                 
         self.assertContains(response, expected_title)
-        self.assertContains(response, "<h2>" + expected_title + "</h2>", count=1)
+        self.assertContains(response, open_tag + expected_title + close_tag,
+                            count=1)
+         

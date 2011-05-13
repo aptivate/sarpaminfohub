@@ -1,5 +1,7 @@
 package org.aptivate.sarpaminfohub;
 
+import java.math.BigInteger;
+
 import org.aptivate.web.utils.HtmlIterator;
 
 import com.meterware.httpunit.WebForm;
@@ -9,28 +11,9 @@ public class IntegrationTest extends SarpamInfoHubTest
 {
 	private static String host = "http://localhost:8000/";
 	
-	private String getSearchPageUrl()
-	{
-		return host;
-	}
-	
-	private WebResponse loadSearchPage(String query) throws Exception
-	{
-		String searchPageUrl = getSearchPageUrl();
-		
-		WebResponse response = loadUrl(searchPageUrl + query);
-		
-		return response;
-	}	
-	
-	private WebResponse loadSearchPage() throws Exception
-	{
-		return loadSearchPage("");
-	}
-	
 	public void testSearchForCiprofloxacinReturnsCiprofloxacin500mg() throws Exception
 	{
-		WebResponse response = loadSearchPage();
+		WebResponse response = loadPageAndReturnResponse("");
 		
 		WebForm searchForm = response.getFormWithID("search");
 		assertNotNull("Unable to find form with ID 'search'", searchForm);
@@ -51,25 +34,25 @@ public class IntegrationTest extends SarpamInfoHubTest
 	
 	public void testSearchPageValidates() throws Exception
 	{
-		WebResponse response = loadSearchPage();
+		WebResponse response = loadPageAndReturnResponse("");
 		validatePage(response);
 	}
 	
 	public void testSearchPageWithResultsValidates() throws Exception
 	{
-		WebResponse response = loadSearchPage("?search=ciprofloxacin");
+		WebResponse response = loadPageAndReturnResponse("?search=ciprofloxacin");
 		validatePage(response);
 	}
 	
 	public void testFormulationPageValidates() throws Exception
 	{
-		WebResponse response = loadSearchPage("formulation/1/");
+		WebResponse response = loadPageAndReturnResponse("formulation/1/");
 		validatePage(response);
 	}
 	
 	public void testSuppliersPageValidates() throws Exception
 	{
-		WebResponse response = loadSearchPage("formulation_suppliers/1/test");
+		WebResponse response = loadPageAndReturnResponse("formulation_suppliers/1/test");
 		validatePage(response);
 	}
 	
@@ -81,7 +64,9 @@ public class IntegrationTest extends SarpamInfoHubTest
 	
 	public void testContactTagsPageValidates() throws Exception
 	{
-		WebResponse response = loadContactSearchPage("tags/Bioethics/");
+		String hexEncodedTag = toHex("procurement");
+		
+		WebResponse response = loadContactSearchPage("tags/" + hexEncodedTag);
 		validatePage(response);
 	}
 	
@@ -117,7 +102,7 @@ public class IntegrationTest extends SarpamInfoHubTest
 	{
 		String url = getContactSearchPageUrl(path);
 		
-		WebResponse response = loadUrl(url);
+		WebResponse response = loadUrlAndReturnResponse(url);
 		
 		return response;
 	}
@@ -126,4 +111,37 @@ public class IntegrationTest extends SarpamInfoHubTest
 	{
 		return host + "contacts/" + path; 
 	}
+	
+	public void testFormulationProductPageValidates() throws Exception
+	{
+		WebResponse response = loadPageAndReturnResponse("formulation_products/1");
+		
+		validatePage(response);
+	}
+
+	public void testSupplierPageValidates() throws Exception
+	{
+		WebResponse response = loadPageAndReturnResponse("suppliers/1");
+		
+		validatePage(response);
+	}
+	
+	public void testProductPageValidates() throws Exception
+	{
+		WebResponse response = loadPageAndReturnResponse("product/1");
+		
+		validatePage(response);
+	}
+	
+	private WebResponse loadPageAndReturnResponse(String relativeUrl) throws Exception
+	{
+		WebResponse response = loadUrlAndReturnResponse(host + relativeUrl);
+		
+		return response;
+	}
+	
+	public String toHex(String arg) {
+	    return String.format("%x", new BigInteger(arg.getBytes()));
+	}
+
 }

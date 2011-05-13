@@ -23,7 +23,12 @@ class SupplierCataloguePageTest(PageDisplayTestCase):
         
     def test_supplier_name_appears_above_table(self):
         response = self.load_page_with_products_supplied_by_afrifarmacia()
-        self.check_sub_title_is(response, u"Afrifármacia, Lda")
+        self.check_sub_sub_title_is(response, u"Afrifármacia, Lda")
+        
+    def test_sub_title_is_supplier(self):
+        response = self.load_page_with_products_supplied_by_afrifarmacia()
+        self.check_sub_title_is(response, "Supplier")
+        
         
     def test_registration_country_appears_in_table(self):
         response = self.load_page_with_products_supplied_by_afrifarmacia()

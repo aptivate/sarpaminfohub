@@ -2,7 +2,7 @@
   <tr>
     <td class="first">
     	{% if row.product.name %}
-    		<a href="{% url product-page product_name=row.product.name %}">{{ row.product.name }}</a>
+    		<a href="{% url product-page product_id=row.product.id %}">{{ row.product.name }}</a>
     	{% endif %}
     </td>
     <td class="second">

@@ -85,7 +85,9 @@ def formulation(request, formulation_id, backend_name="django"):
                                'price_popups': price_popups,
                                'menu' : menu,
                                'search_form' : search_form,
-                               'sub_title' : formulation_name},RequestContext(request))
+                               'sub_title' : "Formulation",
+                               'sub_sub_title' : formulation_name},
+                               RequestContext(request))
 
 def formulation_products(request, formulation_id, backend_name="django"):
     backend = get_backend(backend_name)
@@ -109,7 +111,10 @@ def formulation_products(request, formulation_id, backend_name="django"):
                               {'supplier_table' : supplier_table,
                                'search_form' : search_form,
                                'menu' : menu,
-                               'sub_title' : formulation_name},RequestContext(request))
+                               'sub_title' : "Formulation",
+                               'sub_sub_title' : formulation_name,
+                               },
+                               RequestContext(request))
 
 def supplier_catalogue(request, supplier_id, backend_name="django"):
     backend = get_backend(backend_name)
@@ -125,8 +130,10 @@ def supplier_catalogue(request, supplier_id, backend_name="django"):
                               {'registrations': registrations,
                                'menu': menu,
                                'search_form': search_form,
-                               'sub_title': supplier_name,
-                               'backend': backend_name},RequestContext(request))
+                               'sub_title': "Supplier",
+                               'sub_sub_title': supplier_name,
+                               'backend': backend_name},
+                               RequestContext(request))
 
 def get_formulation_tab(formulation_href=None):
     return get_tab(formulation_href, "Procurement Prices")
@@ -151,13 +158,16 @@ def product_page_tab(product, selected):
     
     return get_tab(href, "Details")
 
-def product_page(request, product_name):
-    product = Product.objects.get(name=product_name)
+def product_page(request, product_id):
+    product = Product.objects.get(id=product_id)
     return render_to_response('product_page.html',
-        RequestContext(request, dict(sub_title=product.name,
-            menu = Menu([product_page_tab(product, True)]),
+        RequestContext(request, 
+                       dict(
+            sub_title="Product",
+            menu = Menu([product_page_tab(product, selected=True)]),
             product=product,
-            search_form = SearchForm())))
+            search_form = SearchForm(),
+            sub_sub_title=product.name)))
     
 def pricing_iframe(request):
     extra_context = {'iframe_url':'/', 'iframe_title':"Drug Price Database"}

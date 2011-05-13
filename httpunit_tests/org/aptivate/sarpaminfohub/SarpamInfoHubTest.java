@@ -17,7 +17,7 @@ public class SarpamInfoHubTest extends TestCase
         HttpUnitOptions.setScriptingEnabled(false);
 	}
 	
-	protected WebResponse loadUrl(String url) throws Exception
+	protected WebResponse loadUrlAndReturnResponse(String url) throws Exception
 	{
 		WebResponse response = null;
 		
