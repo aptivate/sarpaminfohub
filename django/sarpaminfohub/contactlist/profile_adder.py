@@ -95,6 +95,7 @@ class ProfileAdder(object):
                 
                 if len(location_parts) > 0:
                     country = location_parts[-1].strip()
+                    
                     country_code = COUNTRY_DICT.get(country, "")
                     
                     if len(location_parts) > 1:
