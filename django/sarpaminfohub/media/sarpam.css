@@ -16,11 +16,20 @@ body
     width:100%;
     float:left;
     clear:both;
+    margin-bottom: 10px;
+}
+
+h2 {
+    margin-bottom: 0px;
+}
+
+h3 {
+    padding: 0;
+    margin: 0;
 }
 
 #search_text, #search
 {
-    float:left;
 }
 
 #search
@@ -442,4 +451,13 @@ dl {
 }
 #linkedinaddbox span{
     margin-left:0px;
+}
+
+#licence ol {
+    text-align: justify;
+    font-size: 0.8em;
+}
+
+#licence li {
+    margin-bottom: 10px;
 }

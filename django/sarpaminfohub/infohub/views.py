@@ -139,7 +139,7 @@ def get_formulation_tab(formulation_href=None):
     return get_tab(formulation_href, "Procurement Prices")
 
 def get_similar_products_tab(products_href=None):
-    return get_tab(products_href, "Similar Products")
+    return get_tab(products_href, "Related Products")
 
 def get_catalogue_tab():
     return get_tab(None, "Product Catalogue")

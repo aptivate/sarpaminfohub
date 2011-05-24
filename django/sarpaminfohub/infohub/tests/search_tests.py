@@ -85,16 +85,16 @@ class SearchTest(SarpamTestCase):
                 self.cells.append(data)
           
     def test_search_page_is_based_on_search_template(self):
-        response = self.client.get('/')
+        response = self.client.get('/search/')
         self.assertTemplateUsed(response, 'search.html')
 
     def test_search_page_has_no_results_initially(self):
-        response = self.client.get('/')
+        response = self.client.get('/search')
         parser = self.parse_table_content(response)
         self.assertEquals(parser.FINDING_RESULTS_HEADING, parser.state)
 
     def search_for(self, search_term, backend):
-        url = "/?search=%s" % search_term
+        url = "/search/?search=%s" % search_term
         
         if backend is not None:
             url += '&backend=%s' % backend
@@ -140,7 +140,7 @@ class SearchTest(SarpamTestCase):
                           parser.input_field_value)
         
     def test_by_default_search_field_is_empty(self):
-        response = self.client.get('/')
+        response = self.client.get('/search')
         parser = self.parse_table_content(response)
         self.assertEquals(None, parser.input_field_value)
 

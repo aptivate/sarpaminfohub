@@ -39,7 +39,7 @@ class FormulationProductPageTest(PageDisplayTestCase):
 
     def test_similar_products_tab_is_selected(self):
         response = self.load_page_with_suppliers_of_amitriptyline()
-        self.check_tab_is_selected(response, "Similar Products")
+        self.check_tab_is_selected(response, "Related Products")
 
     def test_suppliers_list_to_supplier_catalogue(self):
         response = self.load_page_with_suppliers_of_amitriptyline()

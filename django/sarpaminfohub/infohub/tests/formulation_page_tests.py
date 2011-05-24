@@ -62,13 +62,13 @@ class FormulationPageTest(PageDisplayTestCase):
         
     def test_search_form_on_formulation_page_will_create_new_search(self):
         response = self.load_page_for_formulation_amitriptyline_prices()
-        self.assertContains(response, "<form id=\"search\" action=\"/\">")
+        self.assertContains(response, "<form id=\"search\" action=\"/search/\">")
         
     def test_formulation_page_has_link_to_products(self):
         response = self.load_page_for_formulation_amitriptyline_prices()
         self.check_link_visible_on_page(response, 
                                         href="/formulation_products/1/test", 
-                                        text="Similar Products")
+                                        text="Related Products")
 
     def test_procurement_prices_tab_is_selected(self):
         response = self.load_page_for_formulation_amitriptyline_prices()

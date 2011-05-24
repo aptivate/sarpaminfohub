@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import patterns, url, include
 from django.contrib import admin
+from django.views.generic.simple import direct_to_template
 import sarpaminfohub.infohub.views
 from sarpaminfohub.infohub.views import pricing_iframe
 
@@ -10,7 +11,10 @@ urlpatterns = patterns('',
 )
 
 urlpatterns += patterns('sarpaminfohub.infohub.views',
-    url(r'^$', view='search', name='search'),
+    (r'^$', direct_to_template, {
+        "template" : "license.html",
+    }, 'licence'),
+    url(r'search/$', view='search', name='search'),
     url(r'formulation/(?P<formulation_id>\d+)/(?P<backend_name>[a-z]*)', 
         view=sarpaminfohub.infohub.views.formulation,
         name='formulation-by-id'),

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block body %}
+
+<div id="licence">
+    <h1>YOUR USE OF THE MEDICINE PRICES DATABASE CONSTITUTES YOUR AGREEMENT TO BE BOUND BY THESE TERMS AND CONDITIONS OF USE.</h1>
+
+    The Medicine Prices Database, including all of its features and content is made available through Southern African Regional Programme on Access to Medicines and Diagnostics ("SARPAM"), by Re-Action Consulting (PTY) Ltd. and may be used solely under the following terms and conditions ("Terms of Use").
+
+    <ol>
+        <li>
+            About the Database. The Database includes information about medicines that was obtained through a survey process conducted in the specified countries or regions, whether in public, private or informal sectors (pharmacies, convenience stores, markets, hospitals, and clinics, etc.). The information included reflects the information available at the time that the survey was conducted and has not been validated or checked for accuracy. This information is not officially endorsed by the country governments or agencies that provided the data and should be considered for demonstration purposes only at this time.
+        </li>
+
+        <li>
+            Limitations on Use. The Data is not for commercial exploitation. You may not decompile, reverse engineer, disassemble, rent, lease, loan, sell, sub-license, or create derivative works from information contained in this Database. You may not copy, modify, reproduce, republish, distribute, display, or transmit for commercial purposes all or any portion of this Database. Any unauthorized use of this Database is prohibited.
+        </li>
+        <li>
+        Not Legal Advice. The name of the manufacturer or the brand or commercial name of a medicine, as it appears in the Database, is what was provided by survey respondents. The listing of a particular drug or manufacturer in the Database is not intended as and does not constitute legal advice. The accuracy, completeness, adequacy or currency of the Database is not warranted or guaranteed. Your use of this Database is at your own risk.
+        </li>
+
+        <li>
+            DISCLAIMER. This database and the content thereof is provided "as is" only for the purpose of demonstrating the functionality of this application of such data. To the fullest extent permitted by law, SARPAM and the contractors responsible for implementing the programme specifically disclaim the implied warranty of merchantability of a computer program, and the implied warranty of accuracy. There is no warranty that this database or the information contained within it will fulfill any of your particular purposes or needs. SARPAM makes no representation or warranty with respect to the database's accuracy, completeness, or currency; and SARPAM specifically disclaims any other warranty, express, implied, or statutory, including but not limited to, the implied warranties of merchantability and fitness for a particular purpose. SARPAM shall not be liable on account of any such errors, omissions, delays, or losses. You agree that in no event will SARPAM be liable for the results of your use of the database, for your inability or failure to conduct your business, or for indirect, special, or consequential damages. The foregoing limitation of liability and exclusion of certain damages shall apply regardless of the success or effectiveness of other remedies.
+        </li>
+
+        <li>
+            LIMITATION OF LIABILITY. SARPAM shall not be liable for any loss, injury, claim, liability, or damage of any kind resulting from your use of this database, or the content hereof. SARPAM shall not be liable for any special, direct, indirect, incidental, punitive, or consequential damages of any kind whatsoever (including, without limitation, attorneys' fees) in any way due to, resulting from, or arising in connection with the use of or inability to use this database.
+        </li>
+
+        <li>
+            Governing Law and Jurisdiction. These Terms of Use are governed by and construed in accordance with the laws of South Africa and any action arising out of or relating to these terms shall be filed only in South Africa and you hereby consent and submit to the personal jurisdiction of such courts for the purpose of litigating any such action.
+        </li>
+        <li>
+            Modifications to Terms of Use. SARPAM reserves the right to change these Terms of Use at any time.
+        </li>
+    </ol>
+    <form action="{% url search %}">
+        <input type="submit" value="I Agree"/>
+    </form>
+</div>
+{% endblock %}
+
