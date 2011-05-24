@@ -18,6 +18,9 @@ class Formulation(models.Model):
             
         return msh_price
 
+    def __unicode__(self):
+        return self.name
+
 class Country(models.Model):
     code = models.CharField(max_length=2, primary_key=True)
     name = models.CharField(max_length=200)
@@ -26,9 +29,15 @@ class Country(models.Model):
         record = {}
         record['name'] = self.name
         return record
+
+    def __unicode__(self):
+        return self.name
     
 class Incoterm(models.Model):
     name = models.CharField(max_length=200)
+
+    def __unicode__(self):
+        return self.name
     
 class Manufacturer(models.Model):
     name = models.CharField(max_length=200)
@@ -37,6 +46,9 @@ class Manufacturer(models.Model):
         record = {}
         record['name'] = self.name
         return record
+
+    def __unicode__(self):
+        return self.name
 
 class Supplier(models.Model):
     name = models.CharField(max_length=200)
@@ -49,6 +61,9 @@ class Supplier(models.Model):
         record['name'] = self.name
         record['url'] = self.get_url()       
         return record
+
+    def __unicode__(self):
+        return self.name
 
 class Price(models.Model):
     formulation = models.ForeignKey(Formulation)
@@ -116,15 +131,25 @@ class Price(models.Model):
         
         return record
 
+    def __unicode__(self):
+        return "%s %s" % (self.formulation, self.country)
+
+
 class ExchangeRate(models.Model):
     symbol = models.CharField(max_length=3)
     year = models.IntegerField()
     rate = models.FloatField()
 
+    def __unicode__(self):
+        return "%s (%s)" % (self.symbol, self.year)
+
 class MSHPrice(models.Model):
     formulation = models.OneToOneField(Formulation)
     period = models.IntegerField()
     price = models.DecimalField(max_digits=20, decimal_places=6, null=True)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.formulation, self.period)
 
 class Product(models.Model):
     name = models.CharField(max_length=200)
@@ -146,8 +171,14 @@ class Product(models.Model):
         record['formulation_url'] = self.formulation.get_url()
         return record
 
+    def __unicode__(self):
+        return self.name
+
 class ProductRegistration(models.Model):
     product = models.ForeignKey(Product, related_name="registrations")
     supplier = models.ForeignKey(Supplier, null=True)
     country = models.ForeignKey(Country)
     manufacturer = models.ForeignKey(Manufacturer, null=True)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.product, self.country)
