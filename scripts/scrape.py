@@ -334,9 +334,7 @@ def scrape(data_dir):
 
     outputJson(data_dir, "00_exchange_rates", exchange_rates)
 
-    # Temporarily disabled - using fictitious names instead
     outputJson(data_dir, "00_countries", countries)
-#    outputJson(data_dir, "00_fictitious_countries", fictitious_country_records)
     outputJson(data_dir, "00_supplier_countries", supplier_country_records)
     outputJson(data_dir, "00_suppliers", suppliers)
     outputJson(data_dir, "00_manufacturers", manufacturers)
