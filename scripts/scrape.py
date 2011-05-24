@@ -17,19 +17,19 @@ import csv
 from decimal import Decimal
 
 country_codes = {}
-country_codes[1] = 'XA'
-country_codes[2] = 'XB'
-country_codes[3] = 'XC'
-country_codes[4] = 'XD'
-country_codes[5] = 'XE'
-country_codes[6] = 'XF'
-country_codes[7] = 'XG'
-country_codes[8] = 'XH'
-country_codes[9] = 'XI'
-country_codes[10] = 'XJ'
-country_codes[11] = 'XK'
-country_codes[12] = 'XL'
-country_codes[13] = 'XM'
+country_codes[1] = 'SC'
+country_codes[2] = 'AO'
+country_codes[3] = 'ZA'
+country_codes[4] = 'TZ'
+country_codes[5] = 'MW'
+country_codes[6] = 'LS'
+country_codes[7] = 'ZW'
+country_codes[8] = 'MZ'
+country_codes[9] = 'SZ'
+country_codes[10] = 'NA'
+country_codes[11] = 'CD'
+country_codes[12] = 'BW'
+country_codes[13] = 'ZM'
 
 supplier_country_translations = {'holland' : 'NL',
                       'mozambique' : 'MZ',
@@ -335,8 +335,8 @@ def scrape(data_dir):
     outputJson(data_dir, "00_exchange_rates", exchange_rates)
 
     # Temporarily disabled - using fictitious names instead
-    # outputJson(data_dir, "00_countries", countries)
-    outputJson(data_dir, "00_fictitious_countries", fictitious_country_records)
+    outputJson(data_dir, "00_countries", countries)
+#    outputJson(data_dir, "00_fictitious_countries", fictitious_country_records)
     outputJson(data_dir, "00_supplier_countries", supplier_country_records)
     outputJson(data_dir, "00_suppliers", suppliers)
     outputJson(data_dir, "00_manufacturers", manufacturers)
