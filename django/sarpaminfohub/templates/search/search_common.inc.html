@@ -1,14 +1,62 @@
-<form method="post" action="">{# {% csrf_token %} #}
-	<table>
-		<tr>
-			<td>{{ form.search_term }}{{form.search_term.errors}}</td>
-		</tr>
-		<tr>
-			<td>{{ form.tags }}{{form.tags.errors}}</td>
-		</tr>
-	</table>
-		
-	<input type="submit" value="Search" />
+<script src="http://cdn.jotfor.ms/jotform.jgz?3.1.110" type="text/javascript"></script>
+<script type="text/javascript">
+   JotForm.init(function(){
+      JotForm.description('input_3', 'Search by name, organisation or skill');
+      JotForm.description('input_4', 'Select a tag to narrow down your search');
+   });
+</script>
+<link href="http://cdn.jotfor.ms/jotform.cssgz?3.1.110" rel="stylesheet" type="text/css" />
+<style type="text/css">
+    .form-label{
+        width:150px !important;
+    }
+    .form-label-left{
+        width:150px !important;
+    }
+    .form-line{
+        padding:10px;
+    }
+    .form-label-right{
+        width:150px !important;
+    }
+    .form-all{
+        width:650px;
+        color:Black !important;
+        font-family:Verdana;
+        font-size:12px;
+    }
+</style>
+
+<form class="jotform-form" action="" method="post">{# {% csrf_token %} #}
+    <div class="form-all">
+        <ul class="form-section">
+            <li class="form-line" id="id_3">
+                <label class="form-label-left" id="label_3" for="input_3"> Search Term </label>
+                <div id="cid_3" class="form-input">
+                    <input type="text" class="form-textbox" id="input_3" name="{{ form.search_term.name }}{{ form.search_term.errors }}" size="20" />
+                </div>
+            </li>
+            <li class="form-line" id="id_4">
+                <label class="form-label-left" id="label_4" for="input_4"> Tags </label>
+                <div id="cid_4" class="form-input">
+                    <select class="form-list" style="width:150px" id="input_4" name="tags" size="10" multiple="multiple">
+                        {% for id, val in form.fields.tags.choices %}
+                        <option id="{{ id }}">{{ val }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </li>
+            <li class="form-line" id="id_2">
+                <div id="cid_2" class="form-input-wide">
+                    <div style="margin-left:156px" class="form-buttons-wrapper">
+                        <button id="input_2" type="submit" class="form-submit-button">
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
 </form>
 
 {% if search %}
