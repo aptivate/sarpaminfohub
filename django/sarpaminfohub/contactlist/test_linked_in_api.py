@@ -4,6 +4,12 @@ import binascii
 import sha
 
 class TestLinkedInApi(LinkedIn):
+    test_data = None
+    
+    def __init__(self, api_key, api_secret, callback_url, test_data):
+        self.test_data = test_data
+        super(TestLinkedInApi, self).__init__(api_key, api_secret, callback_url)
+    
     def requestToken(self):
         """
         Mock implementation used for testing
@@ -228,109 +234,10 @@ class TestLinkedInApi(LinkedIn):
                            self._quote(self.API_KEY), self._quote(self.access_token),
                            self._quote(signature), self.version)
         
-        response = self.get_test_profile()
+        response = self.test_data.decode('hex')
         error = self._parse_error(response)
         if error:
             self.error = error
             return None
 
         return Profile.create(response) # this creates Profile instance or gives you null
-
-    def get_test_profile(self):
-        profile_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + \
-        "<person>" + \
-        "  <first-name>Martin</first-name>" + \
-        "  <last-name>Burchell</last-name>" + \
-        "  <specialties>ANSI C, C++, Java, Lull (what?) and some assembler." + \
-        "Unix (Linux, Solaris etc), Windows (various), Palm OS, SuperWaba, RISC OS." + \
-        "X/Motif, MFC." + \
-        "GNU make, gcc, gdb, CVS, Perforce, Eclipse, MS Visual Studio, various unit testing frameworks, test-driven development" + \
-        "HTML, JavaScript, CSS, DOM, PHP, VBA, Excel Kung-Fu" + \
-        "Training, Group Facilitation, Consensus-based Decision Making, Project Management, Salad Making</specialties>" + \
-        "  <positions total=\"4\">" + \
-        "    <position>" + \
-        "      <id>16325633</id>" + \
-        "      <title>Software Engineer</title>" + \
-        "      <start-date>" + \
-        "        <year>2007</year>" + \
-        "        <month>7</month>" + \
-        "      </start-date>" + \
-        "      <is-current>true</is-current>" + \
-        "      <company>" + \
-        "        <name>Aptivate</name>" + \
-        "        <size>1-10 employees</size>" + \
-        "        <type>Privately Held</type>" + \
-        "        <industry>Information Technology and Services</industry>" + \
-        "      </company>" + \
-        "    </position>" + \
-        "    <position>" + \
-        "      <id>11387749</id>" + \
-        "      <title>Software Engineer</title>" + \
-        "      <start-date>" + \
-        "        <year>2003</year>" + \
-        "        <month>11</month>" + \
-        "      </start-date>" + \
-        "      <is-current>true</is-current>" + \
-        "      <company>" + \
-        "        <size>Myself Only</size>" + \
-        "        <type>Self-Employed</type>" + \
-        "        <industry>Computer Software</industry>" + \
-        "      </company>" + \
-        "    </position>" + \
-        "    <position>" + \
-        "      <id>11387819</id>" + \
-        "      <title>Senior Software Engineer</title>" + \
-        "      <start-date>" + \
-        "        <year>2001</year>" + \
-        "        <month>7</month>" + \
-        "      </start-date>" + \
-        "      <end-date>" + \
-        "        <year>2003</year>" + \
-        "        <month>7</month>" + \
-        "      </end-date>" + \
-        "      <is-current>false</is-current>" + \
-        "      <company>" + \
-        "        <name>ANT Limited</name>" + \
-        "        <size>11-50 employees</size>" + \
-        "        <type>Privately Held</type>" + \
-        "        <industry>Computer Software</industry>" + \
-        "      </company>" + \
-        "    </position>" + \
-        "    <position>" + \
-        "      <id>11387877</id>" + \
-        "      <title>Senior Software Engineer</title>" + \
-        "      <start-date>" + \
-        "        <year>1995</year>" + \
-        "        <month>3</month>" + \
-        "      </start-date>" + \
-        "      <end-date>" + \
-        "        <year>2001</year>" + \
-        "        <month>7</month>" + \
-        "      </end-date>" + \
-        "      <is-current>false</is-current>" + \
-        "      <company>" + \
-        "        <name>Laser-Scan Limited</name>" + \
-        "        <size>51-200 employees</size>" + \
-        "        <type>Privately Held</type>" + \
-        "        <industry>Computer Software</industry>" + \
-        "      </company>" + \
-        "    </position>" + \
-        "  </positions>" + \
-        "  <public-profile-url>http://www.linkedin.com/pub/martin-burchell/0/266/926</public-profile-url>" + \
-        "  <summary>Since 1994 I've held several software engineering roles in software development. In July 2007, after a few months of volunteering I joined the paid staff at Aptivate, a not-for-profit  IT consultancy, which specialises in ICTs for International Development. At Aptivate my skillset has expanded to include training, group facilitation, consensus-based decision making, answering the telephone and making lunch." + \
-        "" + \
-        "Prior to joining Aptivate I ported IPTV web browsers to various embedded systems and integrated and extended the browser software to meet customers' requirements." + \
-        "" + \
-        "I've also spent several years developing applications for spatially-indexed object-orientated databases used by the mapping and charting industry." + \
-        "" + \
-        "I'm always keen to build on my experience and learn new skills and technologies.</summary>" + \
-        "  <location>" + \
-        "    <name>Cambridge, United Kingdom</name>" + \
-        "    <country>" + \
-        "      <code>gb</code>" + \
-        "    </country>" + \
-        "  </location>" + \
-        "  <phone-numbers total=\"0\" />" + \
-        "</person>"
-        
-        return profile_xml

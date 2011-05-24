@@ -8,23 +8,18 @@ def tag_search(request):
 
     return tag_searcher.search()
 
-def request_linked_in_profile(request, testing=None):
-    profile_adder = create_and_return_profile_adder(request, testing)
+def request_linked_in_profile(request, test_data=None):
+    profile_adder = create_and_return_profile_adder(request, test_data)
     
     return profile_adder.request_profile()
 
-def add_linked_in_profile(request, testing=None):
-    profile_adder = create_and_return_profile_adder(request, testing)
+def add_linked_in_profile(request, test_data=None):
+    profile_adder = create_and_return_profile_adder(request, test_data)
     
     return profile_adder.add_profile()    
 
-def create_and_return_profile_adder(request, testing):
-    if testing == "testing":
-        testing = True
-    else:
-        testing = False
-    
-    profile_adder = ProfileAdder(request, testing)
+def create_and_return_profile_adder(request, test_data):    
+    profile_adder = ProfileAdder(request, test_data)
     
     return profile_adder
 
