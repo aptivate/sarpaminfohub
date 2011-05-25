@@ -1,5 +1,7 @@
 from django.contrib import admin
-from models import *
+from sarpaminfohub.infohub.models import Formulation, Incoterm, Manufacturer,\
+    Supplier, Price, Country, ExchangeRate, MSHPrice, Product,\
+    ProductRegistration
 
 admin.site.register(Formulation)
 admin.site.register(Country)
