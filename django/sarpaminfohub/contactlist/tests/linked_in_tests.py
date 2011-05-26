@@ -1,26 +1,29 @@
-from django.test.testcases import TestCase
 from sarpaminfohub.contactlist.models import Contact
 from sarpaminfohub.contactlist.profile_adder import ProfileAdder
 from django.http import HttpRequest
+from sarpaminfohub.contactlist.tests.contactlist_test_case import ContactListTestCase
 
-class LinkedInTest(TestCase):
+class LinkedInTest(ContactListTestCase):
     TEST_OAUTH_TOKEN = '7ccce8fb-83e4-4ab7-b8da-7f8b5c32c4ad'
     TEST_OAUTH_VERIFIER = '75959'
     TEST_URL = "http://www.linkedin.com/pub/joyce-kgatlwane/0/123/456"
     
+    def setUp(self):
+        self.rebuild_search_index()
+    
     def test_contact_can_be_created_from_linked_in(self):
         num_contacts_before = len(Contact.objects.all())
 
-        self.request_and_add_profile()        
+        self.request_and_add_profile_and_return_response()        
         num_contacts_after = len(Contact.objects.all())
         self.assertEquals(1, num_contacts_after - num_contacts_before)
 
     def test_request_profile_redirects_to_auth_page(self):
         xml_encoded = self.get_encoded_profile_data(profile_data="notused")
-        response = self.request_profile_and_return_response(xml_encoded)
+        response = self.add_profile_and_return_response(xml_encoded)
         
         self.assertRedirectsNoFollow(response, 
-            "https://api.linkedin.com/uas/oauth/authorize?oauth_token=%s" % self.TEST_OAUTH_TOKEN)
+            "https://api.linkedin.com/uas/oauth/authenticate?oauth_token=%s" % self.TEST_OAUTH_TOKEN)
 
     def assertRedirectsNoFollow(self, response, expected_url):
         self.assertEqual(response._headers['location'], 
@@ -31,7 +34,7 @@ class LinkedInTest(TestCase):
         request = self.create_and_return_http_request()
         profile_adder = ProfileAdder(request, test_data="notempty", 
                                      token_timeout=0)
-        profile_adder.request_profile()
+        profile_adder.get_authorization()
         response = profile_adder.add_profile()
         self.assertContains(response, "Authorization Token Expired", 2)
     
@@ -51,7 +54,7 @@ class LinkedInTest(TestCase):
     def test_given_name_stored_in_new_contact(self):
         profile_data = self.get_first_name_xml_for("Joyce")
 
-        self.check_field_stored_in_contact(field_name='given_name',
+        self.check_field_stored_in_new_contact(field_name='given_name',
                                                expected_value="Joyce", 
                                                profile_data=profile_data)
 
@@ -59,7 +62,7 @@ class LinkedInTest(TestCase):
         profile_data = \
         "  <last-name>Kgatlwane</last-name>"
 
-        self.check_field_stored_in_contact(field_name='family_name', 
+        self.check_field_stored_in_new_contact(field_name='family_name', 
                                                expected_value="Kgatlwane",
                                                profile_data=profile_data)
 
@@ -74,63 +77,63 @@ class LinkedInTest(TestCase):
         expected_note = self.get_note_html(expected_summary,
                                            expected_specialities)
         
-        self.check_field_stored_in_contact(field_name='note',
+        self.check_field_stored_in_new_contact(field_name='note',
                                            expected_value=expected_note,
                                            profile_data=profile_data)
 
     def test_tags_include_capitalised_specialities(self):
         profile_data = self.get_specialities_xml()
         
-        self.check_field_stored_in_contact(field_name='tags', 
+        self.check_field_stored_in_new_contact(field_name='tags', 
                                                expected_value="Procurement,Supply of medicines",
                                                profile_data=profile_data)
 
     def test_title_of_first_position_stored_in_role_field_of_new_contact(self):
         profile_data = self.get_position_xml_with_title("Pharmacist")
 
-        self.check_field_stored_in_contact(field_name='role', 
+        self.check_field_stored_in_new_contact(field_name='role', 
                                            expected_value="Pharmacist",
                                            profile_data=profile_data)
 
     def test_company_of_first_position_stored_in_organization_field_of_new_contact(self):
         profile_data = self.get_position_xml_with_company("Botswana Essential Drugs Action Programme")
         
-        self.check_field_stored_in_contact(field_name='organization', 
+        self.check_field_stored_in_new_contact(field_name='organization', 
             expected_value="Botswana Essential Drugs Action Programme",
             profile_data=profile_data)
 
     def test_first_part_of_location_stored_in_address_line_3_field_of_new_contact(self):
         profile_data = self.get_location_xml_for("Gaborone, Botswana")
         
-        self.check_field_stored_in_contact(field_name='address_line_3', 
+        self.check_field_stored_in_new_contact(field_name='address_line_3', 
                                            expected_value="Gaborone",
                                            profile_data=profile_data)
         
     def test_country_stored_in_country_field_of_new_contact(self):
         profile_data = self.get_location_xml_for("Gaborone, Botswana")
 
-        self.check_field_stored_in_contact(field_name='country', 
+        self.check_field_stored_in_new_contact(field_name='country', 
                                            expected_value="BWA",
                                            profile_data=profile_data)        
 
     def test_country_stored_in_country_field_of_new_contact_when_no_city_exists(self):
         profile_data = self.get_location_xml_for("Botswana")
 
-        self.check_field_stored_in_contact(field_name='country', 
+        self.check_field_stored_in_new_contact(field_name='country', 
                                            expected_value="BWA",
                                            profile_data=profile_data)        
 
     def test_linked_in_approval_flag_set_on_new_contact(self):
-        self.check_field_stored_in_contact(field_name='linked_in_approval', 
+        self.check_field_stored_in_new_contact(field_name='linked_in_approval', 
                                            expected_value=True,
                                            profile_data="")  
 
     def test_given_name_can_be_updated_for_contact(self):
         profile_data = self.get_first_name_xml_for("Joyce")
-        self.request_and_add_profile(profile_data)
+        self.request_and_add_profile_and_return_response(profile_data)
 
         profile_data = self.get_first_name_xml_for("Rose")
-        self.check_field_stored_in_contact(field_name='given_name',
+        self.check_field_stored_in_new_contact(field_name='given_name',
                                            expected_value="Rose",
                                            profile_data=profile_data)
 
@@ -139,10 +142,10 @@ class LinkedInTest(TestCase):
 
     def test_family_name_can_be_updated_for_contact(self):
         profile_data = self.get_last_name_xml_for("Kgatlwane")
-        self.request_and_add_profile(profile_data)
+        self.request_and_add_profile_and_return_response(profile_data)
 
         profile_data = self.get_last_name_xml_for("Shija")
-        self.check_field_stored_in_contact(field_name='family_name', 
+        self.check_field_stored_in_new_contact(field_name='family_name', 
                                            expected_value="Shija",
                                            profile_data=profile_data)
         
@@ -150,10 +153,10 @@ class LinkedInTest(TestCase):
         return "  <last-name>%s</last-name>" % last_name
 
     def test_public_url_can_be_updated_for_contact(self):
-        self.request_and_add_profile()
+        self.request_and_add_profile_and_return_response()
         
         public_url = "http://www.linkedin.com/pub/rose-shija/0/123/456"
-        self.check_field_stored_in_contact(field_name='linked_in_url',
+        self.check_field_stored_in_new_contact(field_name='linked_in_url',
                                            expected_value=public_url, 
                                            public_url=public_url)
         
@@ -162,7 +165,7 @@ class LinkedInTest(TestCase):
             "A healthcare practitioner, specialising as a Pharmacist, in Gaborone, Botswana") +\
         self.get_specialities_xml()
         
-        self.request_and_add_profile(profile_data)
+        self.request_and_add_profile_and_return_response(profile_data)
         
         profile_data = self.get_summary_xml_for(
             "A qualified healthcare practitioner, specialising as a Senior Pharmacist, in Gaborone, Botswana") +\
@@ -174,7 +177,7 @@ class LinkedInTest(TestCase):
         expected_note = self.get_note_html(expected_summary, 
                                            expected_specialities)
         
-        self.check_field_stored_in_contact(field_name='note',
+        self.check_field_stored_in_new_contact(field_name='note',
                                            expected_value=expected_note,
                                            profile_data=profile_data)
             
@@ -184,7 +187,7 @@ class LinkedInTest(TestCase):
         
         profile_data =  summary_xml + self.get_specialities_xml()
         
-        self.request_and_add_profile(profile_data)
+        self.request_and_add_profile_and_return_response(profile_data)
         
         profile_data = summary_xml + self.get_specialities_xml_for("procurement, capacity building")
         
@@ -194,57 +197,108 @@ class LinkedInTest(TestCase):
         expected_note = self.get_note_html(expected_summary, 
                                            expected_specialities)
         
-        self.check_field_stored_in_contact(field_name='note',
+        self.check_field_stored_in_new_contact(field_name='note',
                                            expected_value=expected_note,
                                            profile_data=profile_data)
                 
     def test_tags_can_be_updated_from_specialities_for_contact(self):
         profile_data = self.get_specialities_xml()
-        self.request_and_add_profile(profile_data)
+        self.request_and_add_profile_and_return_response(profile_data)
         
         profile_data = self.get_specialities_xml_for("procurement, capacity building")
         
-        self.check_field_stored_in_contact(field_name='tags', 
+        self.check_field_stored_in_new_contact(field_name='tags', 
                                            expected_value="Procurement,Capacity building",
                                            profile_data=profile_data)
 
     def test_role_can_be_updated_from_title_of_first_position_for_contact(self):
         profile_data = self.get_position_xml_with_title("Pharmacist")
-        self.request_and_add_profile(profile_data)
+        self.request_and_add_profile_and_return_response(profile_data)
 
         profile_data = self.get_position_xml_with_title("Senior Pharmacist")
 
-        self.check_field_stored_in_contact(field_name='role', 
+        self.check_field_stored_in_new_contact(field_name='role', 
                                            expected_value="Senior Pharmacist",
                                            profile_data=profile_data)
 
     def test_organization_can_be_updated_from_company_of_first_position(self):
         profile_data = self.get_position_xml_with_company("Botswana Essential Drugs Action Programme")
-        self.request_and_add_profile(profile_data)
+        self.request_and_add_profile_and_return_response(profile_data)
         
         profile_data = self.get_position_xml_with_company("World Health Organisation")
-        self.check_field_stored_in_contact(field_name='organization', 
+        self.check_field_stored_in_new_contact(field_name='organization', 
                                            expected_value="World Health Organisation",
                                            profile_data=profile_data)
         
     def test_address_line_3_can_be_updated_from_first_part_of_location(self):
         profile_data = self.get_location_xml_for("Gaborone, Botswana")
-        self.request_and_add_profile(profile_data)
+        self.request_and_add_profile_and_return_response(profile_data)
         
         profile_data = self.get_location_xml_for("Harare, Zimbabwe")
-        self.check_field_stored_in_contact(field_name='address_line_3', 
+        self.check_field_stored_in_new_contact(field_name='address_line_3', 
                                            expected_value="Harare",
                                            profile_data=profile_data) 
 
     def test_country_can_be_updated_from_country_field(self):
         profile_data = self.get_location_xml_for("Gaborone, Botswana")
-        self.request_and_add_profile(profile_data)
+        self.request_and_add_profile_and_return_response(profile_data)
 
         profile_data = self.get_location_xml_for("Harare, Zimbabwe")
-        self.check_field_stored_in_contact(field_name='country', 
+        self.check_field_stored_in_new_contact(field_name='country', 
                                            expected_value="ZWE",
                                            profile_data=profile_data)  
 
+    def test_access_token_is_stored_in_contact(self):
+        self.request_and_add_profile_and_return_response()
+        self.check_field_stored_in_new_contact(field_name='access_token', 
+                                           expected_value="b20ecb6c-7706-4d6b-b9b0-8f53672f179d")  
+
+    def test_access_token_secret_is_stored_in_contact(self):
+        self.request_and_add_profile_and_return_response()
+        self.check_field_stored_in_new_contact(field_name='access_token_secret', 
+                                           expected_value="1e41d8e9-acd5-48b1-b1df-de0be9ec01fa")
+        
+    def test_delete_profile_removes_existing_contact(self):
+        self.request_and_add_profile_and_return_response()
+        num_contacts_before = len(Contact.objects.all())
+        self.delete_profile_and_return_response()
+
+        num_contacts_after = len(Contact.objects.all())
+        self.assertEquals(1, num_contacts_before - num_contacts_after)
+                
+    def test_delete_profile_redirects_to_main_page(self):
+        self.request_and_add_profile_and_return_response()
+        response = self.delete_profile_and_return_response()
+        self.assertTemplateUsed(response, "contactlist/window_closer.html")
+        self.assertEquals('/contacts/?deleted=true', response.context['redirect_url'])
+                
+    def test_delete_non_existent_profile_redirects_to_main_page(self):
+        response = self.delete_profile_and_return_response()
+        self.assertTemplateUsed(response, "contactlist/window_closer.html")
+        self.assertEquals('/contacts/', response.context['redirect_url'])        
+                
+    def test_add_profile_redirects_to_contact_detail_page(self):
+        profile_data = self.get_first_name_xml_for("Joyce")
+        response = self.request_and_add_profile_and_return_response(profile_data,
+                                                                    self.TEST_URL)
+        self.assertTemplateUsed(response, "contactlist/window_closer.html")
+        new_contact = Contact.objects.get(given_name="Joyce")
+        expected_url = '/contacts/%d/?new_contact=true' % new_contact.id
+        self.assertEquals(expected_url, response.context['redirect_url'])
+
+    def delete_profile_and_return_response(self):
+        test_data = str("test").encode('hex')
+        response = self.client.get('/contacts/delete_linked_in_profile/%s' % test_data)
+        self.assertEquals(302, response.status_code)
+        
+        # Help things along a bit
+        xml_encoded = self.get_encoded_profile_data("", self.TEST_URL)
+        auth_params = '?oauth_token=%s&oauth_verifier=%s' % (self.TEST_OAUTH_TOKEN, self.TEST_OAUTH_VERIFIER)
+        response = self.client.get('/contacts/authorized_delete/%s%s' % \
+                                   (xml_encoded, auth_params))
+        self.assertEquals(200, response.status_code)
+        return response
+        
     def get_position_xml_with_title(self, title):
         return self.get_position_xml("      <title>" + title + "</title>")
         
@@ -290,26 +344,31 @@ class LinkedInTest(TestCase):
         
         return location_xml
 
-    def check_field_stored_in_contact(self, field_name, expected_value,
+    def check_field_stored_in_new_contact(self, field_name, expected_value,
                                       profile_data="notused", public_url=None):
         if public_url is None:
             public_url = self.TEST_URL
             
-        self.request_and_add_profile(profile_data, public_url)
+        self.request_and_add_profile_and_return_response(profile_data, public_url)
         new_contact = Contact.objects.get(linked_in_url=public_url)
         self.assertEquals(expected_value, getattr(new_contact, field_name))        
 
-    def request_and_add_profile(self, profile_data="notused", public_url=None):
+    def request_and_add_profile_and_return_response(self, profile_data="notused", 
+                                                    public_url=None):
         xml_encoded = self.get_encoded_profile_data(profile_data, public_url)
         
-        self.request_profile_and_return_response(xml_encoded)
+        self.add_profile_and_return_response(xml_encoded)
         
         # we have to help things along a bit here as we've mocked out the
         # linked in API
-        self.client.get('/contacts/add_linked_in_profile/%s?oauth_token=%s&oauth_verifier=%s' % (xml_encoded, self.TEST_OAUTH_TOKEN, self.TEST_OAUTH_VERIFIER))
+        response = self.client.get('/contacts/authorized_add/%s?oauth_token=%s&oauth_verifier=%s' % (xml_encoded, self.TEST_OAUTH_TOKEN, self.TEST_OAUTH_VERIFIER))
+        self.assertEquals(200, response.status_code)
+        return response
 
-    def request_profile_and_return_response(self, xml_encoded):
-        return self.client.get('/contacts/request_linked_in_profile/%s' % xml_encoded)
+    def add_profile_and_return_response(self, xml_encoded):
+        response = self.client.get('/contacts/add_linked_in_profile/%s' % xml_encoded)
+        self.assertEquals(302, response.status_code)
+        return response
 
     def get_encoded_profile_data(self, profile_data, public_url=None):
         if public_url is None:

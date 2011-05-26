@@ -9,8 +9,15 @@
         <link href="/site_media/reset-min.css" media="screen" rel="stylesheet" type="text/css" />
         <link href="/site_media/base-min.css" media="screen" rel="stylesheet" type="text/css" />
         <link href="/site_media/sarpam.css" media="screen" rel="stylesheet" type="text/css" />
+        <script src="/site_media/sarpam.js" type="text/javascript"></script>
     </head>
     <body>
+        {% if deleted %}
+        <div id="flashmessagebox">
+            <p>Your profile has been deleted.</p>
+        </div>
+        {% endif %}
+    
 		{% if search_form %}
         <form id="search" action="/">
             {{ search_form.as_p }}

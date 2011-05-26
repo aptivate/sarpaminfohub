@@ -1,15 +1,13 @@
 {%  extends 'embedded.html' %}
 
 {% block main %}
-<div id="flashmessagebox" style="display:none;" class="flashmessage">
-	<p>Thanks for adding your contact details to the Sarpam Experts List. Below is how your profile will look to other users.</p>
+
+{% if new_contact %}
+<div id="flashmessagebox">
+	<p>Thanks for adding your contact details to the Experts List. Below is how your profile will look to other users.</p>
 </div>
-<script type="text/javascript">
-	if(window.location.search == "?added=True")
-	{
-		document.getElementById("flashmessagebox").style.display="block";
-	}
-</script>
+{% endif %}
+
 <h1>{{object}}</h1>
 
 {% if not object.linked_in_url %}

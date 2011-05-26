@@ -34,6 +34,9 @@ class Contact(models.Model):
     tags = TagField(max_length=512)
     linked_in_url = models.URLField(unique=True,blank=True,null=True)
     linked_in_approval = models.NullBooleanField(default=None)
+    access_token = models.CharField(max_length=512, blank=True)
+    access_token_secret = models.CharField(max_length=512, blank=True)
+    
         
     def _get_tag_list(self):
         return parse_tag_input(self.tags)

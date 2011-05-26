@@ -28,10 +28,13 @@ class TagSearcher(object):
         else:
             form = SearchForm()
             
+        deleted = self.request.GET.get('deleted')
+            
         extra_context = {
             'search':search,
             'query': query,
             'form': form,
+            'deleted' : deleted,
         }
     
         return render_to_response('search/search_embedded.html', extra_context)

@@ -13,7 +13,7 @@ public class IntegrationTest extends SarpamInfoHubTest
 	
 	public void testSearchForCiprofloxacinReturnsCiprofloxacin500mg() throws Exception
 	{
-		WebResponse response = loadPageAndReturnResponse("");
+		WebResponse response = loadPageAndReturnResponse("/search/");
 		
 		WebForm searchForm = response.getFormWithID("search");
 		assertNotNull("Unable to find form with ID 'search'", searchForm);
@@ -34,13 +34,13 @@ public class IntegrationTest extends SarpamInfoHubTest
 	
 	public void testSearchPageValidates() throws Exception
 	{
-		WebResponse response = loadPageAndReturnResponse("");
+		WebResponse response = loadPageAndReturnResponse("/search/");
 		validatePage(response);
 	}
 	
 	public void testSearchPageWithResultsValidates() throws Exception
 	{
-		WebResponse response = loadPageAndReturnResponse("?search=ciprofloxacin");
+		WebResponse response = loadPageAndReturnResponse("/search/?search=ciprofloxacin");
 		validatePage(response);
 	}
 	

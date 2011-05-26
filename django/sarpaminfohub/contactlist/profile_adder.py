@@ -1,53 +1,25 @@
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render_to_response
 from sarpaminfohub.contactlist.custom_fields import COUNTRY_DICT
 from django.core.exceptions import ObjectDoesNotExist
 from sarpaminfohub.contactlist.models import Contact
-from django.conf import settings
-from linkedin import linkedin
 from django.core.urlresolvers import reverse
-from sarpaminfohub.contactlist.test_linked_in_api import TestLinkedInApi
 from django.core.cache import cache
+from sarpaminfohub.contactlist.profile_updater import ProfileUpdater
 
-class ProfileAdder(object):
-    ONE_MINUTE = 60
-    
+class ProfileAdder(ProfileUpdater):
     def __init__(self, request, test_data=False, token_timeout=None):
-        self.request = request
-        
-        if token_timeout is None:
-            self.token_timeout = self.ONE_MINUTE
-        else:
-            self.token_timeout = token_timeout
-        
+                
         if test_data:
             args = [test_data]
         else:
             args = None
         
-        post_authorize_url = request.build_absolute_uri(reverse('add_profile',
-                                                                args=args))
-    
-        api_key = settings.LINKED_IN_API_KEY
-        secret_key = settings.LINKED_IN_SECRET_KEY
-    
-        if test_data:
-            api = TestLinkedInApi(api_key, secret_key, post_authorize_url, 
-                                  test_data)
-        else:
-            api = linkedin.LinkedIn(api_key, secret_key, post_authorize_url)
+        post_authorize_url = request.build_absolute_uri(reverse('authorized_add',
+                                                                     args=args))
 
-        self.api = api
-        
+        ProfileUpdater.__init__(self, request, post_authorize_url, test_data,
+                                token_timeout)
 
-    def request_profile(self):
-        self.api.requestToken()
-            
-        auth_url = self.api.getAuthorizeURL()    
-
-        cache.set(self.api.request_token, self.api.request_token_secret, 
-                  self.token_timeout)
-        
-        return redirect(auth_url)
 
     def add_profile(self):
         verifier = self.request.GET.get('oauth_verifier', None)
@@ -66,9 +38,8 @@ class ProfileAdder(object):
                                   request_token_secret):
         if self.api.accessToken(request_token=request_token, verifier=verifier,
                                 request_token_secret=request_token_secret):
-            fields = ["first-name", "last-name", "honors", "specialties",
-                      "positions", "public-profile-url", "summary", "location",
-                      "phone-numbers"]
+            fields = ["first-name", "last-name", "specialties", "positions", \
+                      "public-profile-url", "summary", "location"]
             
             profile = self.api.GetProfile(fields=fields)
 
@@ -135,10 +106,13 @@ class ProfileAdder(object):
                 contact.linked_in_approval = contact_data['linked_in_approval']
             except ObjectDoesNotExist:
                 contact = Contact.objects.create(**contact_data)
+
+            contact.access_token = self.api.access_token
+            contact.access_token_secret = self.api.access_token_secret
             contact.save()
             cache.delete(request_token)
             extra_context = {
-                'contact_url':contact.get_absolute_url()
+                'redirect_url':contact.get_absolute_url() + '?new_contact=true'
             }
         
-        return render_to_response('contactlist/closeme.html', extra_context)
+        return render_to_response('contactlist/window_closer.html', extra_context)
