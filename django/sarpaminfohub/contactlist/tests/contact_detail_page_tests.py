@@ -3,7 +3,9 @@ from sarpaminfohub.contactlist.tests.contactlist_page_test_case import ContactLi
 
 class ContactDetailPageTest(ContactListPageTestCase):
     def setUp(self):
+        self.delete_contacts()
         self.create_contacts()
+        self.rebuild_search_index()
     
     def test_message_box_appears_when_specified(self):
         url = self.get_contact_url(query_string="?new_contact=true")
