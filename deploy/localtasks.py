@@ -8,6 +8,8 @@ import tasklib
 # this is the svn repository that holds private fixtures
 fixtures_repo = "https://svn.aptivate.org/svn/reactionsarpam/data/fixtures/"
 
+import project_settings
+
 def deploy(environment=None, svnuser=None, svnpass=None):
     if environment == None:
         environment = tasklib._infer_environment()
@@ -73,3 +75,16 @@ def create_cache_table():
     cache_table_name = 'sarpam_cache_table'
     tasklib._mysql_exec('DROP TABLE IF EXISTS %s.%s' % (db_name, cache_table_name))
     tasklib._manage_py(['createcachetable', cache_table_name])
+
+def setup_profile_updates():
+    project_name = project_settings.django_dir.split('/')[-1]
+    cron_file = os.path.join('/etc', 'cron.daily', 'update_profiles_'+project_name)
+
+    if not os.path.exists(cron_file):
+        write_profile_updates_to_cron_file(cron_file)
+        
+def write_profile_updates_to_cron_file(cron_file):
+    with open(cron_file, 'w') as f:
+        f.write("#!/bin/sh\n")
+        f.write("/usr/bin/curl --data \"\" http://localhost/contacts/batch_update/\n")
+    os.chmod(cron_file, 0755)

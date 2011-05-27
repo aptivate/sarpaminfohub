@@ -113,6 +113,8 @@ def deploy(revision=None):
     create_cache_table()
     if env.environment == 'production':
         setup_db_dumps()
+        
+    setup_profile_updates()
     sudo(env.tasks_bin + ' load_fixtures')
     link_apache_conf()
     apache_cmd('start')
@@ -127,3 +129,6 @@ def create_search_dir():
 
 def create_cache_table():
     sudo(env.tasks_bin + ' create_cache_table')
+
+def setup_profile_updates():
+    sudo(env.tasks_bin + ' setup_profile_updates')
