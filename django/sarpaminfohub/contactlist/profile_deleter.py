@@ -6,7 +6,7 @@ from sarpaminfohub.contactlist.models import Contact
 from django.core.exceptions import ObjectDoesNotExist
 
 class ProfileDeleter(ProfileUpdater):
-    def __init__(self, request, test_data=False):
+    def __init__(self, request, test_data=None):
         post_authorize_url = request.build_absolute_uri(
                 reverse('authorized_delete', args=None))
 

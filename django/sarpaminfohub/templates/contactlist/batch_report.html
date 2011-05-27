@@ -1,0 +1,20 @@
+{%  extends 'base.html' %}
+{% block body %}
+    <h1>LinkedIn Profiles Updated</h1>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Status</th>
+        </tr>
+    {% for line in batch_report %}
+        <tr>
+            {% for name, status in line.items %}
+                <td>{{ name }}</td>
+                <td>{{ status }}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </table>    
+    {% include 'contactlist/batch_update_form.html' %}
+{% endblock %}

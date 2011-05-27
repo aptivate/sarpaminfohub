@@ -52,4 +52,8 @@ class Contact(models.Model):
     def __unicode__(self):
         return self.given_name + " " + self.family_name
     
+    def get_full_name(self):
+        full_name = u'%s %s' % (self.given_name, self.family_name)
+        return full_name.strip()
+    
 site.register(Contact, ContactIndex)

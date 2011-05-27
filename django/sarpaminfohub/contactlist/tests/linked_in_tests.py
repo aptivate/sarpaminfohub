@@ -7,6 +7,7 @@ class LinkedInTest(ContactListTestCase):
     TEST_OAUTH_TOKEN = '7ccce8fb-83e4-4ab7-b8da-7f8b5c32c4ad'
     TEST_OAUTH_VERIFIER = '75959'
     TEST_URL = "http://www.linkedin.com/pub/joyce-kgatlwane/0/123/456"
+    XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
     
     def setUp(self):
         self.rebuild_search_index()
@@ -286,15 +287,74 @@ class LinkedInTest(ContactListTestCase):
         expected_url = '/contacts/%d/?new_contact=true' % new_contact.id
         self.assertEquals(expected_url, response.context['redirect_url'])
 
+    def test_batch_update_changes_given_name(self):
+        profile_data = self.get_first_name_xml_for("Joyce")
+        self.request_and_add_profile_and_return_response(profile_data,
+                                                         self.TEST_URL)
+        
+        profile_data = self.get_first_name_xml_for("Rose")
+        xml_encoded = self.get_encoded_profile_data(profile_data, self.TEST_URL)
+        response = self.do_batch_update_and_return_response(test_data=xml_encoded)
+        
+        new_contact = Contact.objects.get(linked_in_url=self.TEST_URL)
+        self.assertEquals("Rose", new_contact.given_name)
+        batch_report = response.context['batch_report']
+        self.assertEquals([{"Rose" : "Updated"}], batch_report)
+
+    def test_batch_update_does_not_change_contact_with_no_linked_in_profile(self):
+        joyce = Contact(given_name="Joyce", family_name="Kgatlwane")
+        joyce.save()
+        
+        response = self.do_batch_update_and_return_response()
+        
+        matches = Contact.objects.filter(given_name="Joyce")
+        self.assertEquals(1, len(matches))
+        
+        batch_report = response.context['batch_report']
+        self.assertEquals([{"Joyce Kgatlwane" : "No LinkedIn Profile"}],
+                          batch_report)
+
+    def test_batch_update_uses_correct_template(self):
+        response = self.do_batch_update_and_return_response()
+        self.assertTemplateUsed(response, "contactlist/batch_report.html")
+
+    def test_batch_update_deletes_contact_when_access_token_has_expired(self):
+        profile_data = self.get_first_name_xml_for("Joyce")
+        self.request_and_add_profile_and_return_response(profile_data,
+                                                         self.TEST_URL)
+        
+        error_xml = self.XML_HEADER + \
+            "<error>" + \
+            "    <status>401</status>" + \
+            "    <timestamp>1306499003728</timestamp>" + \
+            "    <error-code>0</error-code>" + \
+            "<message>[unauthorized]. The token used in the OAuth request is not valid. a418d7d7-59de-40f1-8f66-bc8d3981668e</message>" + \
+            "</error>"
+            
+        xml_encoded = error_xml.encode('hex')
+        response = self.do_batch_update_and_return_response(test_data=xml_encoded)
+        
+        batch_report = response.context['batch_report']
+        self.assertEquals([{"Joyce" : "Deleted"}], batch_report)
+
+        matches = Contact.objects.filter(linked_in_url=self.TEST_URL)
+        self.assertEquals(0, len(matches))
+        
+    def do_batch_update_and_return_response(self, test_data=""):
+        response = self.client.post('/contacts/batch_update/test/%s' % test_data)
+        self.assertEquals(200, response.status_code)
+
+        return response
+
     def delete_profile_and_return_response(self):
         test_data = str("test").encode('hex')
-        response = self.client.get('/contacts/delete_linked_in_profile/%s' % test_data)
+        response = self.client.get('/contacts/delete_linked_in_profile/test/%s' % test_data)
         self.assertEquals(302, response.status_code)
         
         # Help things along a bit
         xml_encoded = self.get_encoded_profile_data("", self.TEST_URL)
         auth_params = '?oauth_token=%s&oauth_verifier=%s' % (self.TEST_OAUTH_TOKEN, self.TEST_OAUTH_VERIFIER)
-        response = self.client.get('/contacts/authorized_delete/%s%s' % \
+        response = self.client.get('/contacts/authorized_delete/test/%s%s' % \
                                    (xml_encoded, auth_params))
         self.assertEquals(200, response.status_code)
         return response
@@ -361,12 +421,12 @@ class LinkedInTest(ContactListTestCase):
         
         # we have to help things along a bit here as we've mocked out the
         # linked in API
-        response = self.client.get('/contacts/authorized_add/%s?oauth_token=%s&oauth_verifier=%s' % (xml_encoded, self.TEST_OAUTH_TOKEN, self.TEST_OAUTH_VERIFIER))
+        response = self.client.get('/contacts/authorized_add/test/%s?oauth_token=%s&oauth_verifier=%s' % (xml_encoded, self.TEST_OAUTH_TOKEN, self.TEST_OAUTH_VERIFIER))
         self.assertEquals(200, response.status_code)
         return response
 
     def add_profile_and_return_response(self, xml_encoded):
-        response = self.client.get('/contacts/add_linked_in_profile/%s' % xml_encoded)
+        response = self.client.get('/contacts/add_linked_in_profile/test/%s' % xml_encoded)
         self.assertEquals(302, response.status_code)
         return response
 
@@ -374,7 +434,7 @@ class LinkedInTest(ContactListTestCase):
         if public_url is None:
             public_url = self.TEST_URL
         
-        xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + \
+        xml = self.XML_HEADER + \
         "<person>" + \
         profile_data + \
         "  <public-profile-url>" + public_url + "</public-profile-url>" + \

@@ -5,6 +5,7 @@ from sarpaminfohub.contactlist.profile_adder import ProfileAdder
 from sarpaminfohub.contactlist.profile_deleter import ProfileDeleter
 from sarpaminfohub.contactlist.models import Contact
 from django.views.generic import list_detail
+from sarpaminfohub.contactlist.batch_updater import BatchUpdater
 
 def tag_search(request):
     tag_searcher = TagSearcher(request)
@@ -52,3 +53,11 @@ def contact_detail(request, object_id):
     
     return list_detail.object_detail(request, queryset, object_id, \
                                      extra_context=extra_context)
+
+def update_linked_in_profiles(request, test_data=None):
+    if request.method == "GET":
+        return render_to_response("contactlist/batch_update.html")
+
+    batch_updater = BatchUpdater(request, test_data)
+    
+    return batch_updater.update()
