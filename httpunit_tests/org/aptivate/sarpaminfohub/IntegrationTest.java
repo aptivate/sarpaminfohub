@@ -6,6 +6,7 @@ import org.aptivate.web.utils.HtmlIterator;
 
 import com.meterware.httpunit.WebForm;
 import com.meterware.httpunit.WebResponse;
+import com.meterware.httpunit.controls.SelectionFormControl;
 
 public class IntegrationTest extends SarpamInfoHubTest
 {
@@ -131,6 +132,38 @@ public class IntegrationTest extends SarpamInfoHubTest
 		WebResponse response = loadPageAndReturnResponse("product/1");
 		
 		validatePage(response);
+	}
+	
+	public void testSearchByTagReturnsMatch() throws Exception
+	{
+		WebResponse response = loadContactSearchPage("");
+		
+		WebForm searchForm = response.getForms()[0];
+		                            
+		SelectionFormControl tagSelect = (SelectionFormControl)searchForm.getControlWithID("input_4");
+		
+		String [] optionValues = tagSelect.getOptionValues();
+		String [] displayedOptions = tagSelect.getDisplayedOptions();
+		
+		int i;
+		
+		for (i = 0; i < optionValues.length; i++)
+		{
+			if (displayedOptions[i].equals("capacity building"))
+				break;
+		}
+		
+		assertTrue(i < optionValues.length);
+		
+		String [] selectedValues = {optionValues[i]};
+		
+		searchForm.setParameter("tags", selectedValues);
+		
+		response = searchForm.submit();
+		
+		String resultsPageContent = response.getText();
+		
+		assertTrue(resultsPageContent.contains("Rose Shija"));
 	}
 	
 	private WebResponse loadPageAndReturnResponse(String relativeUrl) throws Exception

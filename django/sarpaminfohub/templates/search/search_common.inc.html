@@ -34,7 +34,7 @@
                 <div id="cid_4" class="form-input">
                     <select class="form-list" style="width:150px" id="input_4" name="tags" size="10" multiple="multiple">
                         {% for id, val in form.fields.tags.choices %}
-                        <option id="{{ id }}">{{ val }}</option>
+                        <option value="{{ id }}">{{ val }}</option>
                         {% endfor %}
                     </select>
                 </div>
