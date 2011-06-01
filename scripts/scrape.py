@@ -130,7 +130,7 @@ def scrapeExchangeRate(conn):
     c = conn.cursor()
     c.execute(query)
     results = []
-    counter = 0
+    counter = 1
     for row in c:
         result={}
         exchange_fields = {}
@@ -361,6 +361,8 @@ def scrape(data_dir):
                                       'fields' : formulation_fields})
 
             formulation_fields['name'] = f['formulation']
+            formulation_fields['strength'] = ""
+            formulation_fields['generic_name'] = ""
             formulation_dict[f['formulation']] = form_counter
             
         incoterm = f['incoterm']
