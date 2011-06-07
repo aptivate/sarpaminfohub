@@ -87,6 +87,7 @@ def write_profile_updates_to_cron_file(cron_file):
     with open(cron_file, 'w') as f:
         f.write("#!/bin/sh\n")
         f.write("LOG_DIR=/var/log/update_profiles\n")
+        f.write("mkdir -p ${LOG_DIR}\n")
         f.write("LOG_FILE=${LOG_DIR}/update_profiles-`date +%m-%d`.log\n")
         f.write("EMAIL_CARERS=0\n")
         f.write("/usr/bin/curl --data \"\" http://localhost/contacts/batch_update/ > ${LOG_FILE} 2>&1\n")
