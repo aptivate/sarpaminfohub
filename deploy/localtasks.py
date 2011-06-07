@@ -86,5 +86,17 @@ def setup_profile_updates():
 def write_profile_updates_to_cron_file(cron_file):
     with open(cron_file, 'w') as f:
         f.write("#!/bin/sh\n")
-        f.write("/usr/bin/curl --data \"\" http://localhost/contacts/batch_update/\n")
+        f.write("LOG_DIR=/var/log/update_profiles")
+        f.write("LOG_FILE=${LOG_DIR}/update_profiles-`date +%m-%d`.log")
+        f.write("EMAIL_CARERS=0")
+        f.write("/usr/bin/curl --data \"\" http://localhost/contacts/batch_update/ > ${LOG_FILE} 2>&1\n")
+        f.write("if [[ $? -ne 0 ]]; then")
+        f.write("    echo *** FAILED TO UPDATE PROFILES ***")
+        f.write("    echo")
+        f.write("    EMAIL_CARERS=1")
+        f.write("fi")
+        f.write("if [[ ${EMAIL_CARERS} -ne 0 ]]; then")
+        f.write("    cat ${LOG_FILE}")
+        f.write("fi")
+        
     os.chmod(cron_file, 0755)
