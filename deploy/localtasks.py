@@ -92,7 +92,7 @@ def write_profile_updates_to_cron_file(cron_file):
         f.write("EMAIL_CARERS=0\n")
         f.write("/usr/bin/curl --data \"\" http://localhost/contacts/batch_update/ > ${LOG_FILE} 2>&1\n")
         f.write("if [[ $? -ne 0 ]]; then\n")
-        f.write("    echo *** FAILED TO UPDATE PROFILES ***\n")
+        f.write("    echo \"*** FAILED TO UPDATE PROFILES ***\"\n")
         f.write("    echo\n")
         f.write("    EMAIL_CARERS=1\n")
         f.write("fi\n")
